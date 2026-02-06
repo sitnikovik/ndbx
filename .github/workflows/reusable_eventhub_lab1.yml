@@ -1,0 +1,79 @@
+name: EventHub Lab 1 Check (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      scripts_dir:
+        description: 'Path to scripts directory'
+        required: true
+        type: string
+      lab_check_dir:
+        description: 'Path to checks directory'
+        required: true
+        type: string
+
+jobs:
+  healthcheck:
+    name: Healthcheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout student repository
+        uses: actions/checkout@v4
+        with:
+          path: student
+
+      - name: Checkout ndbx scripts
+        uses: actions/checkout@v4
+        with:
+          repository: sitnikovik/ndbx-dev
+          ref: dev
+          path: ndbx
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Load environment variables
+        run: |
+          ndbx/${{ inputs.scripts_dir }}/load_env.sh student/.env.local
+
+      - name: Check required files
+        run: |
+          ndbx/${{ inputs.scripts_dir }}/file_exists.sh \
+            student/docker-compose.yml \
+            student/Makefile
+
+      - name: Start services
+        working-directory: student
+        run: |
+          echo "Starting services with 'make run'..."
+          make run
+
+      - name: Wait for service to start
+        run: |
+          echo "Waiting for service to start..."
+          sleep 15
+
+      - name: Show running containers
+        if: always()
+        working-directory: student
+        run: docker compose ps
+
+      - name: Run healthcheck
+        env:
+          APP_PORT: ${{ env.APP_PORT }}
+        run: |
+          cd ndbx/${{ inputs.lab_check_dir }} && go run main.go
+
+      - name: Show service logs
+        if: always()
+        working-directory: student
+        run: docker compose logs
+
+      - name: Stop services
+        if: always()
+        working-directory: student
+        run: docker compose down -v

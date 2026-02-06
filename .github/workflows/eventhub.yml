@@ -1,0 +1,18 @@
+name: EventHub (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      lab:
+        description: 'Lab number'
+        required: true
+        type: string
+
+jobs:
+  lab1:
+    name: Lab 1
+    if: ${{ inputs.lab >= 1 }}
+    uses: ./.github/workflows/reusable_eventhub_lab1.yml
+    with:
+      scripts_dir: '.github/scripts'
+      lab_check_dir: 'autograder/cmd/lab1'
