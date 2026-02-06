@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://golangci-lint.run/jsonschema/golangci.jsonschema.json
+version: "2"
+
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  enable:
+    - govet
+    - staticcheck
+    - unused
+    - errcheck
+    - revive
+    - misspell
+    - unparam
+    - gocyclo
+    - paralleltest
+    - godoclint
+    - godot
+    - godox
+    - dogsled
+    - bodyclose
+    - testpackage
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
