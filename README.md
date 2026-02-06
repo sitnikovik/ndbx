@@ -1,6 +1,6 @@
 # NoSQL Database Exploration
 
-[![Quality](https://github.com/sitnikovik/ndbx-dev/actions/workflows/quality.yml/badge.svg)](https://github.com/sitnikovik/ndbx-dev/actions/workflows/quality.yml)
+[![Quality](https://github.com/sitnikovik/ndbx/actions/workflows/quality.yml/badge.svg)](https://github.com/sitnikovik/ndbx/actions/workflows/quality.yml)
 ![Lab Progress](https://img.shields.io/badge/Lab-1%20of%207-blue)
 
 Проект содержит все необходимые материалы для курса по NoSQL базам данных и

@@ -50,4 +50,4 @@
   - *bodyclose*: проверка закрытия тела ответа HTTP
   - *testpackage*: проверка, что тесты находятся в отдельном пакете от реализации
 
-[1.0.0]: https://github.com/sitnikovik/ndbx-dev/releases/tag/v1.0.0
+[1.0.0]: https://github.com/sitnikovik/ndbx/releases/tag/v1.0.0
