@@ -1,0 +1,18 @@
+package numbers
+
+import (
+	"github.com/sitnikovik/ndbx/autograder/internal/errs"
+	"github.com/sitnikovik/ndbx/autograder/internal/paints/log"
+)
+
+// AssertPositive checks if the given number is positive (greater than zero) and returns an error if it is not.
+func AssertPositive[T number](num T) error {
+	if num <= 0 {
+		return errs.Wrap(
+			errs.ErrExpectationFailed,
+			"got %s",
+			log.Number(num),
+		)
+	}
+	return nil
+}

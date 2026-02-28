@@ -51,3 +51,18 @@ func (v Value) Empty() bool {
 func (v Value) String() string {
 	return string(v)
 }
+
+// MustInt parses the environment variable value as an integer and returns it.
+// It panics if the value cannot be parsed as an integer.
+func (v Value) MustInt() int {
+	var i int
+	_, err := fmt.Sscanf(v.String(), "%d", &i)
+	if err != nil {
+		panic(fmt.Sprintf(
+			"failed to parse environment variable value %s as int: %v",
+			log.String(v.String()),
+			err,
+		))
+	}
+	return i
+}

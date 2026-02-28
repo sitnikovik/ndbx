@@ -16,3 +16,11 @@ jobs:
     with:
       scripts_dir: '.github/scripts'
       lab_check_dir: 'autograder/cmd/lab1'
+  lab2:
+    name: Lab 2
+    needs: lab1
+    if: ${{ inputs.lab >= 2 }}
+    uses: ./.github/workflows/reusable_eventhub_lab2.yml
+    with:
+      scripts_dir: '.github/scripts'
+      lab_check_dir: 'autograder/cmd/lab2'
