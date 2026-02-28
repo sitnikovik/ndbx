@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/expect"
+	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/strings"
 )
 
@@ -75,7 +75,7 @@ func TestStringEquality_Error(t *testing.T) {
 			)
 			err := eq.Error()
 			if tt.wantErr {
-				assert.ErrorIs(t, err, expect.ErrEqualityFailed)
+				assert.ErrorIs(t, err, errs.ErrExpectationFailed)
 			} else {
 				assert.NoError(t, err)
 			}

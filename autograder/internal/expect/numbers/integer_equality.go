@@ -2,7 +2,6 @@ package numbers
 
 import (
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
-	"github.com/sitnikovik/ndbx/autograder/internal/expect"
 	"github.com/sitnikovik/ndbx/autograder/internal/paints/log"
 )
 
@@ -32,7 +31,7 @@ func NewIntegerEquality(expected, actual int) IntegerEquality {
 func (e IntegerEquality) Error() error {
 	if e.expected != e.actual {
 		return errs.Wrap(
-			expect.ErrEqualityFailed,
+			errs.ErrExpectationFailed,
 			"want %s, got %s",
 			log.Number(e.expected),
 			log.Number(e.actual),
