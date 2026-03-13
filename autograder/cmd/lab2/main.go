@@ -24,7 +24,7 @@ import (
 	teardown "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab2/job/teardown/redis"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/httpx"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/redis"
-	"github.com/sitnikovik/ndbx/autograder/internal/config"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/lab2/config"
 	"github.com/sitnikovik/ndbx/autograder/internal/console"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	"github.com/sitnikovik/ndbx/autograder/internal/step/wait"
