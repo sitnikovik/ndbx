@@ -6,10 +6,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/config"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user/session"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/lab3/config"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/mongo"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/redis"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
