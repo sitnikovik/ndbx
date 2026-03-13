@@ -88,40 +88,92 @@ func TestCookies_MustGet(t *testing.T) {
 		{
 			name: "cookie exists",
 			cookies: cookie.NewCookies([]*http.Cookie{
-				{Name: "session_id", Value: "abc123"},
-				{Name: "user_id", Value: "42"},
+				{
+					Name:  "session_id",
+					Value: "abc123",
+				},
+				{
+					Name:  "user_id",
+					Value: "42",
+				},
 			}),
-			args: args{name: "session_id"},
-			want: &http.Cookie{Name: "session_id", Value: "abc123"},
+			args: args{
+				name: "session_id",
+			},
+			want: &http.Cookie{
+				Name:  "session_id",
+				Value: "abc123",
+			},
 		},
 		{
 			name: "cookie does not exist",
 			cookies: cookie.NewCookies([]*http.Cookie{
-				{Name: "session_id", Value: "abc123"},
-				{Name: "user_id", Value: "42"},
+				{
+					Name:  "session_id",
+					Value: "abc123",
+				},
+				{
+					Name:  "user_id",
+					Value: "42",
+				},
 			}),
-			args:      args{name: "auth_token"},
+			args: args{
+				name: "auth_token",
+			},
 			wantPanic: true,
+		},
+		{
+			name: "empty cookie value",
+			cookies: cookie.NewCookies([]*http.Cookie{
+				{
+					Name:  "session_id",
+					Value: "",
+				},
+				{
+					Name:  "user_id",
+					Value: "42",
+				},
+			}),
+			args: args{
+				name: "session_id",
+			},
+			want: &http.Cookie{
+				Name:  "session_id",
+				Value: "",
+			},
+			wantPanic: false,
 		},
 		{
 			name: "empty cookie name",
 			cookies: cookie.NewCookies([]*http.Cookie{
-				{Name: "session_id", Value: "abc123"},
-				{Name: "user_id", Value: "42"},
+				{
+					Name:  "session_id",
+					Value: "abc123",
+				},
+				{
+					Name:  "user_id",
+					Value: "42",
+				},
 			}),
-			args:      args{name: ""},
+			args: args{
+				name: "",
+			},
 			wantPanic: true,
 		},
 		{
-			name:      "no cookies",
-			cookies:   cookie.NewCookies([]*http.Cookie{}),
-			args:      args{name: "session_id"},
+			name:    "no cookies",
+			cookies: cookie.NewCookies([]*http.Cookie{}),
+			args: args{
+				name: "session_id",
+			},
 			wantPanic: true,
 		},
 		{
-			name:      "nil cookies",
-			cookies:   cookie.NewCookies(nil),
-			args:      args{name: "session_id"},
+			name:    "nil cookies",
+			cookies: cookie.NewCookies(nil),
+			args: args{
+				name: "session_id",
+			},
 			wantPanic: true,
 		},
 	}

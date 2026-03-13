@@ -11,6 +11,9 @@ func (c Config) Validate() error {
 	if err != nil {
 		return errs.WrapNested(errs.ErrInvalidConfig, err, "redis")
 	}
+	if err := c.mongo.Validate(); err != nil {
+		return errs.WrapNested(errs.ErrInvalidConfig, err, "mongo")
+	}
 	err = c.app.Validate()
 	if err != nil {
 		return errs.WrapNested(errs.ErrInvalidConfig, err, "app")

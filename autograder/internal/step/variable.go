@@ -41,6 +41,14 @@ func (v Variable) AsString() string {
 	return ""
 }
 
+// AsInt returns the int value of the variable, or 0 if the variable is not an int.
+func (v Variable) AsInt() int {
+	if i, ok := v.v.(int); ok {
+		return i
+	}
+	return 0
+}
+
 // AsDuration returns the Duration value of the variable,
 // or 0 if the variable is not a Duration.
 func (v Variable) AsDuration() time.Duration {
