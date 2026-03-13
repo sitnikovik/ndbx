@@ -31,7 +31,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/client/httpx"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/mongo"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/redis"
-	"github.com/sitnikovik/ndbx/autograder/internal/config"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/lab3/config"
 	"github.com/sitnikovik/ndbx/autograder/internal/console"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	"github.com/sitnikovik/ndbx/autograder/internal/step/wait"
