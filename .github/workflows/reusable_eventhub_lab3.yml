@@ -27,7 +27,7 @@ jobs:
       - name: Checkout ndbx scripts
         uses: actions/checkout@v4
         with:
-          repository: sitnikovik/ndbx-dev
+          repository: sitnikovik/ndbx
           path: ndbx
 
       - name: Setup Go
