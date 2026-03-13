@@ -9,3 +9,14 @@ services:
       interval: 1s
       timeout: 3s
       retries: 5
+  mongo-test:
+    image: mongo:6.0
+    env_file: .env.test
+    ports:
+      - "${MONGODB_PORT}:27017"
+    command: mongod --noauth
+    healthcheck: 
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 1s
+      timeout: 3s
+      retries: 5

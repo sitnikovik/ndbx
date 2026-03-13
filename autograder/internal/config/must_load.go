@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/mongo"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/redis"
 )
 
@@ -14,6 +15,7 @@ import (
 func MustLoad() Config {
 	cfg := NewConfig(
 		redis.MustLoad(),
+		mongo.MustLoad(),
 		app.MustLoad(),
 	)
 	err := cfg.Validate()

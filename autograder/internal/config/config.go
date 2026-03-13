@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/mongo"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/redis"
 )
 
@@ -9,6 +10,8 @@ import (
 type Config struct {
 	// redis is the configuration for connecting to the Redis server.
 	redis redis.Config
+	// mongo is the configuration for connecting to the MongoDB server.
+	mongo mongo.Config
 	// app is the configuration for the application settings.
 	app app.Config
 }
@@ -17,10 +20,12 @@ type Config struct {
 // with the provided Redis and application configurations.
 func NewConfig(
 	redis redis.Config,
+	mongo mongo.Config,
 	app app.Config,
 ) Config {
 	return Config{
 		redis: redis,
+		mongo: mongo,
 		app:   app,
 	}
 }
@@ -28,6 +33,11 @@ func NewConfig(
 // Redis returns the Redis configuration from the Config instance.
 func (c Config) Redis() redis.Config {
 	return c.redis
+}
+
+// Mongo returns the MongoDB configuration from the Config instance.
+func (c Config) Mongo() mongo.Config {
+	return c.mongo
 }
 
 // App returns the application configuration from the Config instance.

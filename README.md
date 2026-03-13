@@ -2,7 +2,7 @@
 
 [![Quality](https://github.com/sitnikovik/ndbx/actions/workflows/quality.yml/badge.svg)](https://github.com/sitnikovik/ndbx/actions/workflows/quality.yml)
 [![Tests](https://github.com/sitnikovik/ndbx/actions/workflows/tests.yml/badge.svg)](https://github.com/sitnikovik/ndbx/actions/workflows/tests.yml)
-![Lab Progress](https://img.shields.io/badge/Lab-2%20of%207-blue)
+![Lab Progress](https://img.shields.io/badge/Lab-3%20of%207-blue)
 
 Проект содержит все необходимые материалы для курса по NoSQL базам данных и
 пайплайн в GitHub Actions для проверки лабораторных работ.
@@ -28,7 +28,7 @@
 
 1. [Старт: Healthcheck](docs/lab/01/)
 2. [Redis: Сессии пользователей](docs/lab/02/)
-3. MongoDB: Документные данные
+3. [MongoDB: Пользователи и события](docs/lab/03/)
 4. MongoDB: Шардирование и репликация
 5. Cassandra: Агрегация и просмотры
 6. Cassandra: Репликация событий

@@ -46,11 +46,14 @@ unit-test:
 .PHONY: integration-test
 integration-test:
 	@echo "🐳 Starting containers..."
-	@docker compose -f docker-compose.test.yml up -d redis-test
+	@docker compose -f docker-compose.test.yml --env-file .env.test up -d
 	@sleep 2
 	@echo 🧪 Running integration tests...
 	@mkdir -p tmp
 	@cd autograder && ( \
+		set -a; \
+		. ../.env.test; \
+		set +a; \
 		coverpkgs=$$(go list ./... | grep -v 'internal/test/integration' | grep -v 'internal/test/fake' | tr '\n' ','); \
 		go test -tags=integration \
 		-race -count=1 -v \
