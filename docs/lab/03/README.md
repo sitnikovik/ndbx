@@ -174,7 +174,7 @@ Content-Type: application/json
 **Ответ (при успешной создании):**
 
 ```http
-HTTP/1.1 201 OK
+HTTP/1.1 201 Created
 Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
 Content-Length: 999
 Content-Type: application/json
