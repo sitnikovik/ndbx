@@ -110,7 +110,7 @@ Content-Length: 0
 **Ответ (если аутентификация не прошла):**
 
 ```http
-HTTP/1.1 400 Bad Request
+HTTP/1.1 401 Unauthorized
 Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
 {"message": "invalid credentials"}
 ```

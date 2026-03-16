@@ -50,7 +50,7 @@ func (s *Step) Run(
 	}()
 	err = response.AssertAll(
 		rsp,
-		response.AssertBadRequestStatus,
+		response.AssertUnauthorizedStatus,
 		response.AssertNotEmptyContent,
 	)
 	if err != nil {
