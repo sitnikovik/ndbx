@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/user/post/rq/body"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/users/post/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 )
 

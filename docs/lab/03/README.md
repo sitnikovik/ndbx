@@ -16,13 +16,13 @@
 
 ### Регистрация пользователей
 
-Реализуйте новый endpoint `POST /user` для создания пользователя, от лица которого,
+Реализуйте новый endpoint `POST /users` для создания пользователя, от лица которого,
 можно создавать события, на которые будет подписываться все желающие, в том числе, и анонимные пользователи.
 
 **Запрос:**
 
 ```http
-POST /user HTTP/1.1
+POST /users HTTP/1.1
 Host:localhost:8080
 Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d;
 Content-Type: application/json
