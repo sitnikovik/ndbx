@@ -39,7 +39,7 @@ func TestStep_Run(t *testing.T) {
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
 							return &http.Response{
-								StatusCode: http.StatusBadRequest,
+								StatusCode: http.StatusUnauthorized,
 								Body: func() io.ReadCloser {
 									v := `{"message":"invalid credentials"}`
 									return io.NopCloser(strings.NewReader(v))
@@ -95,7 +95,7 @@ func TestStep_Run(t *testing.T) {
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
 							return &http.Response{
-								StatusCode: http.StatusCreated,
+								StatusCode: http.StatusUnauthorized,
 								Body:       http.NoBody,
 								Header: http.Header{
 									"Set-Cookie": []string{

@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/event/post/rq/body"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/post/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"

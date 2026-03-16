@@ -14,7 +14,7 @@ func TestEndpoint_SignUp(t *testing.T) {
 		t.Parallel()
 		assert.Equal(
 			t,
-			"http://localhost:8080/user",
+			"http://localhost:8080/users",
 			endpoint.
 				NewEndpoint("http://localhost:8080").
 				SignUp(),
@@ -24,7 +24,7 @@ func TestEndpoint_SignUp(t *testing.T) {
 		t.Parallel()
 		assert.Equal(
 			t,
-			"/user",
+			"/users",
 			endpoint.
 				NewEndpoint("").
 				SignUp(),

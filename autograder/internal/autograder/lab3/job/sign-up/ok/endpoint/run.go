@@ -7,7 +7,7 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/cookie/session"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
-	request "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/user/post/rq/body"
+	request "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/users/post/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"

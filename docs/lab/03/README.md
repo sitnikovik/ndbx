@@ -16,13 +16,13 @@
 
 ### Регистрация пользователей
 
-Реализуйте новый endpoint `POST /user` для создания пользователя, от лица которого,
+Реализуйте новый endpoint `POST /users` для создания пользователя, от лица которого,
 можно создавать события, на которые будет подписываться все желающие, в том числе, и анонимные пользователи.
 
 **Запрос:**
 
 ```http
-POST /user HTTP/1.1
+POST /users HTTP/1.1
 Host:localhost:8080
 Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d;
 Content-Type: application/json
@@ -110,7 +110,7 @@ Content-Length: 0
 **Ответ (если аутентификация не прошла):**
 
 ```http
-HTTP/1.1 400 Bad Request
+HTTP/1.1 401 Unauthorized
 Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
 {"message": "invalid credentials"}
 ```
@@ -141,7 +141,7 @@ Content-Length: 0
 
 ### Создание события
 
-Реализуйте новый endpoint `POST /event` для создания события,
+Реализуйте новый endpoint `POST /events` для создания события,
 на которое могут подписываться все желающие, в том числе и не авторизованные пользователи.
 Эндпоинт возвращает идентификатор созданного события,
 который соответствует `_id` документа в коллекции `events` в MongoDB.
@@ -149,7 +149,7 @@ Content-Length: 0
 > 🔐 Доступен только для авторизованных пользователей
 
 ```http
-POST /event HTTP/1.1
+POST /events HTTP/1.1
 Host:localhost:8080
 Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d;
 Content-Length: 999
@@ -174,7 +174,7 @@ Content-Type: application/json
 **Ответ (при успешной создании):**
 
 ```http
-HTTP/1.1 201 OK
+HTTP/1.1 201 Created
 Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
 Content-Length: 999
 Content-Type: application/json

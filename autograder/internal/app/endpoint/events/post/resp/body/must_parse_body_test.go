@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/event/post/resp/body"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/post/resp/body"
 )
 
 func TestMustParseBody(t *testing.T) {
