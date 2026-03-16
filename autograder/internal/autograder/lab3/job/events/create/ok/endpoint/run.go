@@ -7,8 +7,8 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/cookie/session"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/event/post/resp/body"
-	request "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/event/post/rq/body"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/post/resp/body"
+	request "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/post/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
@@ -26,7 +26,7 @@ func (s *Step) Run(
 	rsp, err := s.cli.PostJSON(
 		endpoint.
 			NewEndpoint(s.baseURL).
-			Event(),
+			Events(),
 		bytes.NewBuffer(
 			request.
 				NewBody(lab3.NewTestEvent()).
