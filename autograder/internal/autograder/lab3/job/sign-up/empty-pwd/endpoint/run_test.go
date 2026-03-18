@@ -67,6 +67,35 @@ func TestStep_Run(t *testing.T) {
 			},
 		},
 		{
+			name: "ok without session cookie",
+			s: endpoint.NewStep(
+				httpxfk.NewFakeClient(
+					httpxfk.WithPostJSON(
+						func(_ string, _ io.Reader) (*http.Response, error) {
+							return &http.Response{
+								StatusCode: http.StatusBadRequest,
+								Body: func() io.ReadCloser {
+									v := `{"message":"error"}`
+									return io.NopCloser(strings.NewReader(v))
+								}(),
+								ContentLength: int64(len(`{"message":"error"}`)),
+							}, nil
+						},
+					),
+				),
+				"http://localhost",
+			),
+			args: args{
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
+			},
+			want: want{
+				err:   nil,
+				vars:  step.NewVariables(),
+				panic: false,
+			},
+		},
+		{
 			name: "http request fails",
 			s: endpoint.NewStep(
 				httpxfk.NewFakeClient(
