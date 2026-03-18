@@ -5,7 +5,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/cookie/session"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/resp"
 	request "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/users/post/rq/body"
@@ -64,14 +63,6 @@ func (s *Step) Run(
 			"response has no message",
 			errs.ErrExpectationFailed,
 			err,
-		)
-	}
-	sess := session.MustParseSession(rsp.Cookies())
-	err = sess.Validate()
-	if err != nil {
-		return errs.Wrap(
-			err,
-			"got invalid session cookie",
 		)
 	}
 	return nil

@@ -45,9 +45,12 @@ JSON-струтура пользователя (см. [ниже](#пользов
 
 ```http
 HTTP/1.1 201 Created
-Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
+Set-Cookie: X-Session-Id=1238a2c1d9e4b7f0a5c6d2e8b1a355dd; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
 Content-Length: 0
 ```
+
+> ⚠️ При успешной регистрации необходимо создать новую сессию и привязать её к новому пользователю,
+а идентификатор сессии должен быть возвращён в куки `X-Session-Id` в ответе
 
 **Ответ (если пользователь уже существует):**
 
@@ -68,6 +71,8 @@ Content-Type: application/json
 Content-Length: 999
 {"message": "invalid \"{field_name}\" field"}
 ```
+
+> При 400 или 409 ошибке можно обновлять сессию если она есть, но не создавайте новую, если её нет.
 
 ### Аутентификация
 
