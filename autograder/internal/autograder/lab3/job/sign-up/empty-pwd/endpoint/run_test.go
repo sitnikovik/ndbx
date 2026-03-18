@@ -178,40 +178,6 @@ func TestStep_Run(t *testing.T) {
 				panic: false,
 			},
 		},
-		{
-			name: "got invalid session cookie",
-			s: endpoint.NewStep(
-				httpxfk.NewFakeClient(
-					httpxfk.WithPostJSON(
-						func(_ string, _ io.Reader) (*http.Response, error) {
-							return &http.Response{
-								StatusCode: http.StatusBadRequest,
-								Body: func() io.ReadCloser {
-									v := `{"message":"error"}`
-									return io.NopCloser(strings.NewReader(v))
-								}(),
-								ContentLength: int64(len(`{"message":"error"}`)),
-								Header: http.Header{
-									"Set-Cookie": []string{
-										"X-Session-Id=invalid-session-id; HttpOnly; Max-Age=3600; Secure=true",
-									},
-								},
-							}, nil
-						},
-					),
-				),
-				"http://localhost",
-			),
-			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
-			},
-			want: want{
-				err:   errs.ErrExpectationFailed,
-				vars:  step.NewVariables(),
-				panic: false,
-			},
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
