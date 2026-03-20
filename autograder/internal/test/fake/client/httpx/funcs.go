@@ -17,4 +17,10 @@ type funcs struct {
 		url string,
 		body io.Reader,
 	) (*http.Response, error)
+	// Patch is the function that will be executed
+	// when the FakeClient's Patch method is called.
+	Patch func(
+		url string,
+		body io.Reader,
+	) (*http.Response, error)
 }

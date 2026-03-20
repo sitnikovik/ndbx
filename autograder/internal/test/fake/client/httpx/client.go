@@ -46,3 +46,17 @@ func (c *FakeClient) PostJSON(
 	}
 	return c.funcs.PostJSON(url, body)
 }
+
+// Patch simulates an HTTP PATCH request with a JSON body to the specified URL,
+// returning the response body as a string or an error if the operation fails.
+//
+// Panics if the behavior for the Patch method is not specified.
+func (c *FakeClient) Patch(
+	url string,
+	body io.Reader,
+) (*http.Response, error) {
+	if c.funcs.Patch == nil {
+		panic("not specified behavior for Patch method")
+	}
+	return c.funcs.Patch(url, body)
+}
