@@ -31,4 +31,10 @@ type funcs struct {
 		ctx context.Context,
 		collection string,
 	) (doc.Indexes, error)
+	// insert is a function that will be used to mock the behavior of the Insert method.
+	insert func(
+		ctx context.Context,
+		collection string,
+		kvs ...doc.KVs,
+	) error
 }

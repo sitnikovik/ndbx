@@ -59,3 +59,16 @@ func WithIndexes(
 		fc.funcs.indexes = fn
 	}
 }
+
+// WithInsert sets the function that will be used to mock the behavior of the Insert method.
+func WithInsert(
+	fn func(
+		ctx context.Context,
+		collection string,
+		kvs ...doc.KVs,
+	) error,
+) Option {
+	return func(fc *FakeClient) {
+		fc.funcs.insert = fn
+	}
+}

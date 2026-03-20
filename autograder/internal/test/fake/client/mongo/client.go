@@ -71,3 +71,15 @@ func (fc *FakeClient) Indexes(
 	}
 	return fc.funcs.indexes(ctx, collection)
 }
+
+// Insert inserts the list of documents into the specified collection.
+func (fc *FakeClient) Insert(
+	ctx context.Context,
+	collection string,
+	kvs ...doc.KVs,
+) error {
+	if fc.funcs.insert == nil {
+		panic("not specified behavior for Insert method")
+	}
+	return fc.funcs.insert(ctx, collection, kvs...)
+}
