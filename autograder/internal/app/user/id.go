@@ -12,3 +12,8 @@ func NewID(id string) ID {
 func (i ID) String() string {
 	return string(i)
 }
+
+// Empty defines if id is empty.
+func (i ID) Empty() bool {
+	return i == ""
+}
