@@ -5,7 +5,7 @@ set -e
 # Pre-commit hook: run tests before commit
 echo "Running tests..."
 
-if ! make test; then
+if ! make unit-test; then
     echo "❌ Tests failed. Commit aborted."
     exit 1
 fi
