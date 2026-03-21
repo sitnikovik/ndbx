@@ -51,3 +51,55 @@ func TestMoney_String(t *testing.T) {
 		})
 	}
 }
+
+func TestMoney_Free(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		ok bool
+	}
+	tests := []struct {
+		name string
+		m    money.Money
+		want want
+	}{
+		{
+			name: "100.50",
+			m:    money.NewMoney(100, 50),
+			want: want{
+				ok: false,
+			},
+		},
+		{
+			name: "100.00",
+			m:    money.NewMoney(100, 0),
+			want: want{
+				ok: false,
+			},
+		},
+		{
+			name: "zeros",
+			m:    money.NewMoney(0, 0),
+			want: want{
+				ok: true,
+			},
+		},
+		{
+			name: "0.50",
+			m:    money.NewMoney(0, 50),
+			want: want{
+				ok: false,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.m.Free()
+			if tt.want.ok {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}

@@ -28,3 +28,8 @@ func NewMoney(
 func (m Money) String() string {
 	return fmt.Sprintf("%d.%d", m.units, m.nanos)
 }
+
+// Free defines if the money has no value.
+func (m Money) Free() bool {
+	return m.units == 0 && m.nanos == 0
+}
