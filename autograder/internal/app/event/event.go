@@ -10,6 +10,8 @@ type Event struct {
 	content Content
 	// loc is the location of the event.
 	loc Location
+	// costs contains the cost information related to the event.
+	costs Costs
 	// qty represents the quantity of attendees for the event.
 	qty Quantity
 	// id is the unique identifier for the event.
@@ -51,6 +53,11 @@ func (e Event) Created() Created {
 // Location returns the location of the event.
 func (e Event) Location() Location {
 	return e.loc
+}
+
+// Costs returns the cost information related to the event.
+func (e Event) Costs() Costs {
+	return e.costs
 }
 
 // Dates returns the start and finish dates of the event.

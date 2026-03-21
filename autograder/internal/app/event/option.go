@@ -9,3 +9,10 @@ func WithQuantity(q Quantity) Option {
 		b.qty = q
 	}
 }
+
+// WithCosts sets the cost information related to the event.
+func WithCosts(costs Costs) Option {
+	return func(e *Event) {
+		e.costs = costs
+	}
+}
