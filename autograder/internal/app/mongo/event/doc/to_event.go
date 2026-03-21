@@ -19,6 +19,7 @@ func (d EventDocument) ToEvent() event.Event {
 		title      string
 		desc       string
 		addr       string
+		loc        event.Location
 		createdAt  time.Time
 		createdBy  user.Identity
 		startedAt  time.Time
@@ -43,16 +44,24 @@ func (d EventDocument) ToEvent() event.Event {
 				desc = v
 			}
 		case key.Location:
+			var opts []event.LocationOption
 			if v, ok := kv.Value().(string); ok {
-				var loc struct {
+				var jsn struct {
 					Address string `json:"address"`
+					City    string `json:"city"`
 				}
-				err := json.Unmarshal([]byte(v), &loc)
-				if err == nil && loc.Address != "" {
-					addr = loc.Address
+				err := json.Unmarshal([]byte(v), &jsn)
+				if err == nil {
+					if jsn.Address != "" {
+						addr = jsn.Address
+					}
+					if jsn.City != "" {
+						opts = append(opts, event.WithCity(jsn.City))
+					}
 				} else {
 					addr = v
 				}
+				loc = event.NewLocation(addr, opts...)
 			}
 		case key.CreatedAt:
 			if v, ok := kv.Value().(string); ok {
@@ -78,9 +87,7 @@ func (d EventDocument) ToEvent() event.Event {
 			title,
 			desc,
 		),
-		event.NewLocation(
-			addr,
-		),
+		loc,
 		event.NewCreated(
 			createdAt,
 			createdBy,
