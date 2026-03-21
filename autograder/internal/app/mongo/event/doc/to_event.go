@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/money"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/mongo/event/doc/key"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
@@ -23,6 +24,7 @@ func (d EventDocument) ToEvent() event.Event {
 		title      string
 		desc       string
 		addr       string
+		cat        category.Type
 		loc        event.Location
 		createdAt  time.Time
 		createdBy  user.Identity
@@ -91,6 +93,10 @@ func (d EventDocument) ToEvent() event.Event {
 					panic(fmt.Sprintf("failed to parse price: %v", err))
 				}
 			}
+		case key.Category:
+			if v, ok := kv.Value().(string); ok {
+				cat = category.Parse(v)
+			}
 		}
 	}
 	evnt := event.NewEvent(
@@ -98,6 +104,7 @@ func (d EventDocument) ToEvent() event.Event {
 		event.NewContent(
 			title,
 			desc,
+			event.WithCategory(cat),
 		),
 		loc,
 		event.NewCreated(

@@ -64,6 +64,10 @@ func FromEvent(e event.Event) EventDocument {
 		key.Price,
 		e.Costs().Entry().Units(),
 	))
+	kvs = append(kvs, doc.NewKV(
+		key.Category,
+		e.Content().Category().String(),
+	))
 	return NewEventDocument(
 		doc.NewDocument(
 			e.ID().String(),

@@ -19,4 +19,6 @@ const (
 	Quantity = "quantity"
 	// Price is the key for the event's entry price in the MongoDB document.
 	Price = "price"
+	// Category is the key for the category type in the MongoDB document.
+	Category = "category"
 )
