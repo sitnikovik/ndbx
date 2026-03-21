@@ -14,6 +14,6 @@ func (id ID) String() string {
 }
 
 // Empty defines if id is empty.
-func (i ID) Empty() bool {
-	return i == ""
+func (id ID) Empty() bool {
+	return id == ""
 }
