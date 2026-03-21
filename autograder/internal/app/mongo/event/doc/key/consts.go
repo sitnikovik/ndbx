@@ -17,4 +17,6 @@ const (
 	Location = "location"
 	// Quantity is the key for the event's quantity in the MongoDB document.
 	Quantity = "quantity"
+	// Price is the key for the event's entry price in the MongoDB document.
+	Price = "price"
 )

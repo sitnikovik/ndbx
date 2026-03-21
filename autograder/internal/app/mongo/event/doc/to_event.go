@@ -2,9 +2,12 @@ package doc
 
 import (
 	"encoding/json"
+	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/money"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/mongo/event/doc/key"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/console"
@@ -16,6 +19,7 @@ import (
 // Panics if the MongoDB document does not contain the required fields or if the field types are incorrect.
 func (d EventDocument) ToEvent() event.Event {
 	var (
+		err        error
 		title      string
 		desc       string
 		addr       string
@@ -24,6 +28,7 @@ func (d EventDocument) ToEvent() event.Event {
 		createdBy  user.Identity
 		startedAt  time.Time
 		finishedAt time.Time
+		price      uint64
 	)
 	for _, kv := range d.orig.KVs() {
 		console.Log(
@@ -79,6 +84,13 @@ func (d EventDocument) ToEvent() event.Event {
 			if v, ok := kv.Value().(string); ok {
 				finishedAt = timex.MustParse(time.RFC3339, v)
 			}
+		case key.Price:
+			if v, ok := kv.Value().(string); ok {
+				price, err = strconv.ParseUint(v, 10, 64)
+				if err != nil {
+					panic(fmt.Sprintf("failed to parse price: %v", err))
+				}
+			}
 		}
 	}
 	evnt := event.NewEvent(
@@ -95,6 +107,11 @@ func (d EventDocument) ToEvent() event.Event {
 		event.NewDates(
 			startedAt,
 			finishedAt,
+		),
+		event.WithCosts(
+			event.NewCosts(
+				money.NewMoney(price, 0),
+			),
 		),
 	)
 	return evnt
