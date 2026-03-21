@@ -4,9 +4,9 @@ import "fmt"
 
 // Money represents a cost to pay to get some.
 type Money struct {
-	// units is the unit part of the money.
+	// units is the unit part of the money (before comma).
 	units uint64
-	// nanos is the smallest part of the money.
+	// nanos is the nanos part of the money (after comma).
 	nanos uint8
 }
 
@@ -32,4 +32,14 @@ func (m Money) String() string {
 // Free defines if the money has no value.
 func (m Money) Free() bool {
 	return m.units == 0 && m.nanos == 0
+}
+
+// Units return the unit part of the money (before comma).
+func (m Money) Units() uint64 {
+	return m.units
+}
+
+// Nanos return the nanos part of the money (after comma).
+func (m Money) Nanos() uint8 {
+	return m.nanos
 }
