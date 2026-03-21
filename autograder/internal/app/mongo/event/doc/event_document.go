@@ -14,3 +14,8 @@ func NewEventDocument(orig doc.Document) EventDocument {
 		orig: orig,
 	}
 }
+
+// KVs returns the slice of key-value pairs representing the fields of the document.
+func (e EventDocument) KVs() doc.KVs {
+	return e.orig.KVs()
+}
