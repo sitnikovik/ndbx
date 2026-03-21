@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/client/mongo/doc"
+	"github.com/sitnikovik/ndbx/autograder/internal/client/mongo/shard"
 )
 
 // FakeClient is a fake implementation of the MongoDB client used for testing purposes.
@@ -82,4 +83,27 @@ func (fc *FakeClient) Insert(
 		panic("not specified behavior for Insert method")
 	}
 	return fc.funcs.insert(ctx, collection, kvs...)
+}
+
+// HostsOfShard returns a list of hosts where the shard is running.
+func (fc *FakeClient) HostsOfShard(
+	ctx context.Context,
+	id string,
+) ([]string, error) {
+	if fc.funcs.hostsOfShard == nil {
+		panic("not specified behavior for HostsOfShard method")
+	}
+	return fc.funcs.hostsOfShard(ctx, id)
+}
+
+// Shards retrieves the shard
+// information for the specified collection.
+func (fc *FakeClient) Shards(
+	ctx context.Context,
+	collection string,
+) (shard.Shards, error) {
+	if fc.funcs.insert == nil {
+		panic("not specified behavior for Shards method")
+	}
+	return fc.funcs.shards(ctx, collection)
 }

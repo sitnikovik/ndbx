@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/client/mongo/doc"
+	"github.com/sitnikovik/ndbx/autograder/internal/client/mongo/shard"
 )
 
 // funcs holds function fields for mocking the behavior of the FakeClient methods.
@@ -37,4 +38,14 @@ type funcs struct {
 		collection string,
 		kvs ...doc.KVs,
 	) error
+	// hostsOfShard is a function that will be used to mock the behavior of the HostsOfShard method.
+	hostsOfShard func(
+		ctx context.Context,
+		id string,
+	) ([]string, error)
+	// shards is a function that will be used to mock the behavior of the Shards method.
+	shards func(
+		ctx context.Context,
+		collection string,
+	) (shard.Shards, error)
 }
