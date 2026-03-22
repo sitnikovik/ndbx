@@ -125,14 +125,14 @@ func TestContent_Category(t *testing.T) {
 				"This is a test event.",
 			),
 			want: want{
-				val: category.Other,
+				val: category.Unspecified,
 			},
 		},
 		{
 			name: "default value",
 			c:    event.Content{},
 			want: want{
-				val: category.Other,
+				val: category.Unspecified,
 			},
 		},
 	}

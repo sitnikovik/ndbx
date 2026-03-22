@@ -72,7 +72,7 @@ func TestParse(t *testing.T) {
 				s: "",
 			},
 			want: want{
-				val: category.Other,
+				val: category.Unspecified,
 			},
 		},
 		{
@@ -81,7 +81,7 @@ func TestParse(t *testing.T) {
 				s: " ",
 			},
 			want: want{
-				val: category.Other,
+				val: category.Unspecified,
 			},
 		},
 		{
@@ -90,7 +90,7 @@ func TestParse(t *testing.T) {
 				s: "meeting",
 			},
 			want: want{
-				val: category.Other,
+				val: category.Unspecified,
 			},
 		},
 		{
@@ -99,7 +99,7 @@ func TestParse(t *testing.T) {
 				s: "foo",
 			},
 			want: want{
-				val: category.Other,
+				val: category.Unspecified,
 			},
 		},
 	}
@@ -164,14 +164,14 @@ func TestType_String(t *testing.T) {
 			name: "unknown",
 			typ:  category.Parse("foo"),
 			want: want{
-				val: "other",
+				val: "",
 			},
 		},
 		{
 			name: "empty",
 			typ:  category.Parse(""),
 			want: want{
-				val: "other",
+				val: "",
 			},
 		},
 	}

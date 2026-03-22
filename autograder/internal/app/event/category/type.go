@@ -4,17 +4,24 @@ package category
 type Type uint8
 
 const (
+	// Unspecified represents an unspecified event type.
+	Unspecified Type = 0
 	// Other represents an other event.
-	Other Type = 0
+	Other Type = 1
 	// Meetup represents a meetup event.
-	Meetup Type = 1
+	Meetup Type = 2
 	// Concert represents a concert event.
-	Concert Type = 2
+	Concert Type = 3
 	// Exhibition represents an exhibition event.
-	Exhibition Type = 3
+	Exhibition Type = 4
 	// Party represents a party event.
-	Party Type = 4
+	Party Type = 5
 )
+
+// Unspecified defines if the event type is unspecified.
+func (t Type) Unspecified() bool {
+	return t == Unspecified
+}
 
 // Parse parses the event type by a string.
 //
@@ -29,8 +36,10 @@ func Parse(s string) Type {
 		return Exhibition
 	case Party.String():
 		return Party
-	default:
+	case Other.String():
 		return Other
+	default:
+		return Unspecified
 	}
 }
 
@@ -45,7 +54,9 @@ func (t Type) String() string {
 		return "exhibition"
 	case Party:
 		return "party"
-	default:
+	case Other:
 		return "other"
+	default:
+		return ""
 	}
 }
