@@ -10,8 +10,14 @@ import (
 
 // Body represents the request body for the list events endpoint.
 type Body struct {
+	// created holds the creation parameters for filtering events.
+	created Created
 	// content holds the specific query parameters for filtering events.
 	content Content
+	// loc holds the location parameters for filtering events.
+	loc Location
+	// costs holds the cost parameters for filtering events.
+	costs Costs
 	// pg holds the pagination parameters for the request.
 	pg pagination.Pagination
 }
@@ -28,6 +34,13 @@ func NewBody(opts ...Option) Body {
 // URLQuery converts the Body into url.Values by merging the URL queries of its fields.
 func (b Body) URLQuery() url.Values {
 	q := make(url.Values)
-	query.MergeInto(q, b.content.URLQuery(), b.pg.URLQuery())
+	query.MergeInto(
+		q,
+		b.created.URLQuery(),
+		b.content.URLQuery(),
+		b.loc.URLQuery(),
+		b.costs.URLQuery(),
+		b.pg.URLQuery(),
+	)
 	return q
 }
