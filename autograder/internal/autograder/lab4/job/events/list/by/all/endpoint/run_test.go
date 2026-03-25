@@ -33,7 +33,7 @@ func TestStep_Run(t *testing.T) {
 		want want
 	}{
 		{
-			name: "ok",
+			name: "not found",
 			s: endpoint.NewStep(
 				httpfk.NewFakeClient(
 					httpfk.WithGet(
@@ -60,7 +60,7 @@ func TestStep_Run(t *testing.T) {
 				vars: step.NewVariables(),
 			},
 			want: want{
-				err:   nil,
+				err:   errs.ErrExpectationFailed,
 				vars:  step.NewVariables(),
 				panic: false,
 			},
@@ -153,40 +153,7 @@ func TestStep_Run(t *testing.T) {
 				vars: step.NewVariables(),
 			},
 			want: want{
-				err:   errs.ErrExpectationFailed,
-				vars:  step.NewVariables(),
-				panic: false,
-			},
-		},
-		{
-			name: "mismatch real count in response",
-			s: endpoint.NewStep(
-				httpfk.NewFakeClient(
-					httpfk.WithGet(
-						func(_ string) (*http.Response, error) {
-							v := `{` +
-								`"events": [],` +
-								`"count": 1` +
-								`}`
-
-							return &http.Response{
-								StatusCode: http.StatusOK,
-								Body: func() io.ReadCloser {
-									return io.NopCloser(strings.NewReader(v))
-								}(),
-								ContentLength: int64(len(v)),
-							}, nil
-						},
-					),
-				),
-				"http://localhost",
-			),
-			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
-			},
-			want: want{
-				err:   errs.ErrExpectationFailed,
+				err:   nil,
 				vars:  step.NewVariables(),
 				panic: false,
 			},

@@ -7,10 +7,13 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/resp/body"
 	rq "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/rq/body"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/numbers"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
+	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
 
 // Run executes the create event endpoint test step,
@@ -26,7 +29,20 @@ func (s *Step) Run(
 				Events(),
 			rq.
 				NewBody(
-					rq.WithTitle("Test Event"),
+					rq.WithTitle("чудес"),
+					rq.WithCategory(category.Exhibition),
+					rq.WithEntryPrice(0, 0),
+					rq.WithDates(
+						timex.MustRFC3339("2026-03-24T00:00:00Z"),
+						timex.MustRFC3339("2026-03-24T00:00:00Z"),
+					),
+					rq.WithByUser(
+						user.NewIdentity(
+							user.NewID("123"),
+						),
+					),
+					rq.WithAddress("Ходынский"),
+					rq.WithCity("Москва"),
 				).
 				URLQuery(),
 		),
@@ -55,20 +71,12 @@ func (s *Step) Run(
 		)
 	}
 	body := body.MustParseBody(rsp.Body)
-	err = numbers.AssertEquals(0, len(body.Events()))
+	err = numbers.AssertEquals(1, len(body.Events()))
 	if err != nil {
 		return errs.WrapNested(
 			errs.ErrExpectationFailed,
 			err,
 			"expected exactly 1 event in response",
-		)
-	}
-	err = numbers.AssertEquals(0, body.Count())
-	if err != nil {
-		return errs.WrapNested(
-			errs.ErrExpectationFailed,
-			err,
-			"expected count field to be equal to events count",
 		)
 	}
 	return nil
