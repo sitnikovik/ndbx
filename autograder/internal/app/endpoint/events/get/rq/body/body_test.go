@@ -31,7 +31,7 @@ func TestBody_URLQuery(t *testing.T) {
 				body.WithAddress("NY, Groove street, 123/1"),
 				body.WithCity("New York"),
 				body.WithEntryPrice(0, 0),
-				body.WithCreatedAt(
+				body.WithDates(
 					timex.MustRFC3339("2025-03-01T11:00:00Z"),
 					timex.MustRFC3339("2025-03-07T11:00:00Z"),
 				),

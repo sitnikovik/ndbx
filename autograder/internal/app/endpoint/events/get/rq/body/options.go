@@ -58,8 +58,8 @@ func WithEntryPrice(from, to uint64) Option {
 	}
 }
 
-// WithCreatedAt sets the event creation date for the Body struct.
-func WithCreatedAt(from, to time.Time) Option {
+// WithDates sets the event date for the Body struct.
+func WithDates(from, to time.Time) Option {
 	return func(b *Body) {
 		b.created.at = rangeof.NewDates(
 			"date",
