@@ -11,7 +11,7 @@ const (
 	// Name is the name of the step.
 	Name = "Create an event by endpoint"
 	// Description is a brief description of the step.
-	Description = "Creates the provived event by endpoint that to be found by fitlers in the next steps"
+	Description = "Creates the provived event by endpoint that to be found by fitler in the next steps"
 )
 
 // httpClient defines the interface for making HTTP requests.
@@ -30,7 +30,7 @@ type Step struct {
 	cli httpClient
 	// baseURL is the base URL of the application.
 	baseURL string
-	// event is the event that has to be created by the target appication.
+	// event is the event that has to be created by the target application.
 	event event.Event
 }
 
