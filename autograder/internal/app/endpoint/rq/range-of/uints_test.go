@@ -40,7 +40,7 @@ func TestUInts_URLQuery(t *testing.T) {
 			r: rangeof.NewUInts(
 				"age",
 				rangeof.NewUInt(uint(18)),
-				rangeof.NewUInt(uint(30)),
+				rangeof.NewUInt(uint(0)),
 			),
 			want: want{
 				val: func() url.Values {
