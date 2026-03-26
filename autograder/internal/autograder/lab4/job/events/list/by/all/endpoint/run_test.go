@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/list/by/all/endpoint"
+	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	httpfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
@@ -153,8 +154,12 @@ func TestStep_Run(t *testing.T) {
 				vars: step.NewVariables(),
 			},
 			want: want{
-				err:   nil,
-				vars:  step.NewVariables(),
+				err: nil,
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(variable.EventID, "1")
+					return vars
+				}(),
 				panic: false,
 			},
 		},

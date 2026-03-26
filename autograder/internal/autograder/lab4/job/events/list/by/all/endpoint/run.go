@@ -9,6 +9,7 @@ import (
 	rq "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
+	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/numbers"
@@ -16,11 +17,10 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
 
-// Run executes the create event endpoint test step,
-// sending a POST request to the create event endpoint and validating the response.
+// Run executes the search of events by filters and valudates the response got.
 func (s *Step) Run(
 	_ context.Context,
-	_ step.Variables,
+	vars step.Variables,
 ) error {
 	rsp, err := s.cli.Get(
 		endpoint.WithQuery(
@@ -79,5 +79,12 @@ func (s *Step) Run(
 			"expected exactly 1 event in response",
 		)
 	}
+	vars.Set(
+		variable.EventID,
+		body.
+			Events()[0].
+			ID().
+			String(),
+	)
 	return nil
 }
