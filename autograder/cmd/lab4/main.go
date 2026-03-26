@@ -18,6 +18,7 @@ import (
 	redisTeardown "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/teardown/redis"
 	bulkEventCreation "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/create/ok/mongo"
 	listEventsByEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/list/by/all/endpoint"
+	getEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/one/ok/endpoint"
 	updateEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/ok/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/httpx"
@@ -251,6 +252,10 @@ func main() {
 				),
 			),
 			listEventsByEndpoint.NewStep(
+				httpcli,
+				baseURL,
+			),
+			getEventEndpoint.NewStep(
 				httpcli,
 				baseURL,
 			),
