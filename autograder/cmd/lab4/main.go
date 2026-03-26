@@ -29,6 +29,8 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/console"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	createOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/endpoint/ok"
+	createOneUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/one/endpoint/ok"
+	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
 
@@ -78,6 +80,21 @@ func main() {
 			),
 			bulkEventCreation.NewStep(
 				mongocli,
+			),
+			createOneUserEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				userfx.NewSamSepiol(),
+			),
+			createOneUserEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				userfx.NewJohnDoe(),
+			),
+			createOneUserEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				userfx.NewSamSepiol(),
 			),
 			createOneEventEndpoint.NewStep(
 				httpcli,
