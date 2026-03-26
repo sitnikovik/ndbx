@@ -80,11 +80,8 @@ func (s *Step) Run(
 		)
 	}
 	vars.Set(
-		variable.EventID,
-		body.
-			Events()[0].
-			ID().
-			String(),
+		variable.Event,
+		body.Events()[0],
 	)
 	return nil
 }
