@@ -54,6 +54,9 @@ func main() {
 		variable.SessionTTL,
 		sessionTTL,
 	)
+	samSepiol := userfx.NewSamSepiol()
+	johnDoe := userfx.NewJohnDoe()
+	alexSmith := userfx.NewAlexSmith()
 	err := autograder.
 		NewAutograder(
 			mongoSetup.NewStep(
@@ -84,17 +87,17 @@ func main() {
 			createOneUserEndpoint.NewStep(
 				httpcli,
 				baseURL,
-				userfx.NewSamSepiol(),
+				samSepiol,
 			),
 			createOneUserEndpoint.NewStep(
 				httpcli,
 				baseURL,
-				userfx.NewJohnDoe(),
+				johnDoe,
 			),
 			createOneUserEndpoint.NewStep(
 				httpcli,
 				baseURL,
-				userfx.NewSamSepiol(),
+				alexSmith,
 			),
 			createOneEventEndpoint.NewStep(
 				httpcli,
@@ -112,7 +115,7 @@ func main() {
 					),
 					event.NewCreated(
 						timex.MustRFC3339("2026-01-01T11:33:00Z"),
-						user.NewIdentity(user.ID("123")),
+						user.NewIdentity(samSepiol.ID()),
 					),
 					event.NewDates(
 						timex.MustRFC3339("2026-03-24T10:00:00Z"),
@@ -140,7 +143,7 @@ func main() {
 					),
 					event.NewCreated(
 						timex.MustRFC3339("2026-01-01T11:33:00Z"),
-						user.NewIdentity(user.ID("123")),
+						user.NewIdentity(samSepiol.ID()),
 					),
 					event.NewDates(
 						timex.MustRFC3339("2026-03-24T12:00:00Z"),
@@ -169,7 +172,7 @@ func main() {
 					),
 					event.NewCreated(
 						timex.MustRFC3339("2026-01-01T11:33:00Z"),
-						user.NewIdentity(user.ID("124")),
+						user.NewIdentity(johnDoe.ID()),
 					),
 					event.NewDates(
 						timex.MustRFC3339("2026-03-24T14:00:00Z"),
@@ -198,7 +201,7 @@ func main() {
 					),
 					event.NewCreated(
 						timex.MustRFC3339("2026-01-01T11:33:00Z"),
-						user.NewIdentity(user.ID("123")),
+						user.NewIdentity(johnDoe.ID()),
 					),
 					event.NewDates(
 						timex.MustRFC3339("2026-03-24T19:00:00Z"),
@@ -227,7 +230,7 @@ func main() {
 					),
 					event.NewCreated(
 						timex.MustRFC3339("2026-01-01T11:33:00Z"),
-						user.NewIdentity(user.ID("123")),
+						user.NewIdentity(samSepiol.ID()),
 					),
 					event.NewDates(
 						timex.MustRFC3339("2026-03-25T10:00:00Z"),
@@ -256,7 +259,7 @@ func main() {
 					),
 					event.NewCreated(
 						timex.MustRFC3339("2025-10-10T18:25:00Z"),
-						user.NewIdentity(user.ID("123")),
+						user.NewIdentity(alexSmith.ID()),
 					),
 					event.NewDates(
 						timex.MustRFC3339("2026-03-25T18:00:00Z"),
