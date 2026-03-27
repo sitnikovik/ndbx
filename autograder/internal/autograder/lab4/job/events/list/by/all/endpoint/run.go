@@ -14,6 +14,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/numbers"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
+	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
 
@@ -38,7 +39,7 @@ func (s *Step) Run(
 					),
 					rq.WithByUser(
 						user.NewIdentity(
-							user.NewID("123"),
+							userfx.NewSamSepiol().ID(),
 						),
 					),
 					rq.WithAddress("Ходынский"),
