@@ -33,6 +33,8 @@ import (
 	createOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/endpoint/ok"
 	createOneUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/one/endpoint/ok"
 	listUsersEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/list/by/endpoint/ok"
+	getNXUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/not-found"
+	getUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/ok"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
@@ -360,6 +362,17 @@ func main() {
 				[]user.User{
 					johnDoe,
 				},
+			),
+			getUserEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				samSepiol.ID(),
+				samSepiol,
+			),
+			getNXUserEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				user.NewID("123iuj2ekwo"),
 			),
 			mongoTeardown.NewStep(
 				mongocli,
