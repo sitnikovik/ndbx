@@ -33,7 +33,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/console"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	createOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/endpoint/ok"
-	createOneUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/one/endpoint/ok"
+	createOneUserMongo "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/one/mongo"
 	listUsersEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/list/by/endpoint/ok"
 	getNXUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/not-found"
 	getUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/ok"
@@ -247,29 +247,24 @@ func main() {
 			bulkEventCreation.NewStep(
 				mongocli,
 			),
-			createOneUserEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			createOneUserMongo.NewStep(
+				mongocli,
 				samSepiol,
 			),
-			createOneUserEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			createOneUserMongo.NewStep(
+				mongocli,
 				johnDoe,
 			),
-			createOneUserEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			createOneUserMongo.NewStep(
+				mongocli,
 				alexSmith,
 			),
-			createOneUserEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			createOneUserMongo.NewStep(
+				mongocli,
 				johnSmith,
 			),
-			createOneUserEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			createOneUserMongo.NewStep(
+				mongocli,
 				samwiseGamgee,
 			),
 			createOneEventEndpoint.NewStep(
