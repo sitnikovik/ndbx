@@ -4,6 +4,8 @@ import (
 	"context"
 	"os"
 
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/rq/pagination"
+	usersrq "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/users/list/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/money"
@@ -30,6 +32,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	createOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/endpoint/ok"
 	createOneUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/one/endpoint/ok"
+	listUsersEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/list/by/endpoint/ok"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
@@ -57,6 +60,8 @@ func main() {
 	samSepiol := userfx.NewSamSepiol()
 	johnDoe := userfx.NewJohnDoe()
 	alexSmith := userfx.NewAlexSmith()
+	johnSmith := userfx.NewJohnSmith()
+	samwiseGamgee := userfx.NewSamwiseGamgee()
 	err := autograder.
 		NewAutograder(
 			mongoSetup.NewStep(
@@ -98,6 +103,16 @@ func main() {
 				httpcli,
 				baseURL,
 				alexSmith,
+			),
+			createOneUserEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				johnSmith,
+			),
+			createOneUserEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				samwiseGamgee,
 			),
 			createOneEventEndpoint.NewStep(
 				httpcli,
@@ -283,6 +298,68 @@ func main() {
 			getNXEventEndpoint.NewStep(
 				httpcli,
 				baseURL,
+			),
+			listUsersEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				usersrq.NewBody(
+					usersrq.WithFullName("sam"),
+				),
+				[]user.User{
+					samSepiol,
+					samwiseGamgee,
+				},
+			),
+			listUsersEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				usersrq.NewBody(
+					usersrq.WithFullName("sam"),
+					usersrq.WithPagination(
+						pagination.NewPagination(1, 1),
+					),
+				),
+				[]user.User{
+					samwiseGamgee,
+				},
+			),
+			listUsersEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				usersrq.NewBody(
+					usersrq.WithFullName("Smith"),
+					usersrq.WithPagination(
+						pagination.NewPagination(1, 0),
+					),
+				),
+				[]user.User{
+					alexSmith,
+				},
+			),
+			listUsersEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				usersrq.NewBody(
+					usersrq.WithFullName("John"),
+				),
+				[]user.User{
+					johnDoe,
+					johnSmith,
+				},
+			),
+			listUsersEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				usersrq.NewBody(
+					usersrq.WithIdentity(
+						user.NewIdentity(
+							user.NewID("2"),
+						),
+					),
+				),
+				[]user.User{
+					johnDoe,
+				},
 			),
 			mongoTeardown.NewStep(
 				mongocli,
