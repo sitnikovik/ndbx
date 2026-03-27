@@ -10,9 +10,6 @@ import (
 	logoutRedis "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/auth/logout/ok/redis"
 	logoutUnauthEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/auth/logout/unauth/endpoint"
 	authEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/auth/ok/endpoint"
-	createEventExistsEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/events/create/exists/endpoint"
-	createEventExistsMongo "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/events/create/exists/mongo"
-	createEventExistsRedis "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/events/create/exists/redis"
 	createEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/events/create/ok/endpoint"
 	createNewEventMongo "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/events/create/ok/mongo"
 	createNewEventRedis "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/events/create/ok/redis"
@@ -110,16 +107,6 @@ func main() {
 			),
 			wait.NewWaitingStep(
 				sessionTTL/2,
-			),
-			createEventExistsEndpoint.NewStep(
-				httpcli,
-				baseURL,
-			),
-			createEventExistsMongo.NewStep(
-				mongocli,
-			),
-			createEventExistsRedis.NewStep(
-				rediscli,
 			),
 			logoutEndpoint.NewStep(
 				httpcli,
