@@ -233,7 +233,7 @@ func TestStep_Run(t *testing.T) {
 							_ string,
 						) (doc.Indexes, error) {
 							return doc.NewIndexes(
-								doc.NewUniqueIndex(key.Title),
+								doc.NewIndex(key.Title),
 								doc.NewIndex(key.Title, key.CreatedBy),
 								doc.NewIndex(key.CreatedBy),
 							), nil
@@ -480,7 +480,7 @@ func TestStep_Run(t *testing.T) {
 					)
 					return vars
 				}(),
-				err:   errs.ErrExpectationFailed,
+				err:   nil,
 				panic: false,
 			},
 		},
@@ -577,7 +577,6 @@ func TestStep_Run(t *testing.T) {
 						) (doc.Indexes, error) {
 							return doc.NewIndexes(
 								doc.NewUniqueIndex("_id"),
-								doc.NewUniqueIndex(key.Title),
 								doc.NewIndex(key.Title, key.CreatedBy),
 							), nil
 						},
