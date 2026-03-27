@@ -3,7 +3,6 @@ package mongo
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 
@@ -37,22 +36,5 @@ func (c *Client) Shards(
 	if !ok {
 		return nil, errors.New("not found")
 	}
-	raw, ok := v.(bson.M)
-	if !ok {
-		return nil, errors.New("shards is not a map")
-	}
-	mm := make(map[string]map[string]any, len(raw))
-	for id, val := range raw {
-		shardMap, ok := val.(bson.M)
-		if !ok {
-			return nil,
-				fmt.Errorf(
-					"shard '%s' has unexpected type %T",
-					id,
-					val,
-				)
-		}
-		mm[id] = map[string]any(shardMap)
-	}
-	return shard.ParseShards(mm)
+	return shard.ParseShards(v)
 }
