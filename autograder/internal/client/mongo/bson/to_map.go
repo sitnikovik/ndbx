@@ -9,10 +9,24 @@ import (
 // ToMap converts bson value to map or returns error if conversion is not possible.
 func ToMap(v any) (map[string]any, error) {
 	switch t := any(v).(type) {
+	case map[string]any:
+		return t, nil
 	case bson.M:
 		return MToMap(t), nil
 	case bson.D:
 		return DToMap(t), nil
+	default:
+		return nil, fmt.Errorf("unexpected type %T", v)
+	}
+}
+
+// ToArray converts bson array to []any or returns error if conversion is not possible.
+func ToArray(v any) ([]any, error) {
+	switch t := v.(type) {
+	case []any:
+		return t, nil
+	case bson.A:
+		return []any(t), nil
 	default:
 		return nil, fmt.Errorf("unexpected type %T", v)
 	}

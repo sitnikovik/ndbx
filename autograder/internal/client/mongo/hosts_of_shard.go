@@ -7,6 +7,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 
+	bsoni "github.com/sitnikovik/ndbx/autograder/internal/client/mongo/bson"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/mongo/doc"
 )
 
@@ -30,10 +31,17 @@ func (c *Client) HostsOfShard(
 	if err != nil {
 		return nil, err
 	}
-	raw, _ := cmd["shards"].([]any)
-	for _, raw := range raw {
-		m, ok := raw.(map[string]any)
-		if !ok {
+	shards, ok := cmd["shards"]
+	if !ok {
+		return nil, errors.New("shards field not found")
+	}
+	items, err := bsoni.ToArray(shards)
+	if err != nil {
+		return nil, errors.New("shards is not an array")
+	}
+	for _, raw := range items {
+		m, err := bsoni.ToMap(raw)
+		if err != nil {
 			continue
 		}
 		if m["_id"] != id {
