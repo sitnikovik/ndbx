@@ -33,7 +33,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/config/lab3/config"
 	"github.com/sitnikovik/ndbx/autograder/internal/console"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
-	createOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/endpoint/ok"
+	createOneEventMongo "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/mongo"
 	createOneUserMongo "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/one/mongo"
 	listUsersEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/list/by/endpoint/ok"
 	getNXUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/not-found"
@@ -272,34 +272,28 @@ func main() {
 				mongocli,
 				samwiseGamgee,
 			),
-			createOneEventEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			createOneEventMongo.NewStep(
+				mongocli,
 				wonderLandEvents[0],
 			),
-			createOneEventEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			createOneEventMongo.NewStep(
+				mongocli,
 				wonderLandEvents[1],
 			),
-			createOneEventEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			createOneEventMongo.NewStep(
+				mongocli,
 				wonderLandEvents[2],
 			),
-			createOneEventEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			createOneEventMongo.NewStep(
+				mongocli,
 				wonderLandEvents[3],
 			),
-			createOneEventEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			createOneEventMongo.NewStep(
+				mongocli,
 				wonderLandEvents[4],
 			),
-			createOneEventEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			createOneEventMongo.NewStep(
+				mongocli,
 				veniceClassicsEvents[0],
 			),
 			listEventsByEndpoint.NewStep(
