@@ -13,7 +13,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 )
 
-// Run executes the search of events by filters and valudates the response got.
+// Run executes the search of users by filters and valudates the response got.
 func (s *Step) Run(
 	_ context.Context,
 	_ step.Variables,
@@ -22,7 +22,7 @@ func (s *Step) Run(
 		endpoint.WithQuery(
 			endpoint.
 				NewEndpoint(s.baseURL).
-				Events(),
+				Users(),
 			s.rq.URLQuery(),
 		),
 	)
