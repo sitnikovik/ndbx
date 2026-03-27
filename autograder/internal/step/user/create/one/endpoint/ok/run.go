@@ -22,7 +22,7 @@ func (s *Step) Run(
 	rsp, err := s.cli.PostJSON(
 		endpoint.
 			NewEndpoint(s.baseURL).
-			Events(),
+			Users(),
 		bytes.NewBuffer(
 			request.
 				NewBody(
