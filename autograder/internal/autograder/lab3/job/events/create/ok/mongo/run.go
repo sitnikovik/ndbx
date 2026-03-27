@@ -68,14 +68,6 @@ func (s *Step) Run(
 				" field, but it does not exist",
 		)
 	}
-	if !idx.Unique() {
-		return errs.Wrap(
-			errs.ErrExpectationFailed,
-			"expected an index on the "+
-				log.String(key.Title)+
-				" field to be unique, but it is not",
-		)
-	}
 	idx = idxx.For(key.CreatedBy)
 	if idx.Empty() {
 		return errs.Wrap(
