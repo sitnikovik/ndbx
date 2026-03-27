@@ -15,7 +15,7 @@ func NewBody(ev event.Event) Body {
 	}
 }
 
-// Events returns the Event got by the endpoint.
+// Event returns the Event got by the endpoint.
 func (b Body) Event() event.Event {
 	return b.event
 }
