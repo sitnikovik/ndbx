@@ -23,6 +23,6 @@ func (c *Client) Patch(rawURL string, body io.Reader) (*http.Response, error) {
 				content.ApplicationJSON.String(),
 			},
 		},
-		Body: body.(io.ReadCloser),
+		Body: io.NopCloser(body),
 	})
 }
