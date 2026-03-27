@@ -16,3 +16,8 @@ func NewUserDocument(orig doc.Document) UserDocument {
 		orig: orig,
 	}
 }
+
+// KVs returns the slice of key-value pairs representing the fields of the document.
+func (u UserDocument) KVs() doc.KVs {
+	return u.orig.KVs()
+}
