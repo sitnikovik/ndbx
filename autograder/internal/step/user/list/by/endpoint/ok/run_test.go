@@ -83,6 +83,54 @@ func TestStep_Run(t *testing.T) {
 			},
 		},
 		{
+			name: "found but not the expected ones",
+			s: impl.NewStep(
+				httpxfk.NewFakeClient(
+					httpxfk.WithGet(
+						func(_ string) (*http.Response, error) {
+							v := `{` +
+								`"users": [` +
+								`{` +
+								`"id": "2",` +
+								`"username": "johndo3",` +
+								`"full_name": "John Doe"` +
+								`}` +
+								`],` +
+								`"count": 1` +
+								`}`
+							return &http.Response{
+								StatusCode: http.StatusOK,
+								Body: func() io.ReadCloser {
+									return io.NopCloser(strings.NewReader(v))
+								}(),
+								ContentLength: int64(len(v)),
+							}, nil
+						},
+					),
+				),
+				"http://localhost:8000",
+				body.NewBody(
+					body.WithFullName("sepiol"),
+				),
+				[]user.User{
+					user.NewUser(
+						user.NewID("1"),
+						"sams3p1ol",
+						"Sam Sepiol",
+					),
+				},
+			),
+			args: args{
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
+			},
+			want: want{
+				vars:  step.NewVariables(),
+				err:   errs.ErrExpectationFailed,
+				panic: false,
+			},
+		},
+		{
 			name: "not found but expected to be",
 			s: impl.NewStep(
 				httpxfk.NewFakeClient(
