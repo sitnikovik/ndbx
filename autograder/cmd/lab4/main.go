@@ -13,6 +13,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/money"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder"
+	logoutEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/auth/logout/ok/endpoint"
 	authEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/auth/ok/endpoint"
 	createEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/events/create/ok/endpoint"
 	mongoSetup "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/setup/mongo"
@@ -241,6 +242,10 @@ func main() {
 				baseURL,
 			),
 			updateEventEndpoint.NewStep(
+				httpcli,
+				baseURL,
+			),
+			logoutEndpoint.NewStep(
 				httpcli,
 				baseURL,
 			),
