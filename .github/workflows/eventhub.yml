@@ -18,7 +18,6 @@ jobs:
       lab_check_dir: 'autograder/cmd/lab1'
   lab2:
     name: Lab 2
-    needs: lab1
     if: ${{ inputs.lab >= 2 }}
     uses: ./.github/workflows/reusable_eventhub_lab2.yml
     with:
@@ -26,7 +25,6 @@ jobs:
       lab_check_dir: 'autograder/cmd/lab2'
   lab3:
     name: Lab 3
-    needs: lab2
     if: ${{ inputs.lab >= 3 }}
     uses: ./.github/workflows/reusable_eventhub_lab3.yml
     with:
@@ -34,8 +32,6 @@ jobs:
       lab_check_dir: 'autograder/cmd/lab3'
   lab4:
     name: Lab 4
-    needs: lab3
-    if: ${{ inputs.lab >= 4 }}
     uses: ./.github/workflows/reusable_eventhub_lab4.yml
     with:
       scripts_dir: '.github/scripts'
