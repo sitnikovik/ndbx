@@ -10,7 +10,7 @@ func NewSamSepiol() app.User {
 		app.NewID(
 			"1",
 		),
-		"sams3p1ol",
+		"samsep1ol",
 		"Sam Sepiol",
 	)
 }
