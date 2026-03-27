@@ -1,4 +1,4 @@
-name: EventHub Lab 2 Check (Reusable)
+name: EventHub Lab 4 Check (Reusable)
 
 on:
   workflow_call:
@@ -13,8 +13,8 @@ on:
         type: string
 
 jobs:
-  healthcheck:
-    name: Users and events
+  lab:
+    name: Users and events 2
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
