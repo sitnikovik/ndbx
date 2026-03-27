@@ -3,7 +3,7 @@ package mongo
 import (
 	"context"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/mongo/event/collection"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/mongo/user/collection"
 	appdoc "github.com/sitnikovik/ndbx/autograder/internal/app/mongo/user/doc"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"

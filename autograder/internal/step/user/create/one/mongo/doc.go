@@ -1,2 +1,2 @@
-// Package mongo provides functionality to create an event by Mongo.
+// Package mongo provides functionality to create a user by Mongo.
 package mongo

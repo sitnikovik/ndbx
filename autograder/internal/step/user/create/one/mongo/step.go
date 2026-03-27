@@ -9,9 +9,9 @@ import (
 
 const (
 	// Name is the name of the step.
-	Name = "Create an event by Mongo"
+	Name = "Create a user by Mongo"
 	// Description is a brief description of the step.
-	Description = "Creates the provived event by MongoDB request that to be found by fitler in the next steps"
+	Description = "Creates the provived user by MongoDB request that to be found by fitler in the next steps"
 )
 
 // mongoClient defines the interface for interacting with MongoDB.
@@ -24,7 +24,7 @@ type mongoClient interface {
 	) error
 }
 
-// Step represents the HTTP create event step in the autograder process.
+// Step represents the HTTP create user step in the autograder process.
 type Step struct {
 	// mongo is the MongoDB client used to interact with the database.
 	mongo mongoClient
