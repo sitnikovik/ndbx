@@ -13,12 +13,16 @@ import (
 // Run searches the user by the endpoint and compares the result with the expected one.
 func (s *Step) Run(
 	_ context.Context,
-	_ step.Variables,
+	vars step.Variables,
 ) error {
 	rsp, err := s.cli.Get(
 		endpoint.
 			NewEndpoint(s.baseURL).
-			User(s.id.String()),
+			User(
+					vars.
+						MustGet(s.user.Hash()).
+						AsString(),
+			),
 	)
 	if err != nil {
 		return errors.Join(

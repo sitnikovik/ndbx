@@ -37,6 +37,7 @@ import (
 	createOneUserMongo "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/one/mongo"
 	listUsersEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/list/by/endpoint/ok"
 	getNXUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/not-found"
+	getUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/ok"
 	listUserEventsEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/endpoint"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
@@ -355,10 +356,19 @@ func main() {
 					johnSmith,
 				},
 			),
+			getUserEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				samSepiol,
+			),
 			getNXUserEndpoint.NewStep(
 				httpcli,
 				baseURL,
-				user.NewID("123iuj2ekwo"),
+				user.NewUser(
+					user.ID("213uy2uieowqa"),
+					"undefined",
+					"undefined user",
+				),
 			),
 			listUserEventsEndpoint.NewStep(
 				httpcli,

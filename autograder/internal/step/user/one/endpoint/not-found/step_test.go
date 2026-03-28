@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/not-found"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
+	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )
 
 func TestStep_Name(t *testing.T) {
@@ -23,7 +23,7 @@ func TestStep_Name(t *testing.T) {
 			step: impl.NewStep(
 				httpxfk.NewFakeClient(),
 				"/localhost",
-				user.NewID("1"),
+				userfx.NewAlexSmith(),
 			),
 			want: impl.Name,
 		},
@@ -58,7 +58,7 @@ func TestStep_Description(t *testing.T) {
 			step: impl.NewStep(
 				httpxfk.NewFakeClient(),
 				"/localhost",
-				user.NewID("1"),
+				userfx.NewAlexSmith(),
 			),
 			want: impl.Description,
 		},

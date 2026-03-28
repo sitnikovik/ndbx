@@ -25,24 +25,21 @@ type Step struct {
 	cli httpClient
 	// user is the user expects to be retrieved by the endpoint.
 	user user.User
-	// id is the id of the user to retrieve.
-	id user.ID
 	// baseURL is the base URL of the application.
 	baseURL string
 }
 
 // NewStep creates a new Step instance
-// with the provided HTTP client and application base URL.
+// with the provided HTTP client, application base URL
+// and the user to be retrieved.
 func NewStep(
 	cli httpClient,
 	baseURL string,
-	id user.ID,
 	user user.User,
 ) *Step {
 	return &Step{
 		cli:     cli,
 		baseURL: baseURL,
-		id:      id,
 		user:    user,
 	}
 }

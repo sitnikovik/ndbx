@@ -23,23 +23,24 @@ type httpClient interface {
 type Step struct {
 	// cli is the HTTP client used to send requests.
 	cli httpClient
-	// id is the id of the user to retrieve.
-	id user.ID
+	// user is the user that is not exist in the database.
+	user user.User
 	// baseURL is the base URL of the application.
 	baseURL string
 }
 
 // NewStep creates a new Step instance
-// with the provided HTTP client and application base URL.
+// with the provided HTTP client, application base URL
+// and the users that is not exist in the database.
 func NewStep(
 	cli httpClient,
 	baseURL string,
-	id user.ID,
+	usr user.User,
 ) *Step {
 	return &Step{
 		cli:     cli,
 		baseURL: baseURL,
-		id:      id,
+		user:    usr,
 	}
 }
 

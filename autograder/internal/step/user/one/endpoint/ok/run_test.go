@@ -14,6 +14,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/ok"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
+	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )
 
 func TestStep_Run(t *testing.T) {
@@ -55,7 +56,6 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost:8000",
-				user.NewID("1"),
 				user.NewUser(
 					user.NewID("1"),
 					"sams3p1ol",
@@ -63,11 +63,37 @@ func TestStep_Run(t *testing.T) {
 				),
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						user.
+							NewUser(
+								user.NewID("1"),
+								"sams3p1ol",
+								"Sam Sepiol",
+							).
+							Hash(),
+						"123",
+					)
+					return vars
+				}(),
 			},
 			want: want{
-				vars:  step.NewVariables(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						user.
+							NewUser(
+								user.NewID("1"),
+								"sams3p1ol",
+								"Sam Sepiol",
+							).
+							Hash(),
+						"123",
+					)
+					return vars
+				}(),
 				err:   nil,
 				panic: false,
 			},
@@ -83,19 +109,28 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost:8000",
-				user.NewID("1"),
-				user.NewUser(
-					user.NewID("1"),
-					"sams3p1ol",
-					"Sam Sepiol",
-				),
+				userfx.NewSamSepiol(),
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewSamSepiol().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 			},
 			want: want{
-				vars:  step.NewVariables(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewSamSepiol().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 				err:   errs.ErrHTTPFailed,
 				panic: false,
 			},
@@ -114,19 +149,28 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost:8000",
-				user.NewID("1"),
-				user.NewUser(
-					user.NewID("1"),
-					"sams3p1ol",
-					"Sam Sepiol",
-				),
+				userfx.NewSamSepiol(),
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewSamSepiol().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 			},
 			want: want{
-				vars:  step.NewVariables(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewSamSepiol().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 				err:   errs.ErrExpectationFailed,
 				panic: false,
 			},
