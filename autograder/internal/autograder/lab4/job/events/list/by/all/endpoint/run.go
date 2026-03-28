@@ -42,7 +42,6 @@ func (s *Step) Run(
 							userfx.NewSamSepiol().ID(),
 						),
 					),
-					rq.WithAddress("Ходынский"),
 					rq.WithCity("Москва"),
 				).
 				URLQuery(),
