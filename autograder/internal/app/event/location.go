@@ -38,3 +38,8 @@ func (l Location) Address() string {
 func (l Location) City() string {
 	return l.city
 }
+
+// Empty defines if the location is empty.
+func (l Location) Empty() bool {
+	return l.Address() == "" && l.City() == ""
+}

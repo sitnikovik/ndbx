@@ -6,7 +6,6 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/mongo/event/doc/key"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/mongo/doc"
-	dockey "github.com/sitnikovik/ndbx/autograder/internal/client/mongo/doc/key"
 )
 
 // FromEvent converts the Event to an EventDocument related to MongoDB.
@@ -24,16 +23,17 @@ func FromEvent(e event.Event) EventDocument {
 			v,
 		))
 	}
-	if v := e.Location().Address(); v != "" {
+	if v := e.Location(); !v.Empty() {
+		m := make(map[string]string, 2)
+		if v := v.Address(); v != "" {
+			m["address"] = v
+		}
+		if v := v.City(); v != "" {
+			m["city"] = v
+		}
 		kvs = append(kvs, doc.NewKV(
-			dockey.Complex(key.Location, "address"),
-			v,
-		))
-	}
-	if v := e.Location().City(); v != "" {
-		kvs = append(kvs, doc.NewKV(
-			dockey.Complex(key.Location, "city"),
-			v,
+			key.Location,
+			m,
 		))
 	}
 	if v := e.Created().At(); !v.IsZero() {

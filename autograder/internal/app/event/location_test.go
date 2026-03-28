@@ -95,3 +95,73 @@ func TestLocation_City(t *testing.T) {
 		})
 	}
 }
+
+func TestLocation_Empty(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		val bool
+	}
+	tests := []struct {
+		name string
+		l    event.Location
+		want want
+	}{
+		{
+			name: "city and address",
+			l: event.NewLocation(
+				"City, Country, Street, 123",
+				event.WithCity("New York"),
+			),
+			want: want{
+				val: false,
+			},
+		},
+		{
+			name: "only city",
+			l: event.NewLocation(
+				"",
+				event.WithCity("New York"),
+			),
+			want: want{
+				val: false,
+			},
+		},
+		{
+			name: "only address",
+			l: event.NewLocation(
+				"City, Country, Street, 123",
+			),
+			want: want{
+				val: false,
+			},
+		},
+		{
+			name: "empty city and address",
+			l: event.NewLocation(
+				"",
+				event.WithCity(""),
+			),
+			want: want{
+				val: true,
+			},
+		},
+		{
+			name: "default value",
+			l:    event.Location{},
+			want: want{
+				val: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.l.Empty()
+			if tt.want.val {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}
