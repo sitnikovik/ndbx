@@ -7,10 +7,10 @@ import (
 
 	rq "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/endpoint"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	eventfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/event"
+	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )
 
 func TestStep_Name(t *testing.T) {
@@ -26,7 +26,7 @@ func TestStep_Name(t *testing.T) {
 			step: endpoint.NewStep(
 				httpxfk.NewFakeClient(),
 				"/localhost",
-				user.NewID("1"),
+				userfx.NewAlexSmith(),
 				rq.NewBody(),
 				[]event.Event{
 					eventfx.NewTestEvent(),
@@ -60,7 +60,7 @@ func TestStep_Description(t *testing.T) {
 			step: endpoint.NewStep(
 				httpxfk.NewFakeClient(),
 				"/localhost",
-				user.NewID("1"),
+				userfx.NewAlexSmith(),
 				rq.NewBody(),
 				[]event.Event{
 					eventfx.NewTestEvent(),

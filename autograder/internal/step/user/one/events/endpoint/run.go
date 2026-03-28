@@ -15,13 +15,17 @@ import (
 // Run executes the search of user's events by filters and validates the response got.
 func (s *Step) Run(
 	_ context.Context,
-	_ step.Variables,
+	vars step.Variables,
 ) error {
 	rsp, err := s.cli.Get(
 		endpoint.WithQuery(
 			endpoint.
 				NewEndpoint(s.baseURL).
-				UserEvents(s.id.String()),
+				UserEvents(
+					vars.
+						MustGet(s.user.Hash()).
+						AsString(),
+				),
 			s.rq.URLQuery(),
 		),
 	)

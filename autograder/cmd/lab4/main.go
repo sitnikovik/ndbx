@@ -363,7 +363,7 @@ func main() {
 			listUserEventsEndpoint.NewStep(
 				httpcli,
 				baseURL,
-				samSepiol.ID(),
+				samSepiol,
 				eventsrq.NewBody(
 					eventsrq.WithDates(
 						timex.MustRFC3339("2026-03-25T00:00:00Z"),

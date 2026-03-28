@@ -16,6 +16,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/endpoint"
 	httpfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
+	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
 
@@ -70,7 +71,7 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost",
-				user.NewID("1"),
+				userfx.NewAlexSmith(),
 				body.NewBody(),
 				[]event.Event{
 					event.NewEvent(
@@ -92,12 +93,26 @@ func TestStep_Run(t *testing.T) {
 				},
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 			},
 			want: want{
-				err:   nil,
-				vars:  step.NewVariables(),
+				err: nil,
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 				panic: false,
 			},
 		},
@@ -122,17 +137,31 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost",
-				user.NewID("1"),
+				userfx.NewAlexSmith(),
 				body.NewBody(),
 				nil,
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 			},
 			want: want{
-				err:   nil,
-				vars:  step.NewVariables(),
+				err: nil,
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 				panic: false,
 			},
 		},
@@ -147,7 +176,7 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost",
-				user.NewID("1"),
+				userfx.NewAlexSmith(),
 				body.NewBody(),
 				[]event.Event{
 					event.NewEvent(
@@ -169,12 +198,26 @@ func TestStep_Run(t *testing.T) {
 				},
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 			},
 			want: want{
-				err:   errs.ErrExternalDependencyFailed,
-				vars:  step.NewVariables(),
+				err: errs.ErrExternalDependencyFailed,
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 				panic: false,
 			},
 		},
@@ -193,7 +236,7 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost",
-				user.NewID("1"),
+				userfx.NewAlexSmith(),
 				body.NewBody(),
 				[]event.Event{
 					event.NewEvent(
@@ -215,12 +258,26 @@ func TestStep_Run(t *testing.T) {
 				},
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 			},
 			want: want{
-				err:   errs.ErrExpectationFailed,
-				vars:  step.NewVariables(),
+				err: errs.ErrExpectationFailed,
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 				panic: false,
 			},
 		},
@@ -270,7 +327,7 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost",
-				user.NewID("1"),
+				userfx.NewAlexSmith(),
 				body.NewBody(),
 				[]event.Event{
 					event.NewEvent(
@@ -292,12 +349,26 @@ func TestStep_Run(t *testing.T) {
 				},
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 			},
 			want: want{
-				err:   errs.ErrExpectationFailed,
-				vars:  step.NewVariables(),
+				err: errs.ErrExpectationFailed,
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 				panic: false,
 			},
 		},
@@ -335,7 +406,7 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost",
-				user.NewID("1"),
+				userfx.NewAlexSmith(),
 				body.NewBody(),
 				[]event.Event{
 					event.NewEvent(
@@ -357,12 +428,26 @@ func TestStep_Run(t *testing.T) {
 				},
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 			},
 			want: want{
-				err:   errs.ErrExpectationFailed,
-				vars:  step.NewVariables(),
+				err: errs.ErrExpectationFailed,
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
 				panic: false,
 			},
 		},

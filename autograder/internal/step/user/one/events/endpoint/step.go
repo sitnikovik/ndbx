@@ -29,26 +29,26 @@ type Step struct {
 	events []event.Event
 	// rq     body.Body
 	rq body.Body
-	// id is the id of the user's events to retrieve.
-	id user.ID
+	// user is the user's which events are expected to be retrieved.
+	user user.User
 	// baseURL is the base URL of the application.
 	baseURL string
 }
 
 // NewStep creates a new Step instance
-// with the provided HTTP client, application base URL, user's id,
+// with the provided HTTP client, application base URL, user,
 // request body and expected events.
 func NewStep(
 	cli httpClient,
 	baseURL string,
-	id user.ID,
+	usr user.User,
 	rq body.Body,
 	events []event.Event,
 ) *Step {
 	return &Step{
 		cli:     cli,
 		baseURL: baseURL,
-		id:      id,
+		user:    usr,
 		rq:      rq,
 		events:  events,
 	}
