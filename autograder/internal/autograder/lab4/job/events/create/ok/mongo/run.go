@@ -18,7 +18,7 @@ func (s *Step) Run(
 	ctx context.Context,
 	_ step.Variables,
 ) error {
-	err := s.mongo.Insert(
+	_, err := s.mongo.Insert(
 		ctx,
 		collection.Name,
 		appevdoc.

@@ -67,7 +67,7 @@ func WithInsert(
 		ctx context.Context,
 		collection string,
 		kvs ...doc.KVs,
-	) error,
+	) ([]string, error),
 ) Option {
 	return func(fc *FakeClient) {
 		fc.funcs.insert = fn

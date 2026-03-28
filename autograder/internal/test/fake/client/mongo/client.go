@@ -74,11 +74,12 @@ func (fc *FakeClient) Indexes(
 }
 
 // Insert inserts the list of documents into the specified collection.
+// Returns a slice of inserted document IDs and an error if any.
 func (fc *FakeClient) Insert(
 	ctx context.Context,
 	collection string,
 	kvs ...doc.KVs,
-) error {
+) ([]string, error) {
 	if fc.funcs.insert == nil {
 		panic("not specified behavior for Insert method")
 	}

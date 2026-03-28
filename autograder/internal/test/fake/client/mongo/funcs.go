@@ -37,7 +37,7 @@ type funcs struct {
 		ctx context.Context,
 		collection string,
 		kvs ...doc.KVs,
-	) error
+	) ([]string, error)
 	// hostsOfShard is a function that will be used to mock the behavior of the HostsOfShard method.
 	hostsOfShard func(
 		ctx context.Context,

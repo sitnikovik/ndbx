@@ -40,8 +40,8 @@ func TestStep_Run(t *testing.T) {
 							_ context.Context,
 							_ string,
 							_ ...doc.KVs,
-						) error {
-							return nil
+						) ([]string, error) {
+							return nil, nil
 						},
 					),
 					mongofk.WithShards(
@@ -96,8 +96,8 @@ func TestStep_Run(t *testing.T) {
 							_ context.Context,
 							_ string,
 							_ ...doc.KVs,
-						) error {
-							return assert.AnError
+						) ([]string, error) {
+							return nil, assert.AnError
 						},
 					),
 				),
@@ -121,8 +121,8 @@ func TestStep_Run(t *testing.T) {
 							_ context.Context,
 							_ string,
 							_ ...doc.KVs,
-						) error {
-							return nil
+						) ([]string, error) {
+							return nil, nil
 						},
 					),
 					mongofk.WithShards(
@@ -154,8 +154,8 @@ func TestStep_Run(t *testing.T) {
 							_ context.Context,
 							_ string,
 							_ ...doc.KVs,
-						) error {
-							return nil
+						) ([]string, error) {
+							return nil, nil
 						},
 					),
 					mongofk.WithShards(
@@ -192,8 +192,8 @@ func TestStep_Run(t *testing.T) {
 							_ context.Context,
 							_ string,
 							_ ...doc.KVs,
-						) error {
-							return nil
+						) ([]string, error) {
+							return nil, nil
 						},
 					),
 					mongofk.WithShards(
@@ -248,8 +248,8 @@ func TestStep_Run(t *testing.T) {
 							_ context.Context,
 							_ string,
 							_ ...doc.KVs,
-						) error {
-							return nil
+						) ([]string, error) {
+							return nil, nil
 						},
 					),
 					mongofk.WithShards(
@@ -304,8 +304,8 @@ func TestStep_Run(t *testing.T) {
 							_ context.Context,
 							_ string,
 							_ ...doc.KVs,
-						) error {
-							return nil
+						) ([]string, error) {
+							return nil, nil
 						},
 					),
 					mongofk.WithShards(
@@ -356,8 +356,8 @@ func TestStep_Run(t *testing.T) {
 							_ context.Context,
 							_ string,
 							_ ...doc.KVs,
-						) error {
-							return nil
+						) ([]string, error) {
+							return nil, nil
 						},
 					),
 					mongofk.WithShards(

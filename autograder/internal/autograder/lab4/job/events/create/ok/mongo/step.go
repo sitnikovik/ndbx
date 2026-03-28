@@ -17,11 +17,12 @@ const (
 // mongoClient defines the interface for interacting with MongoDB.
 type mongoClient interface {
 	// Insert inserts the list of documents into the specified collection.
+	// Returns a slice of inserted document IDs and an error if any.
 	Insert(
 		ctx context.Context,
 		collection string,
 		kvs ...doc.KVs,
-	) error
+	) ([]string, error)
 	// Shards retrieves the shard
 	// information for the specified collection.
 	Shards(

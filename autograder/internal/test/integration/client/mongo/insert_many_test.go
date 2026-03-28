@@ -32,7 +32,7 @@ func TestClient_Insert(t *testing.T) {
 	t.Run("insert many", func(t *testing.T) {
 		var err error
 		ctx := context.Background()
-		err = cli.Insert(
+		ids, err := cli.Insert(
 			ctx,
 			"test_collection",
 			doc.NewKVs(
@@ -45,5 +45,6 @@ func TestClient_Insert(t *testing.T) {
 			),
 		)
 		require.NoError(t, err)
+		require.NotEmpty(t, ids)
 	})
 }
