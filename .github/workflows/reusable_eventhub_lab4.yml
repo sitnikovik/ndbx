@@ -29,7 +29,6 @@ jobs:
         with:
           repository: sitnikovik/ndbx
           path: ndbx
-          ref: feature/lab-4
 
       - name: Setup Go
         uses: actions/setup-go@v5

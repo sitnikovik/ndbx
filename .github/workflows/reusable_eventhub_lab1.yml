@@ -28,7 +28,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: sitnikovik/ndbx
-          ref: main
           path: ndbx
 
       - name: Setup Go
