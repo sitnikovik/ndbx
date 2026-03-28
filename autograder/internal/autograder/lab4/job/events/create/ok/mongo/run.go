@@ -25,7 +25,7 @@ func (s *Step) Run(
 			FromEvents(
 				lab4.FakeEvents(
 					1000,
-					[]user.ID{"123", "234", "356"},
+					[]user.ID{"80", "90", "100"},
 				),
 			).
 			KVs()...,
