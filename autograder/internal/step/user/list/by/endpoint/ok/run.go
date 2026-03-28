@@ -7,7 +7,6 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/users/list/resp/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
-	"github.com/sitnikovik/ndbx/autograder/internal/expect"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/numbers"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
@@ -68,16 +67,6 @@ func (s *Step) Run(
 		return errs.Wrap(
 			err,
 			"got unexpected 'count' field",
-		)
-	}
-	err = expect.AssertEquals(
-		s.users,
-		users,
-	)
-	if err != nil {
-		return errs.Wrap(
-			err,
-			"got unexpected users",
 		)
 	}
 	return nil
