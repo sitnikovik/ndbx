@@ -33,7 +33,20 @@ func (c *Client) Insert(
 	}
 	ids := make([]string, len(result.InsertedIDs))
 	for i, id := range result.InsertedIDs {
-		ids[i] = id.(string)
+		var v string
+		switch t := id.(type) {
+		case string:
+			v = t
+		case bson.ObjectID:
+			v = t.Hex()
+		default:
+			return nil, errs.Wrap(
+				errs.ErrTypeAssertion,
+				"expect string of bson.OjectID but got %T",
+				t,
+			)
+		}
+		ids[i] = v
 	}
 	return ids, nil
 }
