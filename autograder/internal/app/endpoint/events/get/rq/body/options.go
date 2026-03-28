@@ -75,3 +75,13 @@ func WithByUser(usr user.Identity) Option {
 		b.created.by = usr
 	}
 }
+
+// WithUsername sets the username who created the event.
+func WithUsername(usr string) Option {
+	return func(b *Body) {
+		b.created.by = user.NewIdentity(
+			b.created.by.ID(),
+			user.WithUsername(usr),
+		)
+	}
+}

@@ -38,6 +38,7 @@ func TestBody_URLQuery(t *testing.T) {
 				body.WithByUser(
 					user.NewIdentity(
 						user.NewID("123"),
+						user.WithUsername("username"),
 					),
 				),
 				body.WithPagination(
@@ -55,6 +56,7 @@ func TestBody_URLQuery(t *testing.T) {
 					q.Set("date_from", "20250301")
 					q.Set("date_to", "20250307")
 					q.Set("user_id", "123")
+					q.Set("user", "username")
 					q.Set("limit", "10")
 					q.Set("offset", "10")
 					return q

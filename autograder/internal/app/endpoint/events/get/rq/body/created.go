@@ -23,6 +23,9 @@ func (c Created) URLQuery() url.Values {
 	if v := c.by.ID(); !v.Empty() {
 		q.Set("user_id", v.String())
 	}
+	if v := c.by.Username(); v != "" {
+		q.Set("user", v)
+	}
 	query.MergeInto(q, c.at.URLQuery())
 	return q
 }

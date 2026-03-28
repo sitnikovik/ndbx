@@ -8,7 +8,6 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/resp/body"
 	rq "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response"
@@ -37,10 +36,8 @@ func (s *Step) Run(
 						timex.MustRFC3339("2026-03-24T00:00:00Z"),
 						timex.MustRFC3339("2026-03-24T00:00:00Z"),
 					),
-					rq.WithByUser(
-						user.NewIdentity(
-							userfx.NewSamSepiol().ID(),
-						),
+					rq.WithUsername(
+						userfx.NewSamSepiol().Username(),
 					),
 					rq.WithCity("Москва"),
 				).
