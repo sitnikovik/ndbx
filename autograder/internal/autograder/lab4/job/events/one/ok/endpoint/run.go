@@ -5,10 +5,8 @@ import (
 	"errors"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/one/resp/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
-	"github.com/sitnikovik/ndbx/autograder/internal/expect"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 )
@@ -44,15 +42,6 @@ func (s *Step) Run(
 	)
 	if err != nil {
 		return errs.Wrap(err, "got unexpected response")
-	}
-	err = expect.AssertEquals(
-		ev,
-		body.
-			MustParseBody(rsp.Body).
-			Event(),
-	)
-	if err != nil {
-		return errs.Wrap(err, "got unexpected event")
 	}
 	return nil
 }

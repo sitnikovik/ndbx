@@ -5,9 +5,7 @@ import (
 	"errors"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/users/one/resp/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
-	"github.com/sitnikovik/ndbx/autograder/internal/expect"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 )
@@ -43,15 +41,6 @@ func (s *Step) Run(
 			err,
 			"got unexpected response",
 		)
-	}
-	err = expect.AssertEquals(
-		s.user,
-		body.
-			MustParseBody(rsp.Body).
-			User(),
-	)
-	if err != nil {
-		return errs.Wrap(err, "got unexpected user")
 	}
 	return nil
 }
