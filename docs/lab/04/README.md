@@ -62,7 +62,7 @@ Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max
 Content-Length: 0
 ```
 
-**Ответ (если мероприятие не найдено):**
+**Ответ (если мероприятие не найдено или пользователь не является его организатором):**
 
 ```http
 HTTP/1.1 404 Not Found
