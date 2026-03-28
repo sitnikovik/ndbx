@@ -1,4 +1,4 @@
-package notfound_test
+package endpoint_test
 
 import (
 	"context"
@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/users/one/not-found/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
-	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/not-found"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )

@@ -1,4 +1,4 @@
-package notfound
+package endpoint
 
 import (
 	"net/http"

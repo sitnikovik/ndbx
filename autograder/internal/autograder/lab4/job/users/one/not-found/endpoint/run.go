@@ -1,4 +1,4 @@
-package notfound
+package endpoint
 
 import (
 	"context"
@@ -13,12 +13,12 @@ import (
 // Run tries to get a non-existent user and validates the response.
 func (s *Step) Run(
 	_ context.Context,
-	vars step.Variables,
+	_ step.Variables,
 ) error {
 	rsp, err := s.cli.Get(
 		endpoint.
 			NewEndpoint(s.baseURL).
-			User(s.user.ID().String()),
+			User("2ip3ue32-9ejnojkdsdp932u8eji"),
 	)
 	if err != nil {
 		return errors.Join(

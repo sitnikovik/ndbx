@@ -1,11 +1,11 @@
-package notfound_test
+package endpoint_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/not-found"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/users/one/not-found/endpoint"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )
