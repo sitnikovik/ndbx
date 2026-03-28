@@ -1,5 +1,10 @@
 package user
 
+import (
+	"crypto/md5"
+	"encoding/hex"
+)
+
 // User represents a user in the autograder application.
 type User struct {
 	// fullName is the full name of the user.
@@ -36,4 +41,14 @@ func (u User) FullName() string {
 // Username returns the unique username of the user.
 func (u User) Username() string {
 	return u.username
+}
+
+// Hash returns hash representaion of the user.
+func (u User) Hash() string {
+	usr := u.Username()
+	if usr == "" {
+		return ""
+	}
+	hash := md5.Sum([]byte(usr))
+	return hex.EncodeToString(hash[:])
 }
