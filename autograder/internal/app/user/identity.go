@@ -1,5 +1,10 @@
 package user
 
+import (
+	"crypto/md5"
+	"encoding/hex"
+)
+
 // Identity represents the unique identifier of a user in the autograder application.
 type Identity struct {
 	// username is the username of the user.
@@ -37,4 +42,14 @@ func (i Identity) ID() ID {
 // Username returns the username of the user.
 func (i Identity) Username() string {
 	return i.username
+}
+
+// Hash returns hash representaion of the user's identity
+func (i Identity) Hash() string {
+	usr := i.Username()
+	if usr == "" {
+		return ""
+	}
+	hash := md5.Sum([]byte(usr))
+	return hex.EncodeToString(hash[:])
 }
