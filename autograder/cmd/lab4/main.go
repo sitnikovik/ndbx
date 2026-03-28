@@ -86,7 +86,7 @@ func main() {
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-24T10:00:00Z"),
-				timex.MustRFC3339("2025-01-24T12:00:00Z"),
+				timex.MustRFC3339("2026-03-24T12:00:00Z"),
 			),
 			event.WithCosts(
 				event.NewCosts(
@@ -110,7 +110,7 @@ func main() {
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-24T12:00:00Z"),
-				timex.MustRFC3339("2025-01-24T14:00:00Z"),
+				timex.MustRFC3339("2026-03-24T14:00:00Z"),
 			),
 			event.WithCosts(
 				event.NewCosts(
@@ -135,7 +135,7 @@ func main() {
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-24T14:00:00Z"),
-				timex.MustRFC3339("2025-01-24T16:00:00Z"),
+				timex.MustRFC3339("2026-03-24T16:00:00Z"),
 			),
 			event.WithCosts(
 				event.NewCosts(
@@ -160,7 +160,7 @@ func main() {
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-24T19:00:00Z"),
-				timex.MustRFC3339("2025-01-24T23:59:59Z"),
+				timex.MustRFC3339("2026-03-24T23:59:59Z"),
 			),
 			event.WithCosts(
 				event.NewCosts(
@@ -185,7 +185,7 @@ func main() {
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-25T10:00:00Z"),
-				timex.MustRFC3339("2025-01-25T18:00:00Z"),
+				timex.MustRFC3339("2026-03-25T18:00:00Z"),
 			),
 			event.WithCosts(
 				event.NewCosts(
@@ -212,7 +212,7 @@ func main() {
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-25T18:00:00Z"),
-				timex.MustRFC3339("2025-01-25T21:00:00Z"),
+				timex.MustRFC3339("2026-03-25T21:00:00Z"),
 			),
 			event.WithCosts(
 				event.NewCosts(
