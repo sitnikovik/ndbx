@@ -32,3 +32,16 @@ func WithPostJSON(
 		c.funcs.PostJSON = fn
 	}
 }
+
+// WithPatch sets the function that will be executed
+// when the FakeClient's Patch method is called.
+func WithPatch(
+	fn func(
+		url string,
+		body io.Reader,
+	) (*http.Response, error),
+) Option {
+	return func(c *FakeClient) {
+		c.funcs.Patch = fn
+	}
+}

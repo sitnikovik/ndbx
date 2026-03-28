@@ -37,3 +37,18 @@ func (u User) FullName() string {
 func (u User) Username() string {
 	return u.username
 }
+
+// Idendity returns the user's identity.
+func (u User) Idendity() Identity {
+	return NewIdentity(
+		u.ID(),
+		WithUsername(
+			u.Username(),
+		),
+	)
+}
+
+// Hash represents the user as a hash.
+func (u User) Hash() string {
+	return u.Idendity().Hash()
+}

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/client/mongo/doc"
+	"github.com/sitnikovik/ndbx/autograder/internal/client/mongo/shard"
 )
 
 // Option defines a functional option for configuring the FakeClient.
@@ -57,5 +58,44 @@ func WithIndexes(
 ) Option {
 	return func(fc *FakeClient) {
 		fc.funcs.indexes = fn
+	}
+}
+
+// WithInsert sets the function that will be used to mock the behavior of the Insert method.
+func WithInsert(
+	fn func(
+		ctx context.Context,
+		collection string,
+		kvs ...doc.KVs,
+	) ([]string, error),
+) Option {
+	return func(fc *FakeClient) {
+		fc.funcs.insert = fn
+	}
+}
+
+// WithHostsOfShard sets the function that will be used
+// to mock the behavior of the HostsOfShard method.
+func WithHostsOfShard(
+	fn func(
+		ctx context.Context,
+		id string,
+	) ([]string, error),
+) Option {
+	return func(fc *FakeClient) {
+		fc.funcs.hostsOfShard = fn
+	}
+}
+
+// WithShards sets the function that will be used
+// to mock the behavior of the Shard method.
+func WithShards(
+	fn func(
+		ctx context.Context,
+		collection string,
+	) (shard.Shards, error),
+) Option {
+	return func(fc *FakeClient) {
+		fc.funcs.shards = fn
 	}
 }

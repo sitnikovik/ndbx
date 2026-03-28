@@ -11,4 +11,6 @@ const (
 	Session = "session"
 	// EventID is the key for the event ID variable in the autograder.
 	EventID = "event_id"
+	// Event is the key for the event variable in the autograder.
+	Event = "event"
 )

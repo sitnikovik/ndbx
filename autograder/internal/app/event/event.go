@@ -1,5 +1,11 @@
 package event
 
+import (
+	"crypto/md5"
+	"encoding/hex"
+	"time"
+)
+
 // Event represents an event.
 type Event struct {
 	// created contains the creation details of the event.
@@ -10,6 +16,8 @@ type Event struct {
 	content Content
 	// loc is the location of the event.
 	loc Location
+	// costs contains the cost information related to the event.
+	costs Costs
 	// qty represents the quantity of attendees for the event.
 	qty Quantity
 	// id is the unique identifier for the event.
@@ -53,6 +61,11 @@ func (e Event) Location() Location {
 	return e.loc
 }
 
+// Costs returns the cost information related to the event.
+func (e Event) Costs() Costs {
+	return e.costs
+}
+
 // Dates returns the start and finish dates of the event.
 func (e Event) Dates() Dates {
 	return e.dates
@@ -66,4 +79,15 @@ func (e Event) Quantity() Quantity {
 // ID returns the unique identifier for the event.
 func (e Event) ID() ID {
 	return e.id
+}
+
+// Hash represents the event as a hash.
+func (e Event) Hash() string {
+	title := e.Content().Title()
+	createdAt := e.Created().At()
+	if title == "" && createdAt.IsZero() {
+		return ""
+	}
+	hash := md5.Sum([]byte(title + createdAt.Format(time.RFC3339)))
+	return hex.EncodeToString(hash[:])
 }
