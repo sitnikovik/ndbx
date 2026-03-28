@@ -44,7 +44,7 @@ func (i Identity) Username() string {
 	return i.username
 }
 
-// Hash returns hash representaion of the user's identity
+// Hash represents the user's identity as a hash.
 func (i Identity) Hash() string {
 	usr := i.Username()
 	if usr == "" {

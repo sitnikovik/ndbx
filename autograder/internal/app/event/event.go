@@ -81,7 +81,7 @@ func (e Event) ID() ID {
 	return e.id
 }
 
-// Hash returns hash representaion of the event.
+// Hash represents the event as a hash.
 func (e Event) Hash() string {
 	title := e.Content().Title()
 	createdAt := e.Created().At()

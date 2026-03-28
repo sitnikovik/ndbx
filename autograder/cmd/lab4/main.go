@@ -82,7 +82,7 @@ func main() {
 			),
 			event.NewCreated(
 				timex.MustRFC3339("2026-01-01T11:33:00Z"),
-				user.NewIdentity(samSepiol.ID()),
+				samSepiol.Idendity(),
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-24T10:00:00Z"),
@@ -106,7 +106,7 @@ func main() {
 			),
 			event.NewCreated(
 				timex.MustRFC3339("2026-01-01T11:33:00Z"),
-				user.NewIdentity(samSepiol.ID()),
+				samSepiol.Idendity(),
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-24T12:00:00Z"),
@@ -131,7 +131,7 @@ func main() {
 			),
 			event.NewCreated(
 				timex.MustRFC3339("2026-01-01T11:33:00Z"),
-				user.NewIdentity(johnDoe.ID()),
+				johnDoe.Idendity(),
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-24T14:00:00Z"),
@@ -156,7 +156,7 @@ func main() {
 			),
 			event.NewCreated(
 				timex.MustRFC3339("2026-01-01T11:33:00Z"),
-				user.NewIdentity(johnDoe.ID()),
+				johnDoe.Idendity(),
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-24T19:00:00Z"),
@@ -181,7 +181,7 @@ func main() {
 			),
 			event.NewCreated(
 				timex.MustRFC3339("2026-01-01T11:33:00Z"),
-				user.NewIdentity(samSepiol.ID()),
+				samSepiol.Idendity(),
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-25T10:00:00Z"),
@@ -208,7 +208,7 @@ func main() {
 			),
 			event.NewCreated(
 				timex.MustRFC3339("2025-10-10T18:25:00Z"),
-				user.NewIdentity(alexSmith.ID()),
+				alexSmith.Idendity(),
 			),
 			event.NewDates(
 				timex.MustRFC3339("2026-03-25T18:00:00Z"),

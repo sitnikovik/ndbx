@@ -48,7 +48,7 @@ func (u User) Idendity() Identity {
 	)
 }
 
-// Hash returns hash representaion of the user.
+// Hash represents the user as a hash.
 func (u User) Hash() string {
 	return u.Idendity().Hash()
 }

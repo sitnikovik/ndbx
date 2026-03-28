@@ -12,7 +12,7 @@ func WithID(id ID) Option {
 	}
 }
 
-// sets the user's identification for the event.
+// WithCreatedBy sets the user's identification for the event.
 func WithCreatedBy(id user.Identity) Option {
 	return func(e *Event) {
 		e.created.by = id
