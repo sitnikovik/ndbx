@@ -37,7 +37,6 @@ import (
 	createOneUserMongo "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/one/mongo"
 	listUsersEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/list/by/endpoint/ok"
 	getNXUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/not-found"
-	getUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/ok"
 	listUserEventsEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/endpoint"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
@@ -312,30 +311,6 @@ func main() {
 				httpcli,
 				baseURL,
 				usersrq.NewBody(
-					usersrq.WithFullName("sam"),
-				),
-				[]user.User{
-					samSepiol,
-					samwiseGamgee,
-				},
-			),
-			listUsersEndpoint.NewStep(
-				httpcli,
-				baseURL,
-				usersrq.NewBody(
-					usersrq.WithFullName("sam"),
-					usersrq.WithPagination(
-						pagination.NewPagination(1, 1),
-					),
-				),
-				[]user.User{
-					samwiseGamgee,
-				},
-			),
-			listUsersEndpoint.NewStep(
-				httpcli,
-				baseURL,
-				usersrq.NewBody(
 					usersrq.WithFullName("Smith"),
 					usersrq.WithPagination(
 						pagination.NewPagination(1, 0),
@@ -343,6 +318,19 @@ func main() {
 				),
 				[]user.User{
 					alexSmith,
+				},
+			),
+			listUsersEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				usersrq.NewBody(
+					usersrq.WithFullName("John"),
+					usersrq.WithPagination(
+						pagination.NewPagination(1, 1),
+					),
+				),
+				[]user.User{
+					johnSmith,
 				},
 			),
 			listUsersEndpoint.NewStep(
@@ -360,21 +348,12 @@ func main() {
 				httpcli,
 				baseURL,
 				usersrq.NewBody(
-					usersrq.WithIdentity(
-						user.NewIdentity(
-							user.NewID("2"),
-						),
-					),
+					usersrq.WithFullName("John"),
 				),
 				[]user.User{
 					johnDoe,
+					johnSmith,
 				},
-			),
-			getUserEndpoint.NewStep(
-				httpcli,
-				baseURL,
-				samSepiol.ID(),
-				samSepiol,
 			),
 			getNXUserEndpoint.NewStep(
 				httpcli,
