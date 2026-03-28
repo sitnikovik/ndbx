@@ -48,3 +48,49 @@ func TestUser_Hash(t *testing.T) {
 		})
 	}
 }
+
+func TestUser_Idendity(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		val user.Identity
+	}
+	tests := []struct {
+		name string
+		u    user.User
+		want want
+	}{
+		{
+			name: "ok",
+			u: user.NewUser(
+				user.NewID("1"),
+				"samsep1ol",
+				"Sam Sepiol",
+			),
+			want: want{
+				val: user.NewIdentity(
+					user.NewID("1"),
+					user.WithUsername("samsep1ol"),
+				),
+			},
+		},
+		{
+			name: "default value",
+			u:    user.User{},
+			want: want{
+				val: user.NewIdentity(
+					user.NewID(""),
+				),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.val,
+				tt.u.Idendity(),
+			)
+		})
+	}
+}
