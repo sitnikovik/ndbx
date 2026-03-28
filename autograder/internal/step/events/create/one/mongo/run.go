@@ -9,12 +9,13 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 )
 
-// Run inserts an event into MongoDB.
+// Run inserts an event into MongoDB
+// and sets the event id got into the step variables.
 func (s *Step) Run(
 	ctx context.Context,
-	_ step.Variables,
+	vars step.Variables,
 ) error {
-	_, err := s.mongo.Insert(
+	ids, err := s.mongo.Insert(
 		ctx,
 		collection.Name,
 		appdoc.FromEvent(s.event).KVs(),
@@ -26,5 +27,12 @@ func (s *Step) Run(
 			errs.ErrExternalDependencyFailed,
 		)
 	}
+	if len(ids) == 0 {
+		return errs.Wrap(
+			errs.ErrExternalDependencyFailed,
+			"got empty ids after insert",
+		)
+	}
+	vars.Set(s.event.Hash(), ids[0])
 	return nil
 }

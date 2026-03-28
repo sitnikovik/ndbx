@@ -41,7 +41,7 @@ func TestStep_Run(t *testing.T) {
 							_ string,
 							_ ...doc.KVs,
 						) ([]string, error) {
-							return nil, nil
+							return []string{"1"}, nil
 						},
 					),
 				),
@@ -52,7 +52,14 @@ func TestStep_Run(t *testing.T) {
 				vars: step.NewVariables(),
 			},
 			want: want{
-				vars:  step.NewVariables(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						eventfx.NewTestEvent().Hash(),
+						"1",
+					)
+					return vars
+				}(),
 				err:   nil,
 				panic: false,
 			},
@@ -68,6 +75,32 @@ func TestStep_Run(t *testing.T) {
 							_ ...doc.KVs,
 						) ([]string, error) {
 							return nil, assert.AnError
+						},
+					),
+				),
+				eventfx.NewTestEvent(),
+			),
+			args: args{
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
+			},
+			want: want{
+				vars:  step.NewVariables(),
+				err:   errs.ErrExternalDependencyFailed,
+				panic: false,
+			},
+		},
+		{
+			name: "got empty ids",
+			s: impl.NewStep(
+				mongofk.NewFakeClient(
+					mongofk.WithInsert(
+						func(
+							_ context.Context,
+							_ string,
+							_ ...doc.KVs,
+						) ([]string, error) {
+							return []string{}, nil
 						},
 					),
 				),
