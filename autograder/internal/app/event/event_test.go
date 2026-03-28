@@ -390,3 +390,64 @@ func TestEvent_Costs(t *testing.T) {
 		})
 	}
 }
+
+func TestEvent_Hash(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		val string
+	}
+	tests := []struct {
+		name string
+		e    event.Event
+		want want
+	}{
+		{
+			name: "ok",
+			e: event.NewEvent(
+				event.NewID("1"),
+				event.NewContent(
+					"Title",
+					"description",
+				),
+				event.NewLocation(
+					"Main street, 13",
+				),
+				event.NewCreated(
+					time.Time{},
+					user.NewIdentity(
+						user.NewID("123"),
+					),
+				),
+				event.NewDates(
+					timex.MustParse(time.RFC3339, "2025-01-01T12:00:00Z"),
+					timex.MustParse(time.RFC3339, "2025-01-01T13:00:00Z"),
+				),
+				event.WithCosts(
+					event.NewCosts(
+						money.NewMoney(100, 0),
+					),
+				),
+			),
+			want: want{
+				val: "f2b6c37565467bfb8e4ae05c4117ce61",
+			},
+		},
+		{
+			name: "default value",
+			e:    event.Event{},
+			want: want{
+				val: "",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.val,
+				tt.e.Hash(),
+			)
+		})
+	}
+}
