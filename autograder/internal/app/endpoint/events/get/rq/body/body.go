@@ -6,6 +6,7 @@ import (
 	"github.com/sitnikovik/fluxhttp/query"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/rq/pagination"
+	"github.com/sitnikovik/ndbx/autograder/internal/console"
 )
 
 // Body represents the request body for the list events endpoint.
@@ -42,5 +43,6 @@ func (b Body) URLQuery() url.Values {
 		b.costs.URLQuery(),
 		b.pg.URLQuery(),
 	)
+	console.Log("query: %s", q.Encode())
 	return q
 }
