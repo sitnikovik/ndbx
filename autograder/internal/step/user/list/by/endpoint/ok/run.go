@@ -32,9 +32,11 @@ func (s *Step) Run(
 			err,
 		)
 	}
-	defer errs.MustBeClosed(
-		rsp.Body.Close(),
-	)
+	defer func() {
+		errs.MustBeClosed(
+			rsp.Body.Close(),
+		)
+	}()
 	err = response.AssertAll(
 		rsp,
 		response.AssertOKStatus,
