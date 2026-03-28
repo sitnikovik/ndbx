@@ -48,12 +48,31 @@ func TestStep_Run(t *testing.T) {
 				eventfx.NewTestEvent(),
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						eventfx.
+							NewTestEvent().
+							Created().
+							By().
+							Hash(),
+						"213edf",
+					)
+					return vars
+				}(),
 			},
 			want: want{
 				vars: func() step.Variables {
 					vars := step.NewVariables()
+					vars.Set(
+						eventfx.
+							NewTestEvent().
+							Created().
+							By().
+							Hash(),
+						"213edf",
+					)
 					vars.Set(
 						eventfx.NewTestEvent().Hash(),
 						"1",
@@ -81,11 +100,33 @@ func TestStep_Run(t *testing.T) {
 				eventfx.NewTestEvent(),
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						eventfx.
+							NewTestEvent().
+							Created().
+							By().
+							Hash(),
+						"213edf",
+					)
+					return vars
+				}(),
 			},
 			want: want{
-				vars:  step.NewVariables(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						eventfx.
+							NewTestEvent().
+							Created().
+							By().
+							Hash(),
+						"213edf",
+					)
+					return vars
+				}(),
 				err:   errs.ErrExternalDependencyFailed,
 				panic: false,
 			},
@@ -107,11 +148,33 @@ func TestStep_Run(t *testing.T) {
 				eventfx.NewTestEvent(),
 			),
 			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						eventfx.
+							NewTestEvent().
+							Created().
+							By().
+							Hash(),
+						"213edf",
+					)
+					return vars
+				}(),
 			},
 			want: want{
-				vars:  step.NewVariables(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						eventfx.
+							NewTestEvent().
+							Created().
+							By().
+							Hash(),
+						"213edf",
+					)
+					return vars
+				}(),
 				err:   errs.ErrExternalDependencyFailed,
 				panic: false,
 			},
