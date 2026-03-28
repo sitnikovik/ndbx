@@ -18,11 +18,7 @@ func (s *Step) Run(
 	rsp, err := s.cli.Get(
 		endpoint.
 			NewEndpoint(s.baseURL).
-			User(
-				vars.
-					MustGet(s.user.Hash()).
-					AsString(),
-			),
+			User(s.user.ID().String()),
 	)
 	if err != nil {
 		return errors.Join(

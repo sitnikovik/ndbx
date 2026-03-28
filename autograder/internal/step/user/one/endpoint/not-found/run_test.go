@@ -51,25 +51,11 @@ func TestStep_Run(t *testing.T) {
 				userfx.NewAlexSmith(),
 			),
 			args: args{
-				ctx: context.Background(),
-				vars: func() step.Variables {
-					vars := step.NewVariables()
-					vars.Set(
-						userfx.NewAlexSmith().Hash(),
-						"123",
-					)
-					return vars
-				}(),
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
 			},
 			want: want{
-				vars: func() step.Variables {
-					vars := step.NewVariables()
-					vars.Set(
-						userfx.NewAlexSmith().Hash(),
-						"123",
-					)
-					return vars
-				}(),
+				vars:  step.NewVariables(),
 				err:   nil,
 				panic: false,
 			},
@@ -103,37 +89,11 @@ func TestStep_Run(t *testing.T) {
 				),
 			),
 			args: args{
-				ctx: context.Background(),
-				vars: func() step.Variables {
-					vars := step.NewVariables()
-					vars.Set(
-						user.
-							NewUser(
-								user.NewID("1"),
-								"sams3p1ol",
-								"Sam Sepiol",
-							).
-							Hash(),
-						"123",
-					)
-					return vars
-				}(),
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
 			},
 			want: want{
-				vars: func() step.Variables {
-					vars := step.NewVariables()
-					vars.Set(
-						user.
-							NewUser(
-								user.NewID("1"),
-								"sams3p1ol",
-								"Sam Sepiol",
-							).
-							Hash(),
-						"123",
-					)
-					return vars
-				}(),
+				vars:  step.NewVariables(),
 				err:   errs.ErrExpectationFailed,
 				panic: false,
 			},
@@ -152,25 +112,11 @@ func TestStep_Run(t *testing.T) {
 				userfx.NewAlexSmith(),
 			),
 			args: args{
-				ctx: context.Background(),
-				vars: func() step.Variables {
-					vars := step.NewVariables()
-					vars.Set(
-						userfx.NewAlexSmith().Hash(),
-						"123",
-					)
-					return vars
-				}(),
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
 			},
 			want: want{
-				vars: func() step.Variables {
-					vars := step.NewVariables()
-					vars.Set(
-						userfx.NewAlexSmith().Hash(),
-						"123",
-					)
-					return vars
-				}(),
+				vars:  step.NewVariables(),
 				err:   errs.ErrHTTPFailed,
 				panic: false,
 			},
@@ -198,25 +144,11 @@ func TestStep_Run(t *testing.T) {
 				userfx.NewAlexSmith(),
 			),
 			args: args{
-				ctx: context.Background(),
-				vars: func() step.Variables {
-					vars := step.NewVariables()
-					vars.Set(
-						userfx.NewAlexSmith().Hash(),
-						"123",
-					)
-					return vars
-				}(),
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
 			},
 			want: want{
-				vars: func() step.Variables {
-					vars := step.NewVariables()
-					vars.Set(
-						userfx.NewAlexSmith().Hash(),
-						"123",
-					)
-					return vars
-				}(),
+				vars:  step.NewVariables(),
 				err:   errs.ErrExpectationFailed,
 				panic: false,
 			},
