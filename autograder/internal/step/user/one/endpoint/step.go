@@ -1,50 +1,46 @@
-package ok
+package endpoint
 
 import (
-	"io"
 	"net/http"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 )
 
 const (
 	// Name is the name of the step.
-	Name = "Create an event by endpoint"
+	Name = "Get user"
 	// Description is a brief description of the step.
-	Description = "Creates the provived event by endpoint that to be found by fitler in the next steps"
+	Description = "Retrieves the one user by the endpoint"
 )
 
 // httpClient defines the interface for making HTTP requests.
 type httpClient interface {
-	// PostJSON sends a POST request with a JSON body
-	// to the specified URL and returns the response.
-	PostJSON(
-		url string,
-		body io.Reader,
-	) (*http.Response, error)
+	// Get sends a GET request to the specified URL and returns the response.
+	Get(url string) (*http.Response, error)
 }
 
 // Step represents the HTTP create event step in the autograder process.
 type Step struct {
 	// cli is the HTTP client used to send requests.
 	cli httpClient
+	// user is the user expects to be retrieved by the endpoint.
+	user user.User
 	// baseURL is the base URL of the application.
 	baseURL string
-	// event is the event that has to be created by the target application.
-	event event.Event
 }
 
 // NewStep creates a new Step instance
-// with the provided HTTP client and application base URL.
+// with the provided HTTP client, application base URL
+// and the user to be retrieved.
 func NewStep(
 	cli httpClient,
 	baseURL string,
-	evnt event.Event,
+	user user.User,
 ) *Step {
 	return &Step{
 		cli:     cli,
 		baseURL: baseURL,
-		event:   evnt,
+		user:    user,
 	}
 }
 

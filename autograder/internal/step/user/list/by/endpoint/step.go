@@ -1,16 +1,17 @@
-package ok
+package endpoint
 
 import (
 	"net/http"
 
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/users/list/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 )
 
 const (
 	// Name is the name of the step.
-	Name = "Get user"
+	Name = "Get list of users by filter"
 	// Description is a brief description of the step.
-	Description = "Retrieves the one user by the endpoint"
+	Description = "Gets the filtered list of the users stored in the application"
 )
 
 // httpClient defines the interface for making HTTP requests.
@@ -23,24 +24,27 @@ type httpClient interface {
 type Step struct {
 	// cli is the HTTP client used to send requests.
 	cli httpClient
-	// user is the user expects to be retrieved by the endpoint.
-	user user.User
+	// users is the users expects to be retrieved by the endpoint.
+	users []user.User
+	// rq is the request body of the endpoint to filter the users.
+	rq body.Body
 	// baseURL is the base URL of the application.
 	baseURL string
 }
 
 // NewStep creates a new Step instance
-// with the provided HTTP client, application base URL
-// and the user to be retrieved.
+// with the provided HTTP client and application base URL.
 func NewStep(
 	cli httpClient,
 	baseURL string,
-	user user.User,
+	rq body.Body,
+	users []user.User,
 ) *Step {
 	return &Step{
 		cli:     cli,
 		baseURL: baseURL,
-		user:    user,
+		users:   users,
+		rq:      rq,
 	}
 }
 

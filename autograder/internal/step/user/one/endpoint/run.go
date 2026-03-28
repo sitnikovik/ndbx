@@ -1,4 +1,4 @@
-package ok
+package endpoint
 
 import (
 	"context"
@@ -19,9 +19,9 @@ func (s *Step) Run(
 		endpoint.
 			NewEndpoint(s.baseURL).
 			User(
-					vars.
-						MustGet(s.user.Hash()).
-						AsString(),
+				vars.
+					MustGet(s.user.Hash()).
+					AsString(),
 			),
 	)
 	if err != nil {

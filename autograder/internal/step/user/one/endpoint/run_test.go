@@ -1,4 +1,4 @@
-package ok_test
+package endpoint_test
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
-	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint/ok"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )

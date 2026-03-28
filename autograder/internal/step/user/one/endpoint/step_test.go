@@ -1,11 +1,11 @@
-package ok_test
+package endpoint_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	endpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/one/endpoint/ok"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/endpoint"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )
@@ -14,27 +14,23 @@ func TestStep_Name(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name      string
-		step      *endpoint.Step
+		step      *impl.Step
 		want      string
 		wantPanic bool
 	}{
 		{
 			name: "ok",
-			step: endpoint.NewStep(
+			step: impl.NewStep(
 				httpxfk.NewFakeClient(),
 				"/localhost",
 				userfx.NewSamSepiol(),
 			),
-			want: endpoint.Name,
+			want: impl.Name,
 		},
 		{
 			name: "default fields",
-			step: endpoint.NewStep(
-				nil,
-				"",
-				userfx.NewSamSepiol(),
-			),
-			want: endpoint.Name,
+			step: &impl.Step{},
+			want: impl.Name,
 		},
 	}
 	for _, tt := range tests {
@@ -53,27 +49,23 @@ func TestStep_Description(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name      string
-		step      *endpoint.Step
+		step      *impl.Step
 		want      string
 		wantPanic bool
 	}{
 		{
 			name: "ok",
-			step: endpoint.NewStep(
+			step: impl.NewStep(
 				httpxfk.NewFakeClient(),
 				"/localhost",
 				userfx.NewSamSepiol(),
 			),
-			want: endpoint.Description,
+			want: impl.Description,
 		},
 		{
 			name: "default fields",
-			step: endpoint.NewStep(
-				nil,
-				"",
-				userfx.NewSamSepiol(),
-			),
-			want: endpoint.Description,
+			step: &impl.Step{},
+			want: impl.Description,
 		},
 	}
 	for _, tt := range tests {

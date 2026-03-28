@@ -1,13 +1,11 @@
-package ok_test
+package endpoint_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/users/list/rq/body"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
-	endpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/list/by/endpoint/ok"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/one/endpoint"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )
@@ -16,26 +14,27 @@ func TestStep_Name(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name      string
-		step      *endpoint.Step
+		step      *impl.Step
 		want      string
 		wantPanic bool
 	}{
 		{
 			name: "ok",
-			step: endpoint.NewStep(
+			step: impl.NewStep(
 				httpxfk.NewFakeClient(),
 				"/localhost",
-				body.NewBody(),
-				[]user.User{
-					userfx.NewSamSepiol(),
-				},
+				userfx.NewSamSepiol(),
 			),
-			want: endpoint.Name,
+			want: impl.Name,
 		},
 		{
 			name: "default fields",
-			step: &endpoint.Step{},
-			want: endpoint.Name,
+			step: impl.NewStep(
+				nil,
+				"",
+				userfx.NewSamSepiol(),
+			),
+			want: impl.Name,
 		},
 	}
 	for _, tt := range tests {
@@ -54,26 +53,27 @@ func TestStep_Description(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name      string
-		step      *endpoint.Step
+		step      *impl.Step
 		want      string
 		wantPanic bool
 	}{
 		{
 			name: "ok",
-			step: endpoint.NewStep(
+			step: impl.NewStep(
 				httpxfk.NewFakeClient(),
 				"/localhost",
-				body.NewBody(),
-				[]user.User{
-					userfx.NewSamSepiol(),
-				},
+				userfx.NewSamSepiol(),
 			),
-			want: endpoint.Description,
+			want: impl.Description,
 		},
 		{
 			name: "default fields",
-			step: &endpoint.Step{},
-			want: endpoint.Description,
+			step: impl.NewStep(
+				nil,
+				"",
+				userfx.NewSamSepiol(),
+			),
+			want: impl.Description,
 		},
 	}
 	for _, tt := range tests {

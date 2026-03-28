@@ -1,40 +1,41 @@
-package ok_test
+package endpoint_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	endpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/endpoint/ok"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/users/list/rq/body"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/list/by/endpoint"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
-	eventfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/event"
+	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )
 
 func TestStep_Name(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name      string
-		step      *endpoint.Step
+		step      *impl.Step
 		want      string
 		wantPanic bool
 	}{
 		{
 			name: "ok",
-			step: endpoint.NewStep(
+			step: impl.NewStep(
 				httpxfk.NewFakeClient(),
 				"/localhost",
-				eventfx.NewTestEvent(),
+				body.NewBody(),
+				[]user.User{
+					userfx.NewSamSepiol(),
+				},
 			),
-			want: endpoint.Name,
+			want: impl.Name,
 		},
 		{
 			name: "default fields",
-			step: endpoint.NewStep(
-				nil,
-				"",
-				eventfx.NewTestEvent(),
-			),
-			want: endpoint.Name,
+			step: &impl.Step{},
+			want: impl.Name,
 		},
 	}
 	for _, tt := range tests {
@@ -53,27 +54,26 @@ func TestStep_Description(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name      string
-		step      *endpoint.Step
+		step      *impl.Step
 		want      string
 		wantPanic bool
 	}{
 		{
 			name: "ok",
-			step: endpoint.NewStep(
+			step: impl.NewStep(
 				httpxfk.NewFakeClient(),
 				"/localhost",
-				eventfx.NewTestEvent(),
+				body.NewBody(),
+				[]user.User{
+					userfx.NewSamSepiol(),
+				},
 			),
-			want: endpoint.Description,
+			want: impl.Description,
 		},
 		{
 			name: "default fields",
-			step: endpoint.NewStep(
-				nil,
-				"",
-				eventfx.NewTestEvent(),
-			),
-			want: endpoint.Description,
+			step: &impl.Step{},
+			want: impl.Description,
 		},
 	}
 	for _, tt := range tests {

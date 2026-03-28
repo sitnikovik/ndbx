@@ -1,35 +1,37 @@
-package ok
+package endpoint
 
 import (
+	"io"
 	"net/http"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/users/list/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 )
 
 const (
 	// Name is the name of the step.
-	Name = "Get list of users by filter"
+	Name = "Create a user by endpoint"
 	// Description is a brief description of the step.
-	Description = "Gets the filtered list of the users stored in the application"
+	Description = "Creates the provived user by the endpoint that to be found by fitler in the next steps"
 )
 
 // httpClient defines the interface for making HTTP requests.
 type httpClient interface {
-	// Get sends a GET request to the specified URL and returns the response.
-	Get(url string) (*http.Response, error)
+	// PostJSON sends a POST request with a JSON body
+	// to the specified URL and returns the response.
+	PostJSON(
+		url string,
+		body io.Reader,
+	) (*http.Response, error)
 }
 
 // Step represents the HTTP create event step in the autograder process.
 type Step struct {
 	// cli is the HTTP client used to send requests.
 	cli httpClient
-	// users is the users expects to be retrieved by the endpoint.
-	users []user.User
-	// rq is the request body of the endpoint to filter the users.
-	rq body.Body
 	// baseURL is the base URL of the application.
 	baseURL string
+	// usr is the user that has to be created by the target application.
+	usr user.User
 }
 
 // NewStep creates a new Step instance
@@ -37,14 +39,12 @@ type Step struct {
 func NewStep(
 	cli httpClient,
 	baseURL string,
-	rq body.Body,
-	users []user.User,
+	usr user.User,
 ) *Step {
 	return &Step{
 		cli:     cli,
 		baseURL: baseURL,
-		users:   users,
-		rq:      rq,
+		usr:     usr,
 	}
 }
 

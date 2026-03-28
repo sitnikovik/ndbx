@@ -1,4 +1,4 @@
-package ok_test
+package endpoint_test
 
 import (
 	"context"
@@ -14,7 +14,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
-	endpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/endpoint/ok"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/endpoint"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	eventfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/event"
 )
@@ -32,13 +32,13 @@ func TestStep_Run(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		s    *endpoint.Step
+		s    *impl.Step
 		args args
 		want want
 	}{
 		{
 			name: "ok",
-			s: endpoint.NewStep(
+			s: impl.NewStep(
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -83,7 +83,7 @@ func TestStep_Run(t *testing.T) {
 		},
 		{
 			name: "http failed",
-			s: endpoint.NewStep(
+			s: impl.NewStep(
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -106,7 +106,7 @@ func TestStep_Run(t *testing.T) {
 		},
 		{
 			name: "unexpected response",
-			s: endpoint.NewStep(
+			s: impl.NewStep(
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -136,7 +136,7 @@ func TestStep_Run(t *testing.T) {
 		},
 		{
 			name: "created a new session cookie",
-			s: endpoint.NewStep(
+			s: impl.NewStep(
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -181,7 +181,7 @@ func TestStep_Run(t *testing.T) {
 		},
 		{
 			name: "invalid session in cookie",
-			s: endpoint.NewStep(
+			s: impl.NewStep(
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -226,7 +226,7 @@ func TestStep_Run(t *testing.T) {
 		},
 		{
 			name: "unexpected session in cookie",
-			s: endpoint.NewStep(
+			s: impl.NewStep(
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -271,7 +271,7 @@ func TestStep_Run(t *testing.T) {
 		},
 		{
 			name: "got unexpected json body",
-			s: endpoint.NewStep(
+			s: impl.NewStep(
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
