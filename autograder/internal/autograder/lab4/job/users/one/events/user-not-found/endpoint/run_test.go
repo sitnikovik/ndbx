@@ -9,12 +9,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
-	impl "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/users/one/not-found/endpoint"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/users/one/events/user-not-found/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
-	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )
 
 func TestStep_Run(t *testing.T) {
@@ -52,7 +50,6 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost:8000",
-				userfx.NewAlexSmith(),
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -86,11 +83,6 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost:8000",
-				user.NewUser(
-					user.NewID("1"),
-					"sams3p1ol",
-					"Sam Sepiol",
-				),
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -113,7 +105,6 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost:8000",
-				userfx.NewAlexSmith(),
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -139,7 +130,6 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost:8000",
-				userfx.NewAlexSmith(),
 			),
 			args: args{
 				ctx:  context.Background(),

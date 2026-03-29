@@ -9,12 +9,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
-	impl "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/users/one/not-found/endpoint"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/not-found/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
-	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )
 
 func TestStep_Run(t *testing.T) {
@@ -24,8 +22,8 @@ func TestStep_Run(t *testing.T) {
 		vars step.Variables
 	}
 	type want struct {
-		vars  step.Variables
 		err   error
+		vars  step.Variables
 		panic bool
 	}
 	tests := []struct {
@@ -35,12 +33,12 @@ func TestStep_Run(t *testing.T) {
 		want want
 	}{
 		{
-			name: "ok not found",
+			name: "not found with message",
 			s: impl.NewStep(
 				httpxfk.NewFakeClient(
-					httpxfk.WithGet(
-						func(_ string) (*http.Response, error) {
-							v := `{"message":"Not found"}`
+					httpxfk.WithPatch(
+						func(_ string, _ io.Reader) (*http.Response, error) {
+							v := `{"message":"Not found with the id. Are sure that you have the event you try to change."}`
 							return &http.Response{
 								StatusCode: http.StatusNotFound,
 								Body: func() io.ReadCloser {
@@ -51,86 +49,24 @@ func TestStep_Run(t *testing.T) {
 						},
 					),
 				),
-				"http://localhost:8000",
-				userfx.NewAlexSmith(),
+				"http://localhost",
 			),
 			args: args{
 				ctx:  context.Background(),
 				vars: step.NewVariables(),
 			},
 			want: want{
-				vars:  step.NewVariables(),
 				err:   nil,
-				panic: false,
-			},
-		},
-		{
-			name: "found",
-			s: impl.NewStep(
-				httpxfk.NewFakeClient(
-					httpxfk.WithGet(
-						func(_ string) (*http.Response, error) {
-							v := `{` +
-								`"id": "123",` +
-								`"username": "sams3p1ol",` +
-								`"full_name": "Sam Sepiol"` +
-								`}`
-							return &http.Response{
-								StatusCode: http.StatusOK,
-								Body: func() io.ReadCloser {
-									return io.NopCloser(strings.NewReader(v))
-								}(),
-								ContentLength: int64(len(v)),
-							}, nil
-						},
-					),
-				),
-				"http://localhost:8000",
-				user.NewUser(
-					user.NewID("1"),
-					"sams3p1ol",
-					"Sam Sepiol",
-				),
-			),
-			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
-			},
-			want: want{
 				vars:  step.NewVariables(),
-				err:   errs.ErrExpectationFailed,
 				panic: false,
 			},
 		},
 		{
-			name: "http failed",
+			name: "not found without body",
 			s: impl.NewStep(
 				httpxfk.NewFakeClient(
-					httpxfk.WithGet(
-						func(_ string) (*http.Response, error) {
-							return nil, assert.AnError
-						},
-					),
-				),
-				"http://localhost:8000",
-				userfx.NewAlexSmith(),
-			),
-			args: args{
-				ctx:  context.Background(),
-				vars: step.NewVariables(),
-			},
-			want: want{
-				vars:  step.NewVariables(),
-				err:   errs.ErrHTTPFailed,
-				panic: false,
-			},
-		},
-		{
-			name: "not found but got empty body",
-			s: impl.NewStep(
-				httpxfk.NewFakeClient(
-					httpxfk.WithGet(
-						func(_ string) (*http.Response, error) {
+					httpxfk.WithPatch(
+						func(_ string, _ io.Reader) (*http.Response, error) {
 							return &http.Response{
 								StatusCode: http.StatusNotFound,
 								Body:       http.NoBody,
@@ -138,16 +74,97 @@ func TestStep_Run(t *testing.T) {
 						},
 					),
 				),
-				"http://localhost:8000",
-				userfx.NewAlexSmith(),
+				"http://localhost",
 			),
 			args: args{
 				ctx:  context.Background(),
 				vars: step.NewVariables(),
 			},
 			want: want{
-				vars:  step.NewVariables(),
 				err:   errs.ErrExpectationFailed,
+				vars:  step.NewVariables(),
+				panic: false,
+			},
+		},
+		{
+			name: "http failed",
+			s: impl.NewStep(
+				httpxfk.NewFakeClient(
+					httpxfk.WithPatch(
+						func(_ string, _ io.Reader) (*http.Response, error) {
+							return nil, assert.AnError
+						},
+					),
+				),
+				"http://localhost",
+			),
+			args: args{
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
+			},
+			want: want{
+				err:   errs.ErrHTTPFailed,
+				vars:  step.NewVariables(),
+				panic: false,
+			},
+		},
+		{
+			name: "unexpected ok response",
+			s: impl.NewStep(
+				httpxfk.NewFakeClient(
+					httpxfk.WithPatch(
+						func(_ string, _ io.Reader) (*http.Response, error) {
+							return &http.Response{
+								StatusCode: http.StatusOK,
+								Body:       http.NoBody,
+								Header: http.Header{
+									"Set-Cookie": []string{
+										"X-Session-Id=0123456789abcdef0123456789abcdef; HttpOnly; Max-Age=3600; Secure=true",
+									},
+								},
+							}, nil
+						},
+					),
+				),
+				"http://localhost",
+			),
+			args: args{
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
+			},
+			want: want{
+				err:   errs.ErrInvalidHTTPStatus,
+				vars:  step.NewVariables(),
+				panic: false,
+			},
+		},
+		{
+			name: "changed",
+			s: impl.NewStep(
+				httpxfk.NewFakeClient(
+					httpxfk.WithPatch(
+						func(_ string, _ io.Reader) (*http.Response, error) {
+							return &http.Response{
+								StatusCode: http.StatusNoContent,
+								Body:       http.NoBody,
+								Header: http.Header{
+									"Set-Cookie": []string{
+										"X-Session-Id=0123456789abcdef0123456789abcdef; HttpOnly; Max-Age=3600; Secure=true",
+									},
+								},
+							}, nil
+						},
+					),
+				),
+				"http://localhost",
+			),
+			args: args{
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
+			},
+			want: want{
+				err:   errs.ErrInvalidHTTPStatus,
+				vars:  step.NewVariables(),
 				panic: false,
 			},
 		},
@@ -162,11 +179,6 @@ func TestStep_Run(t *testing.T) {
 						tt.args.vars,
 					)
 				})
-				assert.Equal(
-					t,
-					tt.want.vars,
-					tt.args.vars,
-				)
 				return
 			}
 			assert.ErrorIs(
@@ -176,11 +188,6 @@ func TestStep_Run(t *testing.T) {
 					tt.args.vars,
 				),
 				tt.want.err,
-			)
-			assert.Equal(
-				t,
-				tt.want.vars,
-				tt.args.vars,
 			)
 		})
 	}

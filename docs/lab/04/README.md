@@ -67,7 +67,9 @@ Content-Length: 0
 ```http
 HTTP/1.1 404 Not Found
 Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
-Content-Length: 0
+Content-Type: application/json
+Content-Length: 81
+{"message": "Not found. Be sure that event exists and you are the organizer"}
 ```
 
 **Ответ (если какой-то из параметров невалиден):**
@@ -220,6 +222,8 @@ Content-Length: 591
 ```http
 HTTP/1.1 404 Not Found
 Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
+Content-Length: 24
+{"message": "Not found"}
 Content-Length: 0
 ```
 
@@ -324,6 +328,8 @@ Content-Length: 117
 ```http
 HTTP/1.1 404 Not Found
 Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f97d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
+Content-Length: 24
+{"message": "Not found"}
 Content-Length: 0
 ```
 
@@ -383,6 +389,16 @@ Content-Length: 38
     "events": [],
     "count": 0
 }
+```
+
+**Ответ (пользователь не найден):**
+
+```http
+HTTP/1.1 404 Not Found
+Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f97d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
+Content-Type: application/json
+Content-Length: 29
+{"message": "User not found"}
 ```
 
 ### Шардирование

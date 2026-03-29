@@ -10,7 +10,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 )
 
-// Run tries to get a non-existent user and validates the response.
+// Run tries to get events of a non-existent user and validates the response.
 func (s *Step) Run(
 	_ context.Context,
 	_ step.Variables,
@@ -18,7 +18,7 @@ func (s *Step) Run(
 	rsp, err := s.cli.Get(
 		endpoint.
 			NewEndpoint(s.baseURL).
-			User("2ip3ue32-9ejnojkdsdp932u8eji"),
+			UserEvents("2ip3ue32-9ejnojkdsdp932u8eji"),
 	)
 	if err != nil {
 		return errors.Join(
