@@ -391,6 +391,16 @@ Content-Length: 38
 }
 ```
 
+**Ответ (пользователь не найден):**
+
+```http
+HTTP/1.1 404 Not Found
+Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f97d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
+Content-Type: application/json
+Content-Length: 29
+{"message": "User not found"}
+```
+
 ### Шардирование
 
 Реализуйте шардирование коллекции `events` по хэш-ключу `created_by` (id пользователя, который создал мероприятие).
