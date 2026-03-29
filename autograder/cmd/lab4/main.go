@@ -29,6 +29,7 @@ import (
 	updateEventNotFoundEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/not-found/endpoint"
 	updateEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/ok/endpoint"
 	updateEventUnauthEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/unauth/endpoint"
+	listNXUserEventsEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/users/one/events/user-not-found/endpoint"
 	getNXUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/users/one/not-found/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/httpx"
@@ -381,6 +382,10 @@ func main() {
 					"undefined",
 					"undefined user",
 				),
+			),
+			listNXUserEventsEndpoint.NewStep(
+				httpcli,
+				baseURL,
 			),
 			listUserEventsEndpoint.NewStep(
 				httpcli,
