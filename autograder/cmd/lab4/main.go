@@ -25,6 +25,7 @@ import (
 	listEventsByEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/list/by/all/endpoint"
 	getNXEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/one/not-found/endpoint"
 	getEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/one/ok/endpoint"
+	updateEventForbiddenEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/forbidden/endpoint"
 	updateEventNotFoundEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/not-found/endpoint"
 	updateEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/ok/endpoint"
 	updateEventUnauthEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/unauth/endpoint"
@@ -313,6 +314,11 @@ func main() {
 			getNXEventEndpoint.NewStep(
 				httpcli,
 				baseURL,
+			),
+			updateEventForbiddenEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				veniceClassicsEvents[0],
 			),
 			listUsersEndpoint.NewStep(
 				httpcli,
