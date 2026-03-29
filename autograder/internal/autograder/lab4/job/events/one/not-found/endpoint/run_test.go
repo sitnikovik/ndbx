@@ -38,9 +38,13 @@ func TestStep_Run(t *testing.T) {
 				httpfk.NewFakeClient(
 					httpfk.WithGet(
 						func(_ string) (*http.Response, error) {
+							v := `{"message":"Not found"}`
 							return &http.Response{
 								StatusCode: http.StatusNotFound,
-								Body:       http.NoBody,
+								Body: func() io.ReadCloser {
+									return io.NopCloser(strings.NewReader(v))
+								}(),
+								ContentLength: int64(len(v)),
 							}, nil
 						},
 					),

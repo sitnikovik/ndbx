@@ -35,7 +35,7 @@ func (s *Step) Run(
 	err = response.AssertAll(
 		rsp,
 		response.AssertNotFoundStatus,
-		response.AssertEmptyContent,
+		response.AssertNotEmptyContent,
 	)
 	if err != nil {
 		return errs.Wrap(err, "got unexpected response")

@@ -40,9 +40,13 @@ func TestStep_Run(t *testing.T) {
 				httpxfk.NewFakeClient(
 					httpxfk.WithGet(
 						func(_ string) (*http.Response, error) {
+							v := `{"message":"Not found"}`
 							return &http.Response{
 								StatusCode: http.StatusNotFound,
-								Body:       http.NoBody,
+								Body: func() io.ReadCloser {
+									return io.NopCloser(strings.NewReader(v))
+								}(),
+								ContentLength: int64(len(v)),
 							}, nil
 						},
 					),
@@ -122,20 +126,14 @@ func TestStep_Run(t *testing.T) {
 			},
 		},
 		{
-			name: "not found but got non-empty body",
+			name: "not found but got empty body",
 			s: impl.NewStep(
 				httpxfk.NewFakeClient(
 					httpxfk.WithGet(
 						func(_ string) (*http.Response, error) {
-							v := `{` +
-								`"message": "not found"` +
-								`}`
 							return &http.Response{
 								StatusCode: http.StatusNotFound,
-								Body: func() io.ReadCloser {
-									return io.NopCloser(strings.NewReader(v))
-								}(),
-								ContentLength: int64(len(v)),
+								Body:       http.NoBody,
 							}, nil
 						},
 					),
