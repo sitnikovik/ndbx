@@ -25,6 +25,7 @@ import (
 	listEventsByEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/list/by/all/endpoint"
 	getNXEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/one/not-found/endpoint"
 	getEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/one/ok/endpoint"
+	updateEventNotFoundEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/not-found/endpoint"
 	updateEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/ok/endpoint"
 	updateEventUnauthEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/events/update/unauth/endpoint"
 	getNXUserEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab4/job/users/one/not-found/endpoint"
@@ -239,6 +240,10 @@ func main() {
 				baseURL,
 			),
 			createEventEndpoint.NewStep(
+				httpcli,
+				baseURL,
+			),
+			updateEventNotFoundEndpoint.NewStep(
 				httpcli,
 				baseURL,
 			),
