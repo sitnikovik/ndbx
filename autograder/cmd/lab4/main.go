@@ -401,6 +401,13 @@ func main() {
 					wonderLandEvents[4],
 				},
 			),
+			listUserEventsEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				samwiseGamgee,
+				eventsrq.NewBody(),
+				[]event.Event{},
+			),
 			logoutEndpoint.NewStep(
 				httpcli,
 				baseURL,
