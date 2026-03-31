@@ -264,3 +264,67 @@ func TestVars_Set(t *testing.T) {
 		})
 	}
 }
+
+func TestVars_Del(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		name string
+	}
+	type want struct {
+		v step.Variables
+	}
+	tests := []struct {
+		name string
+		v    step.Variables
+		args args
+		want want
+	}{
+		{
+			name: "existing variable",
+			v: func() step.Variables {
+				v := step.NewVariables()
+				v.Set("var1", 123)
+				return v
+			}(),
+			args: args{name: "var1"},
+			want: want{
+				v: step.NewVariables(),
+			},
+		},
+		{
+			name: "non-existing variable",
+			v: func() step.Variables {
+				v := step.NewVariables()
+				v.Set("var1", 123)
+				return v
+			}(),
+			args: args{name: "var2"},
+			want: want{
+				v: func() step.Variables {
+					v := step.NewVariables()
+					v.Set("var1", 123)
+					return v
+				}(),
+			},
+		},
+		{
+			name: "default value",
+			v:    step.NewVariables(),
+			args: args{name: "var3"},
+			want: want{
+				v: step.NewVariables(),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			tt.v.Del(tt.args.name)
+			assert.Equal(
+				t,
+				tt.want.v,
+				tt.v,
+			)
+		})
+	}
+}
