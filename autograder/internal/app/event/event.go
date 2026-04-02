@@ -4,6 +4,8 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"time"
+
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/reaction"
 )
 
 // Event represents an event.
@@ -20,6 +22,8 @@ type Event struct {
 	costs Costs
 	// qty represents the quantity of attendees for the event.
 	qty Quantity
+	// reactions represents counters of the users' reactions of the event.
+	reactions reaction.Reactions
 	// id is the unique identifier for the event.
 	id ID
 }
@@ -74,6 +78,11 @@ func (e Event) Dates() Dates {
 // Quantity returns the quantity of attendees for the event.
 func (e Event) Quantity() Quantity {
 	return e.qty
+}
+
+// Reactions returns the counters of the reactions for the event.
+func (e Event) Reactions() reaction.Reactions {
+	return e.reactions
 }
 
 // ID returns the unique identifier for the event.

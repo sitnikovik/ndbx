@@ -7,8 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/reaction"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/money"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/reaction/count"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
+	eventfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/event"
+	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
 
@@ -447,6 +451,78 @@ func TestEvent_Hash(t *testing.T) {
 				t,
 				tt.want.val,
 				tt.e.Hash(),
+			)
+		})
+	}
+}
+
+func TestEvent_Reactions(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		val reaction.Reactions
+	}
+	tests := []struct {
+		name string
+		e    event.Event
+		want want
+	}{
+		{
+			name: "with reactions",
+			e: eventfx.
+				NewBirthdayParty(
+					event.NewDates(
+						timex.MustRFC3339("2025-01-01T12:00:00Z"),
+						timex.MustRFC3339("2025-01-01T13:00:00Z"),
+					),
+					timex.MustRFC3339("2024-12-14T13:00:00Z"),
+					userfx.NewAlexSmith(),
+				).
+				CopyWith(
+					event.WithReactions(
+						reaction.NewReactions(
+							reaction.WithCounts(
+								count.NewCounts(
+									count.WithLikes(24),
+									count.WithLikes(1),
+								),
+							),
+						),
+					),
+				),
+			want: want{
+				val: reaction.NewReactions(
+					reaction.WithCounts(
+						count.NewCounts(
+							count.WithLikes(24),
+							count.WithLikes(1),
+						),
+					),
+				),
+			},
+		},
+		{
+			name: "without reactions",
+			e: eventfx.
+				NewBirthdayParty(
+					event.NewDates(
+						timex.MustRFC3339("2025-01-01T12:00:00Z"),
+						timex.MustRFC3339("2025-01-01T13:00:00Z"),
+					),
+					timex.MustRFC3339("2024-12-14T13:00:00Z"),
+					userfx.NewAlexSmith(),
+				),
+			want: want{
+				val: reaction.NewReactions(),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.val,
+				tt.e.Reactions(),
 			)
 		})
 	}
