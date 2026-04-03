@@ -33,6 +33,9 @@ func (c *Client) MustConnect() {
 // Connect connects to the Cassandra database
 // and returns an error if the connection fails.
 func (c *Client) Connect() error {
+	if c.cluster != nil {
+		return nil
+	}
 	cluster := gocql.NewCluster(
 		c.cfg.
 			Connection().
