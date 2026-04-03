@@ -6,9 +6,10 @@ import "context"
 func (c *Client) ExecQuery(
 	_ context.Context,
 	query string,
+	args ...any,
 ) error {
 	c.MustConnect()
 	return c.cluster.
-		Query(query).
+		Query(query, args...).
 		Exec()
 }
