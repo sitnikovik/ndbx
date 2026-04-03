@@ -20,3 +20,24 @@ services:
       interval: 1s
       timeout: 3s
       retries: 5
+  cassandra-test:
+    image: cassandra:4.1
+    environment:
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra-test
+      - CASSANDRA_START_RPC=false
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=128M
+      - CASSANDRA_ENABLE_USER_DEFINED_FUNCTIONS=true
+    ports:
+      - "${CASSANDRA_PORT}:${CASSANDRA_PORT}"
+    volumes:
+      - cassandra_data_test:/var/lib/cassandra
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -u cassandra -p cassandra cassandra-test 9042 -e 'DESCRIBE KEYSPACES' && exit 0 || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    container_name: cassandra-test
+
+volumes:
+  cassandra_data_test:

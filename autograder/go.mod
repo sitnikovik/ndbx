@@ -3,13 +3,16 @@ module github.com/sitnikovik/ndbx/autograder
 go 1.23.4
 
 require (
+	github.com/sitnikovik/fluxhttp v0.0.0-20250317190557-944d960fec05
 	github.com/sitnikovik/paints v0.1.1
 	go.mongodb.org/mongo-driver/v2 v2.5.0
 )
 
 require (
+	github.com/gocql/gocql v1.7.0 // indirect
+	github.com/golang/snappy v0.0.3 // indirect
+	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/klauspost/compress v1.17.6 // indirect
-	github.com/sitnikovik/fluxhttp v0.0.0-20250317190557-944d960fec05 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.2.0 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
@@ -17,6 +20,7 @@ require (
 	golang.org/x/crypto v0.33.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
+	gopkg.in/inf.v0 v0.9.1 // indirect
 )
 
 require (

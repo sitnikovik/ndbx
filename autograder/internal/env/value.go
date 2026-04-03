@@ -3,6 +3,7 @@ package env
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/paints/log"
 )
@@ -65,4 +66,9 @@ func (v Value) MustInt() int {
 		))
 	}
 	return i
+}
+
+// Strings parses the environment variable value as a comma-separated list of strings.
+func (v Value) Strings() []string {
+	return strings.Split(v.String(), ",")
 }
