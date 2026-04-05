@@ -8,11 +8,8 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/money"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder"
-	logoutEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/auth/logout/ok/endpoint"
-	authEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/auth/ok/endpoint"
 	mongoSetup "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/setup/mongo"
 	redisSetup "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/setup/redis"
-	signupEndpoint "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/sign-up/ok/endpoint"
 	mongoTeardown "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/teardown/mongo"
 	redisTeardown "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/teardown/redis"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
@@ -29,7 +26,9 @@ import (
 	likeOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/like/endpoint"
 	getEventLikesRedis "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/like/redis"
 	eventLikesCassandra "github.com/sitnikovik/ndbx/autograder/internal/step/reaction/event/like/list/cassandra"
-	createOneUserMongo "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/one/mongo"
+	login "github.com/sitnikovik/ndbx/autograder/internal/step/user/auth/login"
+	logout "github.com/sitnikovik/ndbx/autograder/internal/step/user/auth/logout"
+	signup "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/sign-up"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
@@ -59,6 +58,10 @@ func main() {
 	)
 	samSepiol := userfx.NewSamSepiol()
 	johnDoe := userfx.NewJohnDoe()
+	alexSmith := userfx.NewAlexSmith()
+	johnSmith := userfx.NewJohnSmith()
+	samwiseGamgee := userfx.NewSamwiseGamgee()
+	pwd := "supa_dxpa_pwd"
 	wonderLandEvents := []event.Event{
 		event.NewEvent(
 			event.NewID("1"),
@@ -135,37 +138,6 @@ func main() {
 			),
 		),
 	}
-	likeEventsEndpoints := make([]step.Runner, 0, 24)
-	for range 14 {
-		likeEventsEndpoints = append(
-			likeEventsEndpoints,
-			likeOneEventEndpoint.NewStep(
-				httpcli,
-				baseURL,
-				wonderLandEvents[0],
-			),
-		)
-	}
-	for range 8 {
-		likeEventsEndpoints = append(
-			likeEventsEndpoints,
-			likeOneEventEndpoint.NewStep(
-				httpcli,
-				baseURL,
-				wonderLandEvents[1],
-			),
-		)
-	}
-	for range 2 {
-		likeEventsEndpoints = append(
-			likeEventsEndpoints,
-			likeOneEventEndpoint.NewStep(
-				httpcli,
-				baseURL,
-				wonderLandEvents[2],
-			),
-		)
-	}
 	err := autograder.
 		NewAutograder(
 			cassandraSetup.NewStep(
@@ -177,25 +149,40 @@ func main() {
 			redisSetup.NewStep(
 				rediscli,
 			),
-			signupEndpoint.NewStep(
+			signup.NewStep(
 				httpcli,
-				baseURL,
-			),
-			authEndpoint.NewStep(
-				httpcli,
-				baseURL,
-			),
-			logoutEndpoint.NewStep(
-				httpcli,
-				baseURL,
-			),
-			createOneUserMongo.NewStep(
 				mongocli,
+				baseURL,
 				samSepiol,
+				pwd,
 			),
-			createOneUserMongo.NewStep(
+			signup.NewStep(
+				httpcli,
 				mongocli,
+				baseURL,
 				johnDoe,
+				pwd,
+			),
+			signup.NewStep(
+				httpcli,
+				mongocli,
+				baseURL,
+				alexSmith,
+				pwd,
+			),
+			signup.NewStep(
+				httpcli,
+				mongocli,
+				baseURL,
+				johnSmith,
+				pwd,
+			),
+			signup.NewStep(
+				httpcli,
+				mongocli,
+				baseURL,
+				samwiseGamgee,
+				pwd,
 			),
 			createOneEventMongo.NewStep(
 				mongocli,
@@ -209,45 +196,113 @@ func main() {
 				mongocli,
 				wonderLandEvents[2],
 			),
-			step.NewList(
-				likeEventsEndpoints...,
+			login.NewStep(
+				httpcli,
+				baseURL,
+				samSepiol,
+				pwd,
+			),
+			likeOneEventEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				wonderLandEvents[0],
+			),
+			likeOneEventEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				wonderLandEvents[1],
+			),
+			likeOneEventEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				wonderLandEvents[2],
+			),
+			logout.NewStep(
+				httpcli,
+				baseURL,
+			),
+			login.NewStep(
+				httpcli,
+				baseURL,
+				johnDoe,
+				pwd,
+			),
+			likeOneEventEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				wonderLandEvents[0],
+			),
+			logout.NewStep(
+				httpcli,
+				baseURL,
+			),
+			login.NewStep(
+				httpcli,
+				baseURL,
+				alexSmith,
+				pwd,
+			),
+			likeOneEventEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				wonderLandEvents[0],
+			),
+			likeOneEventEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				wonderLandEvents[2],
+			),
+			logout.NewStep(
+				httpcli,
+				baseURL,
+			),
+			login.NewStep(
+				httpcli,
+				baseURL,
+				samwiseGamgee,
+				pwd,
+			),
+			likeOneEventEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				wonderLandEvents[0],
+			),
+			logout.NewStep(
+				httpcli,
+				baseURL,
 			),
 			getEventLikesRedis.NewStep(
 				rediscli,
 				wonderLandEvents[0],
-				24,
+				4,
 				reactonTTL,
 			),
 			getEventLikesRedis.NewStep(
 				rediscli,
 				wonderLandEvents[1],
-				24,
+				4,
 				reactonTTL,
 			),
 			getEventLikesRedis.NewStep(
 				rediscli,
 				wonderLandEvents[2],
-				24,
+				4,
 				reactonTTL,
 			),
 			eventLikesCassandra.NewStep(
 				cassandracli,
 				wonderLandEvents[0],
-				14,
-			),
-			eventLikesCassandra.NewStep(
-				cassandracli,
-				wonderLandEvents[1],
-				8,
-			),
-			eventLikesCassandra.NewStep(
-				cassandracli,
-				wonderLandEvents[2],
 				2,
 			),
-			logoutEndpoint.NewStep(
-				httpcli,
-				baseURL,
+			eventLikesCassandra.NewStep(
+				cassandracli,
+				wonderLandEvents[1],
+				1,
+			),
+			eventLikesCassandra.NewStep(
+				cassandracli,
+				wonderLandEvents[2],
+				1,
 			),
 			mongoTeardown.NewStep(
 				mongocli,
@@ -261,6 +316,6 @@ func main() {
 		).
 		Run(ctx, vars)
 	if err != nil {
-		console.Fatal("Lab 4 autograder failed: %v", err)
+		console.Fatal("Lab 5 autograder failed: %v", err)
 	}
 }
