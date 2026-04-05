@@ -39,5 +39,11 @@ func (c Config) Validate() error {
 			err,
 		)
 	}
+	if c.app.Event().Reactions().TTL() <= 0 {
+		return errs.Wrap(
+			errs.ErrInvalidConfig,
+			"event reactions TTL must be greater than zero",
+		)
+	}
 	return nil
 }

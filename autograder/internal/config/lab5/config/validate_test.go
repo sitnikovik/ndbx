@@ -8,6 +8,8 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/client/cassandra/consistency"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/app/event"
+	reaction "github.com/sitnikovik/ndbx/autograder/internal/config/app/reaction/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user/session"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/cassandra"
@@ -58,6 +60,11 @@ func TestConfig_Validate(t *testing.T) {
 					),
 					"localhost",
 					8080,
+					app.WithEvent(
+						event.NewConfig(
+							reaction.NewConfig(1*time.Minute),
+						),
+					),
 				),
 			),
 			wantErr: nil,
@@ -131,6 +138,48 @@ func TestConfig_Validate(t *testing.T) {
 					),
 					"",
 					0,
+				),
+			),
+			wantErr:         errs.ErrInvalidConfig,
+			wantErrContains: "app",
+		},
+		{
+			name: "invalid app event reations ttl",
+			c: impl.NewConfig(
+				redis.NewConfig(
+					"localhost:6379",
+					"",
+					0,
+				),
+				mongo.NewConfig(
+					"testdb",
+					"testuser",
+					"testpass",
+					"localhost",
+					27017,
+				),
+				cassandra.NewConfig(
+					cassandra.NewConnection(
+						[]string{"localhost"},
+						9042,
+					),
+					cassandra.NewAuth("", ""),
+					cassandra.NewDatabase(
+						"testkeyspace",
+						consistency.Quorum,
+					),
+				),
+				app.NewConfig(
+					user.NewConfig(
+						session.NewConfig(0),
+					),
+					"",
+					0,
+					app.WithEvent(
+						event.NewConfig(
+							reaction.NewConfig(0),
+						),
+					),
 				),
 			),
 			wantErr:         errs.ErrInvalidConfig,
