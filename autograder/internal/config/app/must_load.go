@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/sitnikovik/ndbx/autograder/internal/config/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/env"
 )
@@ -12,5 +13,6 @@ func MustLoad() Config {
 		user.MustLoad(),
 		env.MustGet("APP_HOST").String(),
 		env.MustGet("APP_PORT").MustInt(),
+		WithEvent(event.Load()),
 	)
 }
