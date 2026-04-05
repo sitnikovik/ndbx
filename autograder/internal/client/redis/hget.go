@@ -12,9 +12,9 @@ func (c *Client) HGet(
 	key string,
 	field string,
 ) (string, error) {
-	cmd := c.cli.HGet(ctx, key, field)
-	if err := cmd.Err(); err != nil {
+	bb, err := c.cli.HGet(ctx, key, field).Bytes()
+	if err != nil {
 		return "", err
 	}
-	return cmd.String(), nil
+	return string(bb), nil
 }
