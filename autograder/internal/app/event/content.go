@@ -1,6 +1,11 @@
 package event
 
-import "github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
+import (
+	"crypto/md5"
+	"encoding/hex"
+
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
+)
 
 // Content represents content info of the event.
 type Content struct {
@@ -42,6 +47,16 @@ func NewContent(
 // Title returns the title of the event.
 func (c Content) Title() string {
 	return c.title
+}
+
+// TitleHash returns the hash of the title of the event.
+func (c Content) TitleHash() string {
+	v := c.Title()
+	if v == "" {
+		return ""
+	}
+	hash := md5.Sum([]byte(v))
+	return hex.EncodeToString(hash[:])
 }
 
 // Description returns the description of the event.

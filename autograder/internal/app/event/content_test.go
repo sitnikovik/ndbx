@@ -147,3 +147,46 @@ func TestContent_Category(t *testing.T) {
 		})
 	}
 }
+
+func TestContent_TitleHash(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		val string
+	}
+	tests := []struct {
+		name string
+		c    event.Content
+		want want
+	}{
+		{
+			name: "ok",
+			c: event.NewContent(
+				"Test Event",
+				"This is a test event.",
+			),
+			want: want{
+				val: "d157c9076092d9c60a203b13bca24311",
+			},
+		},
+		{
+			name: "empty",
+			c: event.NewContent(
+				"",
+				"This is a test event.",
+			),
+			want: want{
+				val: "",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.val,
+				tt.c.TitleHash(),
+			)
+		})
+	}
+}
