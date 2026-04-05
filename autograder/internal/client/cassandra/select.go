@@ -3,7 +3,7 @@ package cassandra
 import (
 	"context"
 
-	"github.com/gocql/gocql"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/cassandra"
 )
 
 // Select selects the rows from the given query
@@ -12,7 +12,7 @@ func (c *Client) Select(
 	_ context.Context,
 	query string,
 	args ...any,
-) (*gocql.Iter, error) {
+) (cassandra.Scanner, error) {
 	c.MustConnect()
 	return c.cluster.
 		Query(query, args...).
