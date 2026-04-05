@@ -5,7 +5,6 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/redis/event/reactions"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/redis/event/reactions/field"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
@@ -18,14 +17,12 @@ import (
 // meets expectations and validates TTL in Redis.
 func (s *Step) Run(
 	ctx context.Context,
-	vars step.Variables,
+	_ step.Variables,
 ) error {
 	k := reactions.Key(
-		event.ID(
-			vars.
-				MustGet(s.event.Hash()).
-				AsString(),
-		),
+		s.event.
+			Content().
+			TitleHash(),
 	)
 	v, err := s.cli.HGet(ctx, k, field.Likes)
 	if err != nil {

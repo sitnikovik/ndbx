@@ -93,7 +93,24 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "empty vars",
 			s: impl.NewStep(
-				redisfk.NewFakeClient(),
+				redisfk.NewFakeClient(
+					redisfk.WithHGet(
+						func(
+							_ context.Context,
+							_, _ string,
+						) (string, error) {
+							return "3", nil
+						},
+					),
+					redisfk.WithTTL(
+						func(
+							_ context.Context,
+							_ string,
+						) (time.Duration, error) {
+							return 2 * time.Second, nil
+						},
+					),
+				),
 				eventFixture,
 				3,
 				2*time.Second,
@@ -105,7 +122,7 @@ func TestStep_Run(t *testing.T) {
 			want: want{
 				vars:  step.NewVariables(),
 				err:   nil,
-				panic: true,
+				panic: false,
 			},
 		},
 		{
