@@ -5,14 +5,13 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/redis/event/reactions"
 )
 
 func TestKey(t *testing.T) {
 	t.Parallel()
 	type args struct {
-		id event.ID
+		sfx string
 	}
 	type want struct {
 		val string
@@ -25,7 +24,7 @@ func TestKey(t *testing.T) {
 		{
 			name: "ok",
 			args: args{
-				id: event.NewID("123"),
+				sfx: "123",
 			},
 			want: want{
 				val: "event:123:reactions",
@@ -34,7 +33,7 @@ func TestKey(t *testing.T) {
 		{
 			name: "empty id",
 			args: args{
-				id: event.NewID(""),
+				sfx: "",
 			},
 			want: want{
 				val: "event::reactions",
@@ -48,7 +47,7 @@ func TestKey(t *testing.T) {
 				t,
 				tt.want.val,
 				reactions.Key(
-					tt.args.id,
+					tt.args.sfx,
 				),
 			)
 		})
