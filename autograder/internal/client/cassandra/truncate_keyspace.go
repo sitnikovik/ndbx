@@ -13,6 +13,7 @@ import (
 //
 // Returns an error if listing tables fails or if any table cannot be truncated.
 func (c *Client) TruncateKeyspace(ctx context.Context) error {
+	c.MustConnect()
 	keyspace := c.cfg.Database().Keyspace()
 	iter := c.cluster.
 		Query(
