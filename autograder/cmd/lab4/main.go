@@ -253,10 +253,6 @@ func main() {
 				httpcli,
 				baseURL,
 			),
-			logoutEndpoint.NewStep(
-				httpcli,
-				baseURL,
-			),
 			bulkEventCreation.NewStep(
 				mongocli,
 			),
