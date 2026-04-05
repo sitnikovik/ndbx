@@ -16,4 +16,6 @@ type funcs struct {
 		query string,
 		args ...any,
 	) (cassandra.Scanner, error)
+	//
+	truncateKeyspace func(ctx context.Context) error
 }

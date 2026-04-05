@@ -21,3 +21,14 @@ func WithSelect(
 		c.funcs.selectfn = fn
 	}
 }
+
+// WithTruncateKeyspace sets the TruncateKeyspace function for the fake Client.
+func WithTruncateKeyspace(
+	fn func(
+		ctx context.Context,
+	) error,
+) Option {
+	return func(c *Client) {
+		c.funcs.truncateKeyspace = fn
+	}
+}

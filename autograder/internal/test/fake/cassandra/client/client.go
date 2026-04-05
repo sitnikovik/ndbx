@@ -35,3 +35,11 @@ func (c *Client) Select(
 	}
 	return c.funcs.selectfn(ctx, query, args...)
 }
+
+// TruncateKeyspace simulates the behavior of the TruncateKeyspace method.
+func (c *Client) TruncateKeyspace(ctx context.Context) error {
+	if c.funcs.truncateKeyspace == nil {
+		panic("not specified behavior for TruncateKeyspace method")
+	}
+	return c.funcs.truncateKeyspace(ctx)
+}
