@@ -6,10 +6,27 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 )
 
+const (
+	// Name is the name of the step.
+	Name = "List"
+	// Description is a brief description of what the step does.
+	Description = "Runs a list of steps"
+)
+
 // List represents a list of steps to be executed as part of a job.
 type List struct {
 	// steps defines the steps to be executed sequentially.
 	steps []Runner
+}
+
+// Description returns a bries description of the step.
+func (l *List) Description() string {
+	return Description
+}
+
+// Name retunrs the name of the step.
+func (l *List) Name() string {
+	return Name
 }
 
 // NewList creates a new List instance with the provided steps to run.
