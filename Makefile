@@ -1,5 +1,6 @@
 .DEFAULT_GOAL = check
 
+include lab.mk
 -include .github/ci.env
 
 # Run all checks required to validate the codebase before merging.
