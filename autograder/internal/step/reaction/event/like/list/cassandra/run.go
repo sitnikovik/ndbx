@@ -6,7 +6,6 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/cassandra/event/reaction"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/cassandra/event/reaction/filter"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	qb "github.com/sitnikovik/ndbx/autograder/internal/client/cassandra/query/builder"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/numbers"
@@ -29,13 +28,6 @@ func (s *Step) Run(
 						event.ID(
 							vars.
 								MustGet(s.event.Hash()).
-								AsString(),
-						),
-					),
-					filter.WithCreatedBy(
-						user.NewID(
-							vars.
-								MustGet(s.event.Created().By().Hash()).
 								AsString(),
 						),
 					),

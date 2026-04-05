@@ -35,10 +35,6 @@ var (
 			eventFixture.Hash(),
 			"13298",
 		)
-		vv.Set(
-			userfx.NewSamwiseGamgee().Hash(),
-			"21312",
-		)
 		return vv
 	}()
 )
@@ -140,56 +136,6 @@ func TestStep_Run(t *testing.T) {
 			},
 			want: want{
 				vars:  step.NewVariables(),
-				err:   nil,
-				panic: true,
-			},
-		},
-		{
-			name: "user id not set in vars",
-			s: impl.NewStep(
-				dbfk.NewClient(
-					dbfk.WithSelect(
-						func(
-							_ context.Context,
-							_ string,
-							_ ...any,
-						) (cassandra.Scanner, error) {
-							return cassandrafk.NewIter(
-								cassandrafk.NewRow(
-									[]string{
-										"event_id",
-										"like",
-										"created_at",
-										"created_by",
-									},
-									[]any{
-										"123",
-										int8(1),
-										timex.MustRFC3339("2025-03-01T12:00:00Z"),
-										"123213213",
-									},
-								),
-							), nil
-						},
-					),
-				),
-				eventFixture,
-				1,
-			),
-			args: args{
-				ctx: context.Background(),
-				vars: func() step.Variables {
-					vv := vars.Copy()
-					vv.Del(userfx.NewSamwiseGamgee().Hash())
-					return vv
-				}(),
-			},
-			want: want{
-				vars: func() step.Variables {
-					vv := vars.Copy()
-					vv.Del(userfx.NewSamwiseGamgee().Hash())
-					return vv
-				}(),
 				err:   nil,
 				panic: true,
 			},
