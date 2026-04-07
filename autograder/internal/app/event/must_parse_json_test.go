@@ -38,7 +38,11 @@ func TestMustParseJSON(t *testing.T) {
 					`"created_at": "2024-01-01T00:00:00Z",` +
 					`"created_by": "test_user",` +
 					`"started_at": "2024-01-01T01:00:00Z",` +
-					`"finished_at": "2024-01-01T02:00:00Z"` +
+					`"finished_at": "2024-01-01T02:00:00Z",` +
+					`"reactions": {` +
+					`"likes": 24,` +
+					`"dislikes": 3` +
+					`}` +
 					`}`,
 				),
 			},
@@ -58,6 +62,8 @@ func TestMustParseJSON(t *testing.T) {
 						timex.MustRFC3339("2024-01-01T01:00:00Z"),
 						timex.MustRFC3339("2024-01-01T02:00:00Z"),
 					),
+					event.WithLikes(24),
+					event.WithDislikes(3),
 				),
 				panic: false,
 			},

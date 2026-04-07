@@ -23,6 +23,10 @@ func MustParseJSON(bb []byte) Event {
 		CreatedBy  string `json:"created_by"`
 		StartedAt  string `json:"started_at"`
 		FinishedAt string `json:"finished_at"`
+		Reactions  struct {
+			Likes    uint64 `json:"likes"`
+			Dislikes uint64 `json:"dislikes"`
+		} `json:"reactions"`
 	}
 	err := json.Unmarshal(bb, &v)
 	if err != nil {
@@ -57,5 +61,7 @@ func MustParseJSON(bb []byte) Event {
 			startedAt,
 			finishedAt,
 		),
+		WithLikes(v.Reactions.Likes),
+		WithDislikes(v.Reactions.Dislikes),
 	)
 }
