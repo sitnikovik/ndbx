@@ -27,6 +27,8 @@ import (
 	cassandraSetup "github.com/sitnikovik/ndbx/autograder/internal/step/cassandra/setup"
 	cassandraTeardown "github.com/sitnikovik/ndbx/autograder/internal/step/cassandra/teardown"
 	createOneEventMongo "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/mongo"
+	dislikeOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/dislike/endpoint"
+	getEventDislikesRedis "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/dislike/redis"
 	likeOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/like/endpoint"
 	getEventLikesRedis "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/like/redis"
 	eventLikesCassandra "github.com/sitnikovik/ndbx/autograder/internal/step/reaction/event/like/list/cassandra"
@@ -104,7 +106,7 @@ func main() {
 				"Москва. Ходынский бульвар 20а",
 			),
 			event.NewCreated(
-				timex.MustRFC3339("2026-01-01T11:33:00Z"),
+				timex.MustRFC3339("2026-01-01T11:34:00Z"),
 				samSepiol.Idendity(),
 			),
 			event.NewDates(
@@ -129,7 +131,7 @@ func main() {
 				event.WithCity("Москва"),
 			),
 			event.NewCreated(
-				timex.MustRFC3339("2026-01-01T11:33:00Z"),
+				timex.MustRFC3339("2026-01-01T11:35:00Z"),
 				johnDoe.Idendity(),
 			),
 			event.NewDates(
@@ -272,42 +274,41 @@ func main() {
 				baseURL,
 				wonderLandEvents[0],
 			),
-			logout.NewStep(
-				httpcli,
-				baseURL,
-			),
 			getEventLikesRedis.NewStep(
 				rediscli,
 				wonderLandEvents[0],
-				4,
+				7,
 				reactonTTL,
 			),
 			getEventLikesRedis.NewStep(
 				rediscli,
 				wonderLandEvents[1],
-				4,
+				7,
 				reactonTTL,
 			),
 			getEventLikesRedis.NewStep(
 				rediscli,
 				wonderLandEvents[2],
-				4,
+				7,
 				reactonTTL,
 			),
-			eventLikesCassandra.NewStep(
-				cassandracli,
+			getEventDislikesRedis.NewStep(
+				rediscli,
 				wonderLandEvents[0],
-				2,
+				0,
+				reactonTTL,
 			),
-			eventLikesCassandra.NewStep(
-				cassandracli,
+			getEventDislikesRedis.NewStep(
+				rediscli,
 				wonderLandEvents[1],
-				1,
+				0,
+				reactonTTL,
 			),
-			eventLikesCassandra.NewStep(
-				cassandracli,
+			getEventDislikesRedis.NewStep(
+				rediscli,
 				wonderLandEvents[2],
-				1,
+				0,
+				reactonTTL,
 			),
 			listUserEventsEndpoint.NewStep(
 				httpcli,
@@ -329,7 +330,7 @@ func main() {
 								reaction.NewReactions(
 									reaction.WithCounts(
 										count.NewCounts(
-											count.WithLikes(4),
+											count.WithLikes(7),
 											count.WithDislikes(0),
 										),
 									),
@@ -337,8 +338,106 @@ func main() {
 								reaction.NewReactions(
 									reaction.WithCounts(
 										count.NewCounts(
-											count.WithLikes(4),
+											count.WithLikes(7),
 											count.WithDislikes(0),
+										),
+									),
+								),
+							},
+						),
+					),
+				),
+			),
+			dislikeOneEventEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				wonderLandEvents[0],
+			),
+			logout.NewStep(
+				httpcli,
+				baseURL,
+			),
+			getEventLikesRedis.NewStep(
+				rediscli,
+				wonderLandEvents[0],
+				6,
+				reactonTTL,
+			),
+			getEventLikesRedis.NewStep(
+				rediscli,
+				wonderLandEvents[1],
+				6,
+				reactonTTL,
+			),
+			getEventLikesRedis.NewStep(
+				rediscli,
+				wonderLandEvents[2],
+				6,
+				reactonTTL,
+			),
+			getEventDislikesRedis.NewStep(
+				rediscli,
+				wonderLandEvents[0],
+				1,
+				reactonTTL,
+			),
+			getEventDislikesRedis.NewStep(
+				rediscli,
+				wonderLandEvents[1],
+				1,
+				reactonTTL,
+			),
+			getEventDislikesRedis.NewStep(
+				rediscli,
+				wonderLandEvents[2],
+				1,
+				reactonTTL,
+			),
+			eventLikesCassandra.NewStep(
+				cassandracli,
+				wonderLandEvents[0],
+				3,
+			),
+			eventLikesCassandra.NewStep(
+				cassandracli,
+				wonderLandEvents[1],
+				1,
+			),
+			eventLikesCassandra.NewStep(
+				cassandracli,
+				wonderLandEvents[2],
+				2,
+			),
+			listUserEventsEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				samSepiol,
+				eventsrq.NewBody(
+					eventsrq.WithInclude(
+						include.NewInclude("reactions"),
+					),
+				),
+				[]event.Event{
+					wonderLandEvents[0],
+					wonderLandEvents[1],
+				},
+				listUserEventsEndpoint.WithExpectations(
+					expect.NewExpectations(
+						expect.WithReactions(
+							[]reaction.Reactions{
+								reaction.NewReactions(
+									reaction.WithCounts(
+										count.NewCounts(
+											count.WithLikes(6),
+											count.WithDislikes(1),
+										),
+									),
+								),
+								reaction.NewReactions(
+									reaction.WithCounts(
+										count.NewCounts(
+											count.WithLikes(6),
+											count.WithDislikes(1),
 										),
 									),
 								),
