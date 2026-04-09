@@ -4,9 +4,13 @@ import (
 	"context"
 	"os"
 
+	eventsrq "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/rq/body"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/rq/include"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/reaction"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/money"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/reaction/count"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder"
 	mongoSetup "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/setup/mongo"
 	redisSetup "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/setup/redis"
@@ -29,6 +33,8 @@ import (
 	login "github.com/sitnikovik/ndbx/autograder/internal/step/user/auth/login"
 	logout "github.com/sitnikovik/ndbx/autograder/internal/step/user/auth/logout"
 	signup "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/sign-up"
+	listUserEventsEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/endpoint"
+	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/expect"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
@@ -45,7 +51,6 @@ func main() {
 	mongocli := mongo.NewClient(cfg.Mongo())
 	rediscli := redis.NewClient(cfg.Redis())
 	cassandracli := cassandra.NewClient(cfg.Cassandra())
-	_ = cassandracli
 	httpcli := httpx.NewClient(httpx.WithEmptyCookieJar())
 	baseURL := cfg.App().Address()
 	sessionTTL := cfg.App().User().Session().TTL()
@@ -303,6 +308,44 @@ func main() {
 				cassandracli,
 				wonderLandEvents[2],
 				1,
+			),
+			listUserEventsEndpoint.NewStep(
+				httpcli,
+				baseURL,
+				samSepiol,
+				eventsrq.NewBody(
+					eventsrq.WithInclude(
+						include.NewInclude("reactions"),
+					),
+				),
+				[]event.Event{
+					wonderLandEvents[0],
+					wonderLandEvents[1],
+				},
+				listUserEventsEndpoint.WithExpectations(
+					expect.NewExpectations(
+						expect.WithReactions(
+							[]reaction.Reactions{
+								reaction.NewReactions(
+									reaction.WithCounts(
+										count.NewCounts(
+											count.WithLikes(4),
+											count.WithDislikes(0),
+										),
+									),
+								),
+								reaction.NewReactions(
+									reaction.WithCounts(
+										count.NewCounts(
+											count.WithLikes(4),
+											count.WithDislikes(0),
+										),
+									),
+								),
+							},
+						),
+					),
+				),
 			),
 			mongoTeardown.NewStep(
 				mongocli,
