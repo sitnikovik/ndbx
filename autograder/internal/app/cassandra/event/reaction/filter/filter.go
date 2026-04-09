@@ -3,6 +3,7 @@ package filter
 import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/creation"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
+	"github.com/sitnikovik/ndbx/autograder/internal/console"
 )
 
 // where implements WHERE clause.
@@ -49,7 +50,7 @@ func (f Filter) Empty() bool {
 // Where returns WHERE clause for the filter.
 func (f Filter) Where() string {
 	if v := f.like; !v.Empty() {
-		f.where.Add("like", v.Value())
+		f.where.Add("like_value", v.Value())
 	}
 	if v := f.eventID; !v.Empty() {
 		f.where.Add("event_id", v.String())
@@ -64,6 +65,7 @@ func (f Filter) Where() string {
 func (f Filter) Args() []any {
 	vv := f.where.Args()
 	if len(vv) != 0 {
+		console.Log("%v", vv)
 		return vv
 	}
 	vv = make([]any, 0, 3)

@@ -28,9 +28,9 @@ func NewLikes(
 // Select returns all likes for the event.
 func (r *Likes) Select(ctx context.Context) ([]eventReaction.Like, error) {
 	q := fmt.Sprintf(
-		`SELECT "%s", "%s", "%s", "%s" FROM "%s" %s`,
+		`SELECT %s, %s, %s, %s FROM %s %s`,
 		"event_id",
-		"like",
+		"like_value",
 		"created_at",
 		"created_by",
 		Table,
