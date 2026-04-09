@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/cassandra/event/reaction"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/cassandra/event/reaction/enum/like"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/cassandra/event/reaction/filter"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	qb "github.com/sitnikovik/ndbx/autograder/internal/client/cassandra/query/builder"
@@ -24,6 +25,7 @@ func (s *Step) Run(
 			reaction.WithFilter(
 				filter.NewFilter(
 					qb.NewWhere(),
+					filter.WithLike(like.Like),
 					filter.WithEventID(
 						event.ID(
 							vars.
@@ -33,7 +35,7 @@ func (s *Step) Run(
 					),
 				),
 			),
-			reaction.WithLimit(s.expected),
+			reaction.WithLimit(s.expected+10),
 		).
 		Select(ctx)
 	if err != nil {
