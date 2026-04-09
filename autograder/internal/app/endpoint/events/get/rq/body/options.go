@@ -3,6 +3,7 @@ package body
 import (
 	"time"
 
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/rq/include"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/rq/pagination"
 	rangeof "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/rq/range-of"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
@@ -83,5 +84,12 @@ func WithUsername(usr string) Option {
 			b.created.by.ID(),
 			user.WithUsername(usr),
 		)
+	}
+}
+
+// WithInclude sets the include for the Body struct.
+func WithInclude(inc include.Include) Option {
+	return func(b *Body) {
+		b.inc = inc
 	}
 }

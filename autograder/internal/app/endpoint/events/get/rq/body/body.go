@@ -5,6 +5,7 @@ import (
 
 	"github.com/sitnikovik/fluxhttp/query"
 
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/rq/include"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/rq/pagination"
 	"github.com/sitnikovik/ndbx/autograder/internal/console"
 )
@@ -19,6 +20,8 @@ type Body struct {
 	loc Location
 	// costs holds the cost parameters for filtering events.
 	costs Costs
+	// inc holds the include parameters for the request.
+	inc include.Include
 	// pg holds the pagination parameters for the request.
 	pg pagination.Pagination
 }
@@ -41,6 +44,7 @@ func (b Body) URLQuery() url.Values {
 		b.content.URLQuery(),
 		b.loc.URLQuery(),
 		b.costs.URLQuery(),
+		b.inc.URLQuery(),
 		b.pg.URLQuery(),
 	)
 	console.Log("query: %s", q.Encode())

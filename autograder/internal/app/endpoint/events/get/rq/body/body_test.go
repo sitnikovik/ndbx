@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/rq/body"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/rq/include"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/rq/pagination"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
@@ -41,13 +42,16 @@ func TestBody_URLQuery(t *testing.T) {
 						user.WithUsername("username"),
 					),
 				),
+				body.WithInclude(
+					include.NewInclude("reactions"),
+				),
 				body.WithPagination(
 					pagination.NewPagination(10, 10),
 				),
 			),
 			want: want{
 				val: func() url.Values {
-					q := make(url.Values, 11)
+					q := make(url.Values, 12)
 					q.Set("title", "test")
 					q.Set("category", category.Concert.String())
 					q.Set("address", "NY, Groove street, 123/1")
@@ -57,6 +61,7 @@ func TestBody_URLQuery(t *testing.T) {
 					q.Set("date_to", "20250307")
 					q.Set("user_id", "123")
 					q.Set("user", "username")
+					q.Set("include", "reactions")
 					q.Set("limit", "10")
 					q.Set("offset", "10")
 					return q
