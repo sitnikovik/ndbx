@@ -12,7 +12,7 @@ import (
 func Load() Config {
 	ttl := env.
 		Get("APP_LIKE_TTL").
-		MustInt()
+		Int()
 	return NewConfig(
 		time.Duration(ttl) * time.Second,
 	)
