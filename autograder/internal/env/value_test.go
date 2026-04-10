@@ -1,6 +1,8 @@
 package env_test
 
 import (
+	"fmt"
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -107,6 +109,101 @@ func TestValue_String(t *testing.T) {
 			t.Parallel()
 			got := tt.v.String()
 			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestValue_Int(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		value int
+	}
+	tests := []struct {
+		name string
+		v    env.Value
+		want want
+	}{
+		{
+			name: "zero int",
+			v:    env.NewValue("0"),
+			want: want{
+				value: 0,
+			},
+		},
+		{
+			name: "empty string",
+			v:    env.NewValue(""),
+			want: want{
+				value: 0,
+			},
+		},
+		{
+			name: "space string",
+			v:    env.NewValue(""),
+			want: want{
+				value: 0,
+			},
+		},
+		{
+			name: "word",
+			v:    env.NewValue("hello"),
+			want: want{
+				value: 0,
+			},
+		},
+		{
+			name: "max int64",
+			v: env.NewValue(
+				fmt.Sprint(
+					math.MaxInt64,
+				),
+			),
+			want: want{
+				value: math.MaxInt64,
+			},
+		},
+		{
+			name: "max int64 negative",
+			v: env.NewValue(
+				fmt.Sprint(
+					-1 * math.MaxInt64,
+				),
+			),
+			want: want{
+				value: -1 * math.MaxInt64,
+			},
+		},
+		{
+			name: "max int32",
+			v: env.NewValue(
+				fmt.Sprint(
+					math.MaxInt32,
+				),
+			),
+			want: want{
+				value: math.MaxInt32,
+			},
+		},
+		{
+			name: "max int32 negative",
+			v: env.NewValue(
+				fmt.Sprint(
+					-1 * math.MaxInt32,
+				),
+			),
+			want: want{
+				value: -1 * math.MaxInt32,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.value,
+				tt.v.Int(),
+			)
 		})
 	}
 }

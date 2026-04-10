@@ -68,6 +68,16 @@ func (v Value) MustInt() int {
 	return i
 }
 
+// Int parses the environment variable value as an integer and returns it.
+func (v Value) Int() int {
+	var i int
+	_, err := fmt.Sscanf(v.String(), "%d", &i)
+	if err != nil {
+		return 0
+	}
+	return i
+}
+
 // Strings parses the environment variable value as a comma-separated list of strings.
 func (v Value) Strings() []string {
 	return strings.Split(v.String(), ",")
