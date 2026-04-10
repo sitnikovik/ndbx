@@ -27,6 +27,8 @@ import (
 	cassandraSetup "github.com/sitnikovik/ndbx/autograder/internal/step/cassandra/setup"
 	cassandraTeardown "github.com/sitnikovik/ndbx/autograder/internal/step/cassandra/teardown"
 	createOneEventMongo "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/mongo"
+	listEventsEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/list/endpoint"
+	listEventsExpectations "github.com/sitnikovik/ndbx/autograder/internal/step/events/list/expect"
 	dislikeOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/dislike/endpoint"
 	getEventDislikesRedis "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/dislike/redis"
 	likeOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/like/endpoint"
@@ -36,7 +38,7 @@ import (
 	logout "github.com/sitnikovik/ndbx/autograder/internal/step/user/auth/logout"
 	signup "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/sign-up"
 	listUserEventsEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/endpoint"
-	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/expect"
+	listUserEventsExpectations "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/expect"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
@@ -324,8 +326,8 @@ func main() {
 					wonderLandEvents[1],
 				},
 				listUserEventsEndpoint.WithExpectations(
-					expect.NewExpectations(
-						expect.WithReactions(
+					listUserEventsExpectations.NewExpectations(
+						listUserEventsExpectations.WithReactions(
 							[]reaction.Reactions{
 								reaction.NewReactions(
 									reaction.WithCounts(
@@ -344,6 +346,52 @@ func main() {
 									),
 								),
 							},
+						),
+					),
+				),
+			),
+			listEventsEndpoint.NewStep(
+				step.NewDesc(
+					"List events including reactions",
+					"Gets lists of all events with reactions",
+				),
+				httpcli,
+				baseURL,
+				eventsrq.NewBody(
+					eventsrq.WithInclude(
+						include.NewInclude("reactions"),
+					),
+				),
+				listEventsExpectations.NewExpectations(
+					listEventsExpectations.WithEvents(
+						wonderLandEvents[0],
+						wonderLandEvents[1],
+						wonderLandEvents[2],
+					),
+					listEventsExpectations.WithReactions(
+						reaction.NewReactions(
+							reaction.WithCounts(
+								count.NewCounts(
+									count.WithLikes(7),
+									count.WithDislikes(0),
+								),
+							),
+						),
+						reaction.NewReactions(
+							reaction.WithCounts(
+								count.NewCounts(
+									count.WithLikes(7),
+									count.WithDislikes(0),
+								),
+							),
+						),
+						reaction.NewReactions(
+							reaction.WithCounts(
+								count.NewCounts(
+									count.WithLikes(7),
+									count.WithDislikes(0),
+								),
+							),
 						),
 					),
 				),
@@ -422,8 +470,8 @@ func main() {
 					wonderLandEvents[1],
 				},
 				listUserEventsEndpoint.WithExpectations(
-					expect.NewExpectations(
-						expect.WithReactions(
+					listUserEventsExpectations.NewExpectations(
+						listUserEventsExpectations.WithReactions(
 							[]reaction.Reactions{
 								reaction.NewReactions(
 									reaction.WithCounts(
@@ -442,6 +490,52 @@ func main() {
 									),
 								),
 							},
+						),
+					),
+				),
+			),
+			listEventsEndpoint.NewStep(
+				step.NewDesc(
+					"List events after dislike",
+					"Gets lists of all events with reactions after someone disliked",
+				),
+				httpcli,
+				baseURL,
+				eventsrq.NewBody(
+					eventsrq.WithInclude(
+						include.NewInclude("reactions"),
+					),
+				),
+				listEventsExpectations.NewExpectations(
+					listEventsExpectations.WithEvents(
+						wonderLandEvents[0],
+						wonderLandEvents[1],
+						wonderLandEvents[2],
+					),
+					listEventsExpectations.WithReactions(
+						reaction.NewReactions(
+							reaction.WithCounts(
+								count.NewCounts(
+									count.WithLikes(6),
+									count.WithDislikes(1),
+								),
+							),
+						),
+						reaction.NewReactions(
+							reaction.WithCounts(
+								count.NewCounts(
+									count.WithLikes(6),
+									count.WithDislikes(1),
+								),
+							),
+						),
+						reaction.NewReactions(
+							reaction.WithCounts(
+								count.NewCounts(
+									count.WithLikes(6),
+									count.WithDislikes(1),
+								),
+							),
 						),
 					),
 				),
