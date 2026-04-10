@@ -9,7 +9,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/reaction"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/reaction/count"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
-	impl "github.com/sitnikovik/ndbx/autograder/internal/step/events/list/expect"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/step/events/list/endpoint/expect"
 	eventfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/event"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"

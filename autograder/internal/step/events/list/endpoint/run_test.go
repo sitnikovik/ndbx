@@ -17,7 +17,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/step/events/list/endpoint"
-	"github.com/sitnikovik/ndbx/autograder/internal/step/events/list/expect"
+	"github.com/sitnikovik/ndbx/autograder/internal/step/events/list/endpoint/expect"
 	httpfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )

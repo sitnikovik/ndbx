@@ -9,7 +9,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/step/events/list/endpoint"
-	"github.com/sitnikovik/ndbx/autograder/internal/step/events/list/expect"
+	"github.com/sitnikovik/ndbx/autograder/internal/step/events/list/endpoint/expect"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	eventfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/event"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"

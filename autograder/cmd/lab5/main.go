@@ -28,7 +28,7 @@ import (
 	cassandraTeardown "github.com/sitnikovik/ndbx/autograder/internal/step/cassandra/teardown"
 	createOneEventMongo "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/mongo"
 	listEventsEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/list/endpoint"
-	listEventsExpectations "github.com/sitnikovik/ndbx/autograder/internal/step/events/list/expect"
+	listEventsExpectations "github.com/sitnikovik/ndbx/autograder/internal/step/events/list/endpoint/expect"
 	dislikeOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/dislike/endpoint"
 	getEventDislikesRedis "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/dislike/redis"
 	likeOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/like/endpoint"
