@@ -32,7 +32,15 @@ jobs:
       lab_check_dir: 'autograder/cmd/lab3'
   lab4:
     name: Lab 4
+    if: ${{ inputs.lab >= 4 }}
     uses: ./.github/workflows/reusable_eventhub_lab4.yml
     with:
       scripts_dir: '.github/scripts'
       lab_check_dir: 'autograder/cmd/lab4'
+  lab5:
+    name: Lab 5
+    if: ${{ inputs.lab >= 5 }}
+    uses: ./.github/workflows/reusable_eventhub_lab5.yml
+    with:
+      scripts_dir: '.github/scripts'
+      lab_check_dir: 'autograder/cmd/lab5'
