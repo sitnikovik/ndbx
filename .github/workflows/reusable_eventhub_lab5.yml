@@ -70,8 +70,10 @@ jobs:
           MONGODB_PASSWORD: ${{ env.MONGODB_PASSWORD }}
           MONGODB_HOST: localhost
           MONGODB_PORT: ${{ env.MONGODB_PORT }}
-          CASSANDRA_HOSTS: ${{ env.CASSANDRA_HOSTS }}
+          CASSANDRA_HOSTS: localhost
           CASSANDRA_PORT: ${{ env.CASSANDRA_PORT }}
+          CASSANDRA_USERNAME: ${{ env.CASSANDRA_USERNAME }}
+          CASSANDRA_PASSWORD: ${{ env.CASSANDRA_PASSWORD }}
           CASSANDRA_KEYSPACE: ${{ env.CASSANDRA_KEYSPACE }}
           CASSANDRA_CONSISTENCY: ${{ env.CASSANDRA_CONSISTENCY }}
         run: |
