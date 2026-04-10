@@ -8,28 +8,41 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 )
 
-// DropAll drops all user databases in the MongoDB server.
-// System databases (admin, local, config) are skipped as they cannot be dropped.
+// DropAll truncates all collections in all user databases in the MongoDB server.
+// System databases (admin, local, config) are skipped.
+// This is similar to TRUNCATE in SQL - it removes all documents but keeps the database structure.
 func (c *Client) DropAll(ctx context.Context) error {
-	var err error
-	if !c.connected {
-		err = c.Connect()
-		if err != nil {
-			return err
-		}
-	}
+	c.MustConnect()
 	dbs, err := c.cli.ListDatabaseNames(ctx, bson.D{})
 	if err != nil {
-		return errs.Wrap(err, "failed to get all database names")
+		return errs.Wrap(
+			err,
+			"failed to get all database names",
+		)
 	}
 	for _, db := range dbs {
-		// Skip system databases that cannot be dropped
 		if db == "admin" || db == "local" || db == "config" {
 			continue
 		}
-		err = c.cli.Database(db).Drop(ctx)
+		database := c.cli.Database(db)
+		collections, err := database.ListCollectionNames(ctx, bson.D{})
 		if err != nil {
-			return errs.Wrap(err, "failed to drop database '%s'", db)
+			return errs.Wrap(
+				err,
+				"failed to list collections in database '%s'",
+				db,
+			)
+		}
+		for _, collName := range collections {
+			_, err = database.Collection(collName).DeleteMany(ctx, bson.D{})
+			if err != nil {
+				return errs.Wrap(
+					err,
+					"failed to truncate collection '%s' in database '%s'",
+					collName,
+					db,
+				)
+			}
 		}
 	}
 	return nil

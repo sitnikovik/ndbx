@@ -15,6 +15,8 @@ type Variables interface {
 	MustGet(name string) Variable
 	// Set sets the variable with the given name and value.
 	Set(name string, value any)
+	// Del removes the variable with the given name.
+	Del(name string)
 	// Len returns the number of variables in the struct.
 	Len() int
 	// Empty returns true if the struct has no variables, false otherwise.
@@ -63,6 +65,13 @@ func (v *Vars) Get(name string) (Variable, bool) {
 func (v *Vars) Set(name string, value any) {
 	v.mu.Lock()
 	v.m[name] = NewVariable(name, value)
+	v.mu.Unlock()
+}
+
+// Del removes the variable with the given name.
+func (v *Vars) Del(name string) {
+	v.mu.Lock()
+	delete(v.m, name)
 	v.mu.Unlock()
 }
 

@@ -11,6 +11,10 @@ func (c *Client) HGet(
 	ctx context.Context,
 	key string,
 	field string,
-) ([]byte, error) {
-	return c.cli.HGet(ctx, key, field).Bytes()
+) (string, error) {
+	bb, err := c.cli.HGet(ctx, key, field).Bytes()
+	if err != nil {
+		return "", err
+	}
+	return string(bb), nil
 }

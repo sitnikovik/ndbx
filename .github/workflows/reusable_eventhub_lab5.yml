@@ -1,0 +1,90 @@
+name: EventHub Lab 5 Check (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      scripts_dir:
+        description: 'Path to scripts directory'
+        required: true
+        type: string
+      lab_check_dir:
+        description: 'Path to checks directory'
+        required: true
+        type: string
+
+jobs:
+  lab:
+    name: Reactions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout student repository
+        uses: actions/checkout@v4
+        with:
+          path: student
+
+      - name: Checkout ndbx scripts
+        uses: actions/checkout@v4
+        with:
+          repository: sitnikovik/ndbx
+          path: ndbx
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Load environment variables
+        run: |
+          ndbx/${{ inputs.scripts_dir }}/load_env.sh student/.env.local
+
+      - name: Check required files
+        run: |
+          ndbx/${{ inputs.scripts_dir }}/file_exists.sh \
+            student/docker-compose.yml \
+            student/Makefile
+
+      - name: Start services
+        working-directory: student
+        run: |
+          echo "Starting services with 'make run'..."
+          make run
+    
+      - name: Show running containers
+        if: always()
+        working-directory: student
+        run: docker compose ps
+
+      - name: Run autograder
+        env:
+          APP_PORT: ${{ env.APP_PORT }}
+          APP_HOST: http://${{ env.APP_HOST }}
+          APP_USER_SESSION_TTL: ${{ env.APP_USER_SESSION_TTL }}
+          REDIS_HOST: localhost
+          REDIS_PORT: ${{ env.REDIS_PORT }}
+          REDIS_PASSWORD: ${{ env.REDIS_PASSWORD }}
+          REDIS_DB: ${{ env.REDIS_DB }}
+          MONGODB_DATABASE: ${{ env.MONGODB_DATABASE }}
+          MONGODB_USER: ${{ env.MONGODB_USER }}
+          MONGODB_PASSWORD: ${{ env.MONGODB_PASSWORD }}
+          MONGODB_HOST: localhost
+          MONGODB_PORT: ${{ env.MONGODB_PORT }}
+          CASSANDRA_HOSTS: localhost
+          CASSANDRA_PORT: ${{ env.CASSANDRA_PORT }}
+          CASSANDRA_USERNAME: ${{ env.CASSANDRA_USERNAME }}
+          CASSANDRA_PASSWORD: ${{ env.CASSANDRA_PASSWORD }}
+          CASSANDRA_KEYSPACE: ${{ env.CASSANDRA_KEYSPACE }}
+          CASSANDRA_CONSISTENCY: ${{ env.CASSANDRA_CONSISTENCY }}
+        run: |
+          cd ndbx/${{ inputs.lab_check_dir }} && go run main.go
+
+      - name: Show service logs
+        if: always()
+        working-directory: student
+        run: docker compose logs
+
+      - name: Stop services
+        if: always()
+        working-directory: student
+        run: docker compose down -v

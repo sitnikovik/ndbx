@@ -7,6 +7,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/resp/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
+	"github.com/sitnikovik/ndbx/autograder/internal/expect"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/numbers"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
@@ -72,6 +73,32 @@ func (s *Step) Run(
 			err,
 			"got unexpected 'count' field",
 		)
+	}
+	if s.expect.HasReactions() {
+		want := s.expect.Reactions()
+		err = numbers.AssertEquals(
+			len(want),
+			len(events),
+		)
+		if err != nil {
+			return errs.Wrap(
+				err,
+				"got length mismatch of expected reactions with gotten events",
+			)
+		}
+		for i, ev := range events {
+			err = expect.AssertEquals(
+				want[i],
+				ev.Reactions(),
+			)
+			if err != nil {
+				return errs.Wrap(
+					err,
+					"got unexpected reactions for event '%s'",
+					ev.ID().String(),
+				)
+			}
+		}
 	}
 	return nil
 }

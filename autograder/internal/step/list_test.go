@@ -101,3 +101,111 @@ func TestList_Run(t *testing.T) {
 		})
 	}
 }
+
+func TestList_Name(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		val string
+	}
+	tests := []struct {
+		name string
+		l    *step.List
+		want want
+	}{
+		{
+			name: "empty list",
+			l:    step.NewList(),
+			want: want{
+				val: step.Name,
+			},
+		},
+		{
+			name: "has steps",
+			l: step.NewList(
+				stepfk.NewFakeRunner(
+					stepfk.WithErrRun(assert.AnError),
+				),
+				stepfk.NewFakeRunner(
+					stepfk.WithOkRun(),
+				),
+				stepfk.NewFakeRunner(
+					stepfk.WithOkRun(),
+				),
+			),
+			want: want{
+				val: step.Name,
+			},
+		},
+		{
+			name: "default value",
+			l:    nil,
+			want: want{
+				val: step.Name,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.val,
+				tt.l.Name(),
+			)
+		})
+	}
+}
+
+func TestList_Description(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		val string
+	}
+	tests := []struct {
+		name string
+		l    *step.List
+		want want
+	}{
+		{
+			name: "empty list",
+			l:    step.NewList(),
+			want: want{
+				val: step.Description,
+			},
+		},
+		{
+			name: "has steps",
+			l: step.NewList(
+				stepfk.NewFakeRunner(
+					stepfk.WithErrRun(assert.AnError),
+				),
+				stepfk.NewFakeRunner(
+					stepfk.WithOkRun(),
+				),
+				stepfk.NewFakeRunner(
+					stepfk.WithOkRun(),
+				),
+			),
+			want: want{
+				val: step.Description,
+			},
+		},
+		{
+			name: "default value",
+			l:    nil,
+			want: want{
+				val: step.Description,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.val,
+				tt.l.Description(),
+			)
+		})
+	}
+}

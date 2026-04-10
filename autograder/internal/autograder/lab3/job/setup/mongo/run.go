@@ -21,5 +21,9 @@ func (s *Step) Run(
 	if err != nil {
 		return errs.Wrap(err, "failed to ping MongoDB")
 	}
+	err = s.mongo.DropAll(ctx)
+	if err != nil {
+		return errs.Wrap(err, "failed to drop MongoDB data")
+	}
 	return nil
 }

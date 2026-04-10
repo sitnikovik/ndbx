@@ -6,6 +6,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
+	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/expect"
 )
 
 const (
@@ -27,6 +28,8 @@ type Step struct {
 	cli httpClient
 	// events is the list of events to be checked.
 	events []event.Event
+	// expect holds the expectations we need to check in the Step.
+	expect expect.Expectations
 	// rq     body.Body
 	rq body.Body
 	// user is the user's which events are expected to be retrieved.
@@ -37,21 +40,26 @@ type Step struct {
 
 // NewStep creates a new Step instance
 // with the provided HTTP client, application base URL, user,
-// request body and expected events.
+// request body, expected events and additional functional options.
 func NewStep(
 	cli httpClient,
 	baseURL string,
 	usr user.User,
 	rq body.Body,
 	events []event.Event,
+	opts ...Option,
 ) *Step {
-	return &Step{
+	s := &Step{
 		cli:     cli,
 		baseURL: baseURL,
 		user:    usr,
 		rq:      rq,
 		events:  events,
 	}
+	for _, opt := range opts {
+		opt(s)
+	}
+	return s
 }
 
 // Name returns the name of the step.
