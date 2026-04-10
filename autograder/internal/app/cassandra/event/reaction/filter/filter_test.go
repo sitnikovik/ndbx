@@ -36,7 +36,7 @@ func TestFilter_Where(t *testing.T) {
 				),
 			),
 			want: want{
-				val:   "WHERE like = ? AND event_id = ? AND created_by = ?",
+				val:   "WHERE like_value = ? AND event_id = ? AND created_by = ?",
 				panic: false,
 			},
 		},
@@ -66,7 +66,7 @@ func TestFilter_Where(t *testing.T) {
 				),
 			),
 			want: want{
-				val:   "WHERE like = ? AND created_by = ?",
+				val:   "WHERE like_value = ? AND created_by = ?",
 				panic: false,
 			},
 		},
@@ -80,7 +80,7 @@ func TestFilter_Where(t *testing.T) {
 				),
 			),
 			want: want{
-				val:   "WHERE like = ? AND event_id = ?",
+				val:   "WHERE like_value = ? AND event_id = ?",
 				panic: false,
 			},
 		},
@@ -91,7 +91,7 @@ func TestFilter_Where(t *testing.T) {
 				impl.WithLike(like.Unspecified),
 			),
 			want: want{
-				val:   "WHERE like = ?",
+				val:   "WHERE like_value = ?",
 				panic: false,
 			},
 		},
