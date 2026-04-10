@@ -5,6 +5,20 @@
 Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.0.0/),
 и этот проект придерживается [Semantic Versioning](https://semver.org/lang/ru/).
 
+## [1.4.1] - 2026-04-10
+
+### Добавлено
+
+- **Конфигурация:**
+  - Парсинг числа из переменной окружения без паники
+
+### Исправлено
+
+- Падения воркфлоу [EventHub Sessions](.github/workflows/reusable_eventhub_lab2.yml)
+на [лаботаторных работах №2](docs/lab/02/README.md)
+из-за необъявленной переменной окружения `APP_LIKE_TTL`,
+которая используется начиная с [лабораторной работы №5](docs/lab/05/README.md)
+
 ## [1.4.0] - 2026-04-10
 
 ### Добавлено
