@@ -47,7 +47,7 @@ unit-test:
 .PHONY: integration-test
 integration-test:
 	@echo "🐳 Starting containers..."
-	@docker compose -f docker-compose.test.yml --env-file .env.test up -d
+	@set -a && . ./.env.test && set +a && docker compose -f docker-compose.test.yml --env-file .env.test up -d
 	@sleep 2
 	@echo 🧪 Running integration tests...
 	@mkdir -p tmp
@@ -67,7 +67,7 @@ integration-test:
 		fi \
 	)
 	@echo "🐳 Stopping containers..."
-	@docker compose -f docker-compose.test.yml down
+	@set -a && . ./.env.test && set +a && docker compose -f docker-compose.test.yml down
 
 # Lint the codebase.
 .PHONY: lint
