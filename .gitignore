@@ -20,6 +20,12 @@ vendor/
 *.log
 tmp/
 
+# Build
+bin/
+
+# Docker
+volume/
+
 # Go workspace file
 go.work
 go.work.sum
