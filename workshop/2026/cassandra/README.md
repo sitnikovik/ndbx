@@ -34,7 +34,7 @@ docker compose exec -T cassandra-dc1-node1 cqlsh < ./scripts/cql/init.cql
 
 Для генерации данных в таблицу `iot.sensor_data` есть CLI-команда, написанная на Go (код [здесь](./sensorgen/))
 
-Рекомедуется скачать готовый бинарник `sensorgen` [из релиза](https://github.com/sitnikovik/ndbx/releases), чтобы не собирать его самим, если у вас нет Go на компьютере.
+Рекомедуется скачать готовый бинарник `sensorgen` [из релиза](https://github.com/sitnikovik/ndbx/releases/tag/v1.5.0), чтобы не собирать его самим, если у вас нет Go на компьютере.
 
 **Запуск:**
 
