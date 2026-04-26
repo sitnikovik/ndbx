@@ -186,7 +186,7 @@ APP_LIKE_TTL=60
 **Ключ:**
 
 ```plaintext
-events:{event_title_md5_hash}:reactions
+event:{event_title_md5_hash}:reactions
 ```
 
 `{event_title_md5_hash}` - хэш по алгоритму md5 для названия мероприятия.
@@ -194,7 +194,7 @@ events:{event_title_md5_hash}:reactions
 Например, для "Алиса в стране чудес" ключ будет
 
 ```plaintext
-events:ba80405c3ebccb9cb99791b47c2487f9:reactions
+event:ba80405c3ebccb9cb99791b47c2487f9:reactions
 ```
 
 **Значение:**
