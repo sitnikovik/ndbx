@@ -1,0 +1,79 @@
+version: '3.8'
+services:
+  cassandra-dc1-node1:
+    image: cassandra:latest
+    container_name: cassandra-dc1-node1
+    environment:
+      - CASSANDRA_CLUSTER_NAME=IoTCluster
+      - CASSANDRA_DC=dc1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=cassandra-dc1-node1
+      - MAX_HEAP_SIZE=2G
+      - HEAP_NEWSIZE=256M
+    mem_limit: 4g ## min 2g
+    mem_reservation: 3g
+    ports:
+      - "9042:9042"
+    volumes:
+      - ./volume/dc1-node1:/var/lib/cassandra/data
+    networks:
+      - cassandra-net
+    healthcheck:
+      test: ["CMD", "nodetool", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  cassandra-dc1-node2:
+    image: cassandra:latest
+    container_name: cassandra-dc1-node2
+    environment:
+      - CASSANDRA_CLUSTER_NAME=IoTCluster
+      - CASSANDRA_DC=dc1
+      - CASSANDRA_RACK=rack2
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=cassandra-dc1-node1
+      - MAX_HEAP_SIZE=2G
+      - HEAP_NEWSIZE=256M
+    mem_limit: 4g ## min 2g
+    mem_reservation: 3g
+    volumes:
+      - ./volume/dc1-node2:/var/lib/cassandra/data
+    networks:
+      - cassandra-net
+    healthcheck:
+      test: ["CMD", "nodetool", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  cassandra-dc1-node3:
+    image: cassandra:latest
+    container_name: cassandra-dc1-node3
+    environment:
+      - CASSANDRA_CLUSTER_NAME=IoTCluster
+      - CASSANDRA_DC=dc1
+      - CASSANDRA_RACK=rack3
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=cassandra-dc1-node1
+      - MAX_HEAP_SIZE=2G
+      - HEAP_NEWSIZE=256M
+    mem_limit: 4g ## min 2g
+    mem_reservation: 3g
+    volumes:
+      - ./volume/dc1-node3:/var/lib/cassandra/data
+    networks:
+      - cassandra-net
+    healthcheck:
+      test: ["CMD", "nodetool", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+networks:
+  cassandra-net:
+    driver: bridge
