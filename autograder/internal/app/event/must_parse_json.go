@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/review"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/rating"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/review/count"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
@@ -27,6 +30,10 @@ func MustParseJSON(bb []byte) Event {
 			Likes    uint64 `json:"likes"`
 			Dislikes uint64 `json:"dislikes"`
 		} `json:"reactions"`
+		Reviews struct {
+			Rating float64 `json:"rating"`
+			Count  int     `json:"count"`
+		} `json:"reviews"`
 	}
 	err := json.Unmarshal(bb, &v)
 	if err != nil {
@@ -63,5 +70,17 @@ func MustParseJSON(bb []byte) Event {
 		),
 		WithLikes(v.Reactions.Likes),
 		WithDislikes(v.Reactions.Dislikes),
+		WithReviews(
+			review.NewReviews(
+				review.WithCounts(
+					count.NewCounts(
+						count.WithRating(
+							rating.NewRating(v.Reviews.Rating),
+						),
+						count.WithCount(v.Reviews.Count),
+					),
+				),
+			),
+		),
 	)
 }

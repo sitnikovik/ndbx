@@ -2,7 +2,10 @@ package event
 
 import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/reaction"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/review"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/rating"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/reaction/count"
+	reviewCount "github.com/sitnikovik/ndbx/autograder/internal/app/review/count"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 )
 
@@ -68,6 +71,28 @@ func WithDislikes(n uint64) Option {
 					Counts().
 					With(
 						count.WithDislikes(n),
+					),
+			),
+		)
+	}
+}
+
+// WithReviews set the reviews to the event.
+func WithReviews(reviews review.Reviews) Option {
+	return func(e *Event) {
+		e.reviews = reviews
+	}
+}
+
+// WithRating sets the rating for the event.
+func WithRating(r rating.Rating) Option {
+	return func(e *Event) {
+		e.reviews = e.reviews.With(
+			review.WithCounts(
+				e.reviews.
+					Counts().
+					With(
+						reviewCount.WithRating(r),
 					),
 			),
 		)
