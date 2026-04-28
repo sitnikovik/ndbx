@@ -269,8 +269,8 @@ Content-Length: 999
 - `event_id` *text* - идентификатор мероприятия в MongoDB
 - `rating` *tinyint* - оценка от `1` до `5` (только **целые** числа)
 - `comment` *text* - комментарий (любые символы)
-- `created_by` *string* - идентификатор пользователя в MongoDB, который оставил реакцию
 - `created_at` *timestamp* - дата и время создания отзыва (в UTC)
+- `created_by` *string* - идентификатор пользователя в MongoDB, который оставил реакцию
 - `updated_at` *timestamp* - дата и время обновления отзыва (в UTC)
 
 > ⚡️ Рекомендуется добавить `created_at` по **убыванию** в ключ кластеризации
@@ -321,6 +321,12 @@ CASSANDRA_PASSWORD=
 CASSANDRA_KEYSPACE="testkeyspace"
 # Уровень согласованности Cassandra
 CASSANDRA_CONSISTENCY="QUORUM"
+```
+
+И TTL для данных по отзывам мероприятий в Redis
+
+```sh
+APP_EVENT_REVIEWS_TTL=120
 ```
 
 ## FAQ
