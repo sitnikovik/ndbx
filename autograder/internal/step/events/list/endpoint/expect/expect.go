@@ -46,7 +46,7 @@ func (e Expectations) Reactions() []reaction.Reactions {
 	return e.reactions
 }
 
-// ReviewsRequired defines is reactions set in the Expectations instance.
+// ReviewsRequired defines are reviews set in the Expectations instance.
 func (e Expectations) ReviewsRequired() bool {
 	return e.reviews != nil
 }
