@@ -8,7 +8,7 @@ import (
 
 // number is a type constraint that allows number types for Rating.
 type number interface {
-	~int | ~int32 | ~int64 | ~uint8 | ~float32 | ~float64
+	~int | ~int8 | ~int32 | ~int64 | ~uint8 | ~float32 | ~float64
 }
 
 // Rating represents a rating value.
