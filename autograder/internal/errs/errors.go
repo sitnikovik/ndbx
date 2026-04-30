@@ -32,6 +32,8 @@ var (
 	ErrMarshallFailed = errors.New("failed to marshal data")
 	// ErrInvalidParam signals that the provided parameter is invalid.
 	ErrInvalidParam = errors.New("invalid parameter")
+	// ErrInvalidValue signals that the value is invalid.
+	ErrInvalidValue = errors.New("invalid value")
 	// ErrTypeAssertion signals that type assertion failed.
 	ErrTypeAssertion = errors.New("type assertion failed")
 )
