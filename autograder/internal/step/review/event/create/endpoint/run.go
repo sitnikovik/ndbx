@@ -10,7 +10,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 )
 
-// Run executes the search of events by filters and valudates the response got.
+// Run creates a review for the event and validates the response.
 func (s *Step) Run(
 	_ context.Context,
 	vars step.Variables,
