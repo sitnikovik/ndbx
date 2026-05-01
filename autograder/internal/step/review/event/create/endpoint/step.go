@@ -6,6 +6,7 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/reviews/events/create/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
+	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response/expectation"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 )
 
@@ -25,6 +26,8 @@ type Step struct {
 	cli httpClient
 	// event is the event that has to be created by the target application.
 	event event.Event
+	// want is the expectations to check.
+	want expectation.Expectations
 	// desc is the description of the step.
 	desc step.Desc
 	// rq is the request body to send.
@@ -41,6 +44,7 @@ func NewStep(
 	baseURL string,
 	ev event.Event,
 	rq body.Body,
+	want expectation.Expectations,
 ) *Step {
 	return &Step{
 		cli:     cli,
@@ -48,6 +52,7 @@ func NewStep(
 		baseURL: baseURL,
 		event:   ev,
 		rq:      rq,
+		want:    want,
 	}
 }
 

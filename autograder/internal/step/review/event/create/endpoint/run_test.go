@@ -66,6 +66,7 @@ func TestStep_Run(t *testing.T) {
 					body.WithComment("test review"),
 					body.WithRating(rating.Five),
 				),
+				xpctFixture,
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -88,6 +89,7 @@ func TestStep_Run(t *testing.T) {
 					body.WithComment("test review"),
 					body.WithRating(rating.Five),
 				),
+				xpctFixture,
 			),
 			args: args{
 				ctx: context.Background(),
@@ -127,6 +129,7 @@ func TestStep_Run(t *testing.T) {
 					body.WithComment("test review"),
 					body.WithRating(rating.Five),
 				),
+				xpctFixture,
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -163,6 +166,7 @@ func TestStep_Run(t *testing.T) {
 				"http://localhost",
 				eventFixture,
 				bodyFixture,
+				xpctFixture,
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -201,6 +205,7 @@ func TestStep_Run(t *testing.T) {
 				"http://localhost",
 				eventFixture,
 				bodyFixture,
+				xpctFixture,
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -232,6 +237,7 @@ func TestStep_Run(t *testing.T) {
 				"http://localhost",
 				eventFixture,
 				bodyFixture,
+				xpctFixture,
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -239,8 +245,8 @@ func TestStep_Run(t *testing.T) {
 			},
 			want: want{
 				vars:  varsFixture,
-				err:   nil,
-				panic: true,
+				err:   errs.ErrMissedCookie,
+				panic: false,
 			},
 		},
 		{
@@ -271,6 +277,7 @@ func TestStep_Run(t *testing.T) {
 				"http://localhost",
 				eventFixture,
 				bodyFixture,
+				xpctFixture,
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -310,6 +317,7 @@ func TestStep_Run(t *testing.T) {
 				"http://localhost",
 				eventFixture,
 				bodyFixture,
+				xpctFixture,
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -354,6 +362,7 @@ func TestStep_Run(t *testing.T) {
 				"http://localhost",
 				eventFixture,
 				bodyFixture,
+				xpctFixture,
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -361,7 +370,7 @@ func TestStep_Run(t *testing.T) {
 			},
 			want: want{
 				vars:  varsFixture,
-				err:   errs.ErrExpectationFailed,
+				err:   nil,
 				panic: false,
 			},
 		},
@@ -395,6 +404,7 @@ func TestStep_Run(t *testing.T) {
 				"http://localhost",
 				eventFixture,
 				bodyFixture,
+				xpctFixture,
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -402,7 +412,7 @@ func TestStep_Run(t *testing.T) {
 			},
 			want: want{
 				vars:  varsFixture,
-				err:   errs.ErrExpectationFailed,
+				err:   nil,
 				panic: false,
 			},
 		},

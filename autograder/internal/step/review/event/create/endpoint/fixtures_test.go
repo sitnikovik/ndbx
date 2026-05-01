@@ -8,11 +8,16 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/rating"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
+	cookieassert "github.com/sitnikovik/ndbx/autograder/internal/expect/http/cookie"
+	cookiexpct "github.com/sitnikovik/ndbx/autograder/internal/expect/http/cookie/expectation"
+	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response"
+	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response/expectation"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	eventfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/event"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	sidfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/cookie/session/id"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
+	usrsession "github.com/sitnikovik/ndbx/autograder/internal/user/session"
 )
 
 var (
@@ -55,4 +60,22 @@ var (
 		)
 		return vv
 	}()
+	xpctFixture = expectation.NewExpectations(
+		expectation.WithAsserts(
+			response.AssertNoContentStatus,
+			response.AssertEmptyContent,
+		),
+		expectation.WithCookies(
+			cookiexpct.NewExpectations(
+				cookie.Name,
+				cookiexpct.WithAsserts(
+					cookieassert.AssertExistsMaxAge,
+					cookieassert.AssertExistsHTTPOnly,
+				),
+				cookiexpct.WithAssertsValueFn(
+					usrsession.Validate,
+				),
+			),
+		),
+	)
 )

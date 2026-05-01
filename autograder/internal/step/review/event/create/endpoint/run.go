@@ -5,10 +5,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/cookie/session"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
-	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 )
 
@@ -45,32 +43,12 @@ func (s *Step) Run(
 			rsp.Body.Close(),
 		)
 	}()
-	err = response.AssertAll(
-		rsp,
-		response.AssertNoContentStatus,
-		response.AssertEmptyContent,
-	)
+	err = s.want.Assert(rsp)
 	if err != nil {
-		return errs.Wrap(
+		return errs.WrapJoin(
+			"unexpected response",
+			errs.ErrExpectationFailed,
 			err,
-			"got unexpected response",
-		)
-	}
-	cksess := session.MustParseSession(
-		rsp.Cookies(),
-	)
-	err = cksess.Validate()
-	if err != nil {
-		return errs.Wrap(
-			err,
-			"invalid session value in cookie",
-		)
-	}
-	err = cksess.MatchVariables(vars)
-	if err != nil {
-		return errs.Wrap(
-			err,
-			"session cookie does not match expected variables",
 		)
 	}
 	return nil

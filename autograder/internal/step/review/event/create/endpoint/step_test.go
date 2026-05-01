@@ -33,6 +33,7 @@ func TestStep_Name(t *testing.T) {
 					body.WithComment("test review"),
 					body.WithRating(rating.Five),
 				),
+				xpctFixture,
 			),
 			want: want{
 				value: descFixture.Title(),
@@ -88,6 +89,7 @@ func TestStep_Description(t *testing.T) {
 					body.WithComment("test review"),
 					body.WithRating(rating.Five),
 				),
+				xpctFixture,
 			),
 			want: want{
 				value: descFixture.Description(),
