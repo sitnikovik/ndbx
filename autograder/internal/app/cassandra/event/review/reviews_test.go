@@ -8,11 +8,13 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/cassandra"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/app/cassandra/event/review"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/cassandra/event/review/filter"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/creation"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/rating"
 	eventreview "github.com/sitnikovik/ndbx/autograder/internal/app/review/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
+	qb "github.com/sitnikovik/ndbx/autograder/internal/client/cassandra/query/builder"
 	cassandrafk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/cassandra"
 	dbfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/cassandra/client"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
@@ -69,6 +71,14 @@ func TestReviews_Select(t *testing.T) {
 					),
 				),
 				impl.WithLimit(1),
+				impl.WithFilter(
+					filter.NewFilter(
+						qb.NewWhere(),
+						filter.WithEventID(
+							event.NewID("123"),
+						),
+					),
+				),
 			),
 			args: args{
 				ctx: context.Background(),

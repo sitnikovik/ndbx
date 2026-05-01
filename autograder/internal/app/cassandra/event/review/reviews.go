@@ -6,13 +6,17 @@ import (
 	"strconv"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/cassandra"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/cassandra/event/review/filter"
 	eventreview "github.com/sitnikovik/ndbx/autograder/internal/app/review/event"
+	qb "github.com/sitnikovik/ndbx/autograder/internal/client/cassandra/query/builder"
 )
 
 // Reviews represents event reviews from database.
 type Reviews struct {
 	// db is database client.
 	db cassandra.Selectable
+	// ftr is filter for reactions.
+	ftr *filter.Filter
 	// limit defines limit of returned reviews.
 	limit int
 }
@@ -24,6 +28,9 @@ func NewReviews(
 ) *Reviews {
 	r := &Reviews{
 		db: db,
+		ftr: filter.NewFilter(
+			qb.NewWhere(),
+		),
 	}
 	for _, opt := range opts {
 		opt(r)
@@ -44,10 +51,19 @@ func (r *Reviews) Select(ctx context.Context) ([]eventreview.Review, error) {
 		"updated_at",
 		Table,
 	)
+	if !r.ftr.Empty() {
+		q += ` WHERE ` + r.ftr.Where()
+	}
 	if n := r.limit; n > 0 {
 		q += ` LIMIT ` + strconv.Itoa(n)
 	}
-	itr, err := r.db.Select(ctx, q)
+	var itr cassandra.Scanner
+	var err error
+	if !r.ftr.Empty() {
+		itr, err = r.db.Select(ctx, q, r.ftr.Args()...)
+	} else {
+		itr, err = r.db.Select(ctx, q)
+	}
 	if err != nil {
 		return nil, err
 	}
