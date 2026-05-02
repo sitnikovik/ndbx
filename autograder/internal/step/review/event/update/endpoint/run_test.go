@@ -110,6 +110,37 @@ func TestStep_Run(t *testing.T) {
 			},
 		},
 		{
+			name: "empty review id in vars",
+			s: impl.NewStep(
+				descFixture,
+				httpxfk.NewFakeClient(),
+				"http://localhost",
+				eventFixture,
+				body.NewBody(
+					body.WithComment("test review"),
+					body.WithRating(rating.Five),
+				),
+				xpctFixture,
+			),
+			args: args{
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					v := varsFixture.Copy()
+					v.Del(variable.Review + eventFixture.Hash())
+					return v
+				}(),
+			},
+			want: want{
+				vars: func() step.Variables {
+					v := varsFixture.Copy()
+					v.Del(variable.Review + eventFixture.Hash())
+					return v
+				}(),
+				err:   nil,
+				panic: true,
+			},
+		},
+		{
 			name: "http failed",
 			s: impl.NewStep(
 				descFixture,

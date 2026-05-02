@@ -58,6 +58,10 @@ var (
 			eventFixture.Hash(),
 			"13298",
 		)
+		vv.Set(
+			variable.Review+eventFixture.Hash(),
+			"12325324e2w2ew12w3213123",
+		)
 		return vv
 	}()
 	xpctFixture = expectation.NewExpectations(

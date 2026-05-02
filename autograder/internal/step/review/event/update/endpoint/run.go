@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
+	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 )
@@ -18,9 +19,12 @@ func (s *Step) Run(
 	rsp, err := s.cli.Patch(
 		endpoint.
 			NewEndpoint(s.baseURL).
-			EventReviews(
+			EventReview(
 				vars.
 					MustGet(s.event.Hash()).
+					AsString(),
+				vars.
+					MustGet(variable.Review+s.event.Hash()).
 					AsString(),
 			),
 		bytes.NewBuffer(
