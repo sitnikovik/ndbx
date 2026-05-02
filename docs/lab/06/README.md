@@ -45,9 +45,10 @@ Content-Length: 999
 **Ответ (OK):**
 
 ```http
-HTTP/1.1 204 No Content
+HTTP/1.1 201 Created
 Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
-Content-Length: 0
+Content-Length: 46
+{"id": "069b9830-4b5f-487a-ae89-424619ca2a35"}
 ```
 
 **Ответ (уже добавлял отзыв):**
@@ -55,7 +56,7 @@ Content-Length: 0
 ```http
 HTTP/1.1 409 No Content
 Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
-Content-Length: 0
+Content-Length: 29
 {"message": "Already exists"}
 ```
 
