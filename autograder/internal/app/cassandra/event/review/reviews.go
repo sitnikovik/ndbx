@@ -52,7 +52,7 @@ func (r *Reviews) Select(ctx context.Context) ([]eventreview.Review, error) {
 		Table,
 	)
 	if !r.ftr.Empty() {
-		q += ` WHERE ` + r.ftr.Where()
+		q += " " + r.ftr.Where()
 	}
 	if n := r.limit; n > 0 {
 		q += ` LIMIT ` + strconv.Itoa(n)
