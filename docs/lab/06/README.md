@@ -158,6 +158,63 @@ Content-Type: application/json
 {"message": "invalid \"{field_name}\" field"}
 ```
 
+### Изменить отзыв на мероприятие
+
+Реализуйте новый эндпоинт `PATCH /events/{event_id}/reviews/{review_id}`,
+с помощью которого пользователи могут редактировать отзывы и комментарии на мероприятия.
+
+> 🔐 Доступно **только авторизованным** пользователям и только владельцам самих отзывам
+
+**Запрос**:
+
+```http
+PATCH /events/{event_id}/reviews/{review_id} HTTP/1.1
+Host:localhost:8080
+Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d;
+Content-Type: application/json
+Content-Length: 999
+```
+
+**Тело запроса**:
+
+```json
+{
+    "rating": 3,
+    "comment": "На самом деле, так себе спектакль..."
+}
+```
+
+- `rating` *int* - оценка от `1` до `5` (только **целые** числа)
+- `comment` *string* - комментарий к отзыву (любые символы, но максимум 300)
+
+> 💡 Эндпоинт изменяет в отзыве только те поля, которые переданы
+и **всегда** обновляет поле `updated_at` на текущее время при успешном обновлении отзыва
+
+**Ответ (OK):**
+
+```http
+HTTP/1.1 204 No Content
+Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
+Content-Length: 0
+```
+
+**Ответ (мероприятие не найдено или нет доступа к нему):**
+
+```http
+HTTP/1.1 404 Not Found
+Set-Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d; HttpOnly; Path=/; Max-Age={APP_USER_SESSION_TTL}
+Content-Type: application/json
+Content-Length: 29
+{"message": "Event not found"}
+```
+
+**Ответ (если пользователь не авторизован):**
+
+```http
+HTTP/1.1 401 Unauthorized
+Content-Length: 0
+```
+
 ### Отзывы в мероприятиях
 
 Доработайте существующие эндпоинты `GET /events`, `GET /events/{event_id}`, `GET /users/{user_id}/events` так,
@@ -282,6 +339,9 @@ A: Можно, но в `CASSANDRA_PORT` описывает порт основн
 **Q: Что если отправить `POST /events/{event_id}/reviews` а несколько раз подряд?**  
 A: Один пользователь — один отзыв.
 Если отзыв уже был создан — возвращаем 409 ошибку, сообщающая, что отзыв уже был создан.
+
+**Q: Редактировать отзыв через `PATCH` можно сколь угодно раз?**  
+A: У нас — да. Мы опускаем момент с модерацией и прочей бизнес-логикой.
 
 **Q: Можно ли сортировать отзывы в `GET /events/{event_id}/reviews`?**  
 A: Нет. Отзывы лежат в Cassandra и сортировка "на лету" сильно замедлит время ответа,
