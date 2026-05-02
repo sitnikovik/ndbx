@@ -48,9 +48,11 @@ func TestStep_Run(t *testing.T) {
 							_ string,
 							_ io.Reader,
 						) (*http.Response, error) {
+							v := `{"id": "123"}`
 							return &http.Response{
-								StatusCode: http.StatusNoContent,
-								Body:       http.NoBody,
+								StatusCode:    http.StatusCreated,
+								Body:          io.NopCloser(strings.NewReader(v)),
+								ContentLength: int64(len(v)),
 								Header: http.Header{
 									"Set-Cookie": []string{
 										sessionfx.NewOKSession(),
@@ -73,8 +75,12 @@ func TestStep_Run(t *testing.T) {
 				vars: varsFixture,
 			},
 			want: want{
-				err:   nil,
-				vars:  varsFixture,
+				err: nil,
+				vars: func() step.Variables {
+					vv := varsFixture.Copy()
+					vv.Set(variable.Review+eventFixture.Hash(), "123")
+					return vv
+				}(),
 				panic: false,
 			},
 		},
@@ -151,9 +157,11 @@ func TestStep_Run(t *testing.T) {
 							_ string,
 							_ io.Reader,
 						) (*http.Response, error) {
+							v := `{"id": "123"}`
 							return &http.Response{
-								StatusCode: http.StatusOK,
-								Body:       http.NoBody,
+								StatusCode:    http.StatusOK,
+								Body:          io.NopCloser(strings.NewReader(v)),
+								ContentLength: int64(len(v)),
 								Header: http.Header{
 									"Set-Cookie": []string{
 										sessionfx.NewOKSession(),
@@ -179,7 +187,7 @@ func TestStep_Run(t *testing.T) {
 			},
 		},
 		{
-			name: "got not empty http body conteny",
+			name: "got empty http body content",
 			s: impl.NewStep(
 				descFixture,
 				httpxfk.NewFakeClient(
@@ -188,9 +196,9 @@ func TestStep_Run(t *testing.T) {
 							_ string,
 							_ io.Reader,
 						) (*http.Response, error) {
-							v := `{"message": "ok"}`
+							v := ``
 							return &http.Response{
-								StatusCode:    http.StatusOK,
+								StatusCode:    http.StatusCreated,
 								Body:          io.NopCloser(strings.NewReader(v)),
 								ContentLength: int64(len(v)),
 								Header: http.Header{
@@ -227,9 +235,11 @@ func TestStep_Run(t *testing.T) {
 							_ string,
 							_ io.Reader,
 						) (*http.Response, error) {
+							v := `{"id": "123"}`
 							return &http.Response{
-								StatusCode: http.StatusNoContent,
-								Body:       http.NoBody,
+								StatusCode:    http.StatusCreated,
+								Body:          io.NopCloser(strings.NewReader(v)),
+								ContentLength: int64(len(v)),
 							}, nil
 						},
 					),
@@ -259,9 +269,11 @@ func TestStep_Run(t *testing.T) {
 							_ string,
 							_ io.Reader,
 						) (*http.Response, error) {
+							v := `{"id": "123"}`
 							return &http.Response{
-								StatusCode: http.StatusNoContent,
-								Body:       http.NoBody,
+								StatusCode:    http.StatusCreated,
+								Body:          io.NopCloser(strings.NewReader(v)),
+								ContentLength: int64(len(v)),
 								Header: http.Header{
 									"Set-Cookie": []string{
 										sessionfx.NewSession(
@@ -299,9 +311,11 @@ func TestStep_Run(t *testing.T) {
 							_ string,
 							_ io.Reader,
 						) (*http.Response, error) {
+							v := `{"id": "123"}`
 							return &http.Response{
-								StatusCode: http.StatusNoContent,
-								Body:       http.NoBody,
+								StatusCode:    http.StatusCreated,
+								Body:          io.NopCloser(strings.NewReader(v)),
+								ContentLength: int64(len(v)),
 								Header: http.Header{
 									"Set-Cookie": []string{
 										sessionfx.NewSession(
@@ -339,9 +353,11 @@ func TestStep_Run(t *testing.T) {
 							_ string,
 							_ io.Reader,
 						) (*http.Response, error) {
+							v := `{"id": "123"}`
 							return &http.Response{
-								StatusCode: http.StatusNoContent,
-								Body:       http.NoBody,
+								StatusCode:    http.StatusCreated,
+								Body:          io.NopCloser(strings.NewReader(v)),
+								ContentLength: int64(len(v)),
 								Header: http.Header{
 									"Set-Cookie": []string{
 										sessionfx.NewSession(
@@ -384,9 +400,11 @@ func TestStep_Run(t *testing.T) {
 							_ string,
 							_ io.Reader,
 						) (*http.Response, error) {
+							v := `{"id": "123"}`
 							return &http.Response{
-								StatusCode: http.StatusNoContent,
-								Body:       http.NoBody,
+								StatusCode:    http.StatusCreated,
+								Body:          io.NopCloser(strings.NewReader(v)),
+								ContentLength: int64(len(v)),
 								Header: http.Header{
 									"Set-Cookie": []string{
 										sessionfx.NewSession(

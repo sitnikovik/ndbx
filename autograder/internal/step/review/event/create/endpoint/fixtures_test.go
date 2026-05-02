@@ -62,8 +62,8 @@ var (
 	}()
 	xpctFixture = expectation.NewExpectations(
 		expectation.WithAsserts(
-			response.AssertNoContentStatus,
-			response.AssertEmptyContent,
+			response.AssertCreatedStatus,
+			response.AssertNotEmptyContent,
 		),
 		expectation.WithCookies(
 			cookiexpct.NewExpectations(

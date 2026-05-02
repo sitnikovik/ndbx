@@ -4,8 +4,11 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"net/http"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/reviews/events/create/resp/body"
+	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 )
@@ -49,6 +52,14 @@ func (s *Step) Run(
 			"unexpected response",
 			errs.ErrExpectationFailed,
 			err,
+		)
+	}
+	if rsp.StatusCode == http.StatusCreated {
+		vars.Set(
+			variable.Review+s.event.Hash(),
+			body.
+				MustParseBody(rsp.Body).
+				ID(),
 		)
 	}
 	return nil
