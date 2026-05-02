@@ -1,0 +1,102 @@
+package body_test
+
+import (
+	"io"
+	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	impl "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/reviews/events/create/resp/body"
+)
+
+func TestMustParseBody(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		body io.ReadCloser
+	}
+	type want struct {
+		val   impl.Body
+		panic bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want want
+	}{
+		{
+			name: "ok",
+			args: args{
+				body: io.NopCloser(
+					strings.NewReader(`{"id":"123"}`),
+				),
+			},
+			want: want{
+				val:   impl.NewBody("123"),
+				panic: false,
+			},
+		},
+		{
+			name: "invalid JSON",
+			args: args{
+				body: io.NopCloser(
+					strings.NewReader(`{"id":123}`),
+				),
+			},
+			want: want{
+				panic: true,
+			},
+		},
+		{
+			name: "missing id field",
+			args: args{
+				body: io.NopCloser(
+					strings.NewReader(`{"name":"Event Name"}`),
+				),
+			},
+			want: want{
+				val:   impl.NewBody(""),
+				panic: false,
+			},
+		},
+		{
+			name: "empty body",
+			args: args{
+				body: io.NopCloser(
+					strings.NewReader(``),
+				),
+			},
+			want: want{
+				panic: true,
+			},
+		},
+		{
+			name: "id field is empty",
+			args: args{
+				body: io.NopCloser(
+					strings.NewReader(`{"id":""}`),
+				),
+			},
+			want: want{
+				val:   impl.NewBody(""),
+				panic: false,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if tt.want.panic {
+				assert.Panics(t, func() {
+					_ = impl.MustParseBody(tt.args.body)
+				})
+				return
+			}
+			assert.Equal(
+				t,
+				tt.want.val,
+				impl.MustParseBody(tt.args.body),
+			)
+		})
+	}
+}
