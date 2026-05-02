@@ -13,4 +13,6 @@ const (
 	EventID = "event_id"
 	// Event is the key for the event variable in the autograder.
 	Event = "event"
+	// Review is the key for the review variable in the autograder.
+	Review = "event_review"
 )
