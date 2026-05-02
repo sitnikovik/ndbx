@@ -14,7 +14,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user/session"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/cassandra"
-	impl "github.com/sitnikovik/ndbx/autograder/internal/config/lab5/config"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/config/lab6/config"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/mongo"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/redis"
 	"github.com/sitnikovik/ndbx/autograder/internal/console"
@@ -173,10 +173,10 @@ func TestConfig_Validate(t *testing.T) {
 				),
 				app.NewConfig(
 					user.NewConfig(
-						session.NewConfig(0),
+						session.NewConfig(1*time.Second),
 					),
-					"",
-					0,
+					"localhost",
+					8080,
 					app.WithEvent(
 						event.NewConfig(
 							reaction.NewConfig(0),
@@ -186,7 +186,50 @@ func TestConfig_Validate(t *testing.T) {
 				),
 			),
 			wantErr:         errs.ErrInvalidConfig,
-			wantErrContains: "app",
+			wantErrContains: "reactions TTL",
+		},
+		{
+			name: "invalid app event reviews ttl",
+			c: impl.NewConfig(
+				redis.NewConfig(
+					"localhost:6379",
+					"",
+					0,
+				),
+				mongo.NewConfig(
+					"testdb",
+					"testuser",
+					"testpass",
+					"localhost",
+					27017,
+				),
+				cassandra.NewConfig(
+					cassandra.NewConnection(
+						[]string{"localhost"},
+						9042,
+					),
+					cassandra.NewAuth("", ""),
+					cassandra.NewDatabase(
+						"testkeyspace",
+						consistency.Quorum,
+					),
+				),
+				app.NewConfig(
+					user.NewConfig(
+						session.NewConfig(1*time.Second),
+					),
+					"localhost",
+					8080,
+					app.WithEvent(
+						event.NewConfig(
+							reaction.NewConfig(1*time.Minute),
+							review.NewConfig(0),
+						),
+					),
+				),
+			),
+			wantErr:         errs.ErrInvalidConfig,
+			wantErrContains: "reviews TTL",
 		},
 		{
 			name: "invalid mongo config",
