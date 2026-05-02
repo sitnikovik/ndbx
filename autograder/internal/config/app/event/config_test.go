@@ -8,6 +8,7 @@ import (
 
 	impl "github.com/sitnikovik/ndbx/autograder/internal/config/app/event"
 	reaction "github.com/sitnikovik/ndbx/autograder/internal/config/app/reaction/event"
+	review "github.com/sitnikovik/ndbx/autograder/internal/config/app/review/event"
 )
 
 func TestConfig_Reactions(t *testing.T) {
@@ -24,7 +25,10 @@ func TestConfig_Reactions(t *testing.T) {
 			name: "ok",
 			c: impl.NewConfig(
 				reaction.NewConfig(
-					10 * time.Second,
+					10*time.Second,
+				),
+				review.NewConfig(
+					32*time.Second,
 				),
 			),
 			want: want{
@@ -48,6 +52,52 @@ func TestConfig_Reactions(t *testing.T) {
 				t,
 				tt.want.val,
 				tt.c.Reactions(),
+			)
+		})
+	}
+}
+
+func TestConfig_Reviews(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		val review.Config
+	}
+	tests := []struct {
+		name string
+		c    impl.Config
+		want want
+	}{
+		{
+			name: "ok",
+			c: impl.NewConfig(
+				reaction.NewConfig(
+					10*time.Second,
+				),
+				review.NewConfig(
+					32*time.Second,
+				),
+			),
+			want: want{
+				val: review.NewConfig(
+					32 * time.Second,
+				),
+			},
+		},
+		{
+			name: "default value",
+			c:    impl.Config{},
+			want: want{
+				val: review.NewConfig(0),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.val,
+				tt.c.Reviews(),
 			)
 		})
 	}
