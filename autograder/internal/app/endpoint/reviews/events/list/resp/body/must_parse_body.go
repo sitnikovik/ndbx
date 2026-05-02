@@ -13,14 +13,14 @@ import (
 // Panics if parsing the body fails or if the required fields are missing.
 func MustParseBody(body io.ReadCloser) Body {
 	var v struct {
-		Events []json.RawMessage `json:"events"`
-		Count  int               `json:"count"`
+		Reviews []json.RawMessage `json:"reviews"`
+		Count   int               `json:"count"`
 	}
 	jsonbody.NewBody(body).MustParseIn(&v)
 	var reviews []event.Review
-	if len(v.Events) > 0 {
-		reviews = make([]event.Review, 0, len(v.Events))
-		for _, jsn := range v.Events {
+	if len(v.Reviews) > 0 {
+		reviews = make([]event.Review, 0, len(v.Reviews))
+		for _, jsn := range v.Reviews {
 			reviews = append(reviews, event.MustParseJSON(jsn))
 		}
 	}

@@ -35,7 +35,7 @@ func TestMustParseBody(t *testing.T) {
 			args: args{
 				body: io.NopCloser(
 					strings.NewReader(`{` +
-						`"events": [
+						`"reviews": [
 						{` +
 						`"id": "56e2c0b3a2b4c1a5e6f7f8b3",` +
 						`"event_id": "12e9c0b1a2b3c3d5e6f7a8b7",` +
@@ -84,7 +84,7 @@ func TestMustParseBody(t *testing.T) {
 			args: args{
 				body: io.NopCloser(
 					strings.NewReader(`{` +
-						`"events": [],` +
+						`"reviews": [],` +
 						`"count": 1` +
 						`}`,
 					),
