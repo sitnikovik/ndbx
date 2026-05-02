@@ -62,9 +62,10 @@ func (s *Step) Run(
 	}
 	err = numbers.AssertEquals(n, b.Count())
 	if err != nil {
-		return errs.Wrap(
-			err,
+		return errs.WrapJoin(
 			"got mismatch in 'count' field",
+			errs.ErrExpectationFailed,
+			err,
 		)
 	}
 	return nil
