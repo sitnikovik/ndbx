@@ -2,7 +2,7 @@
 
 [![Quality](https://github.com/sitnikovik/ndbx/actions/workflows/quality.yml/badge.svg)](https://github.com/sitnikovik/ndbx/actions/workflows/quality.yml)
 [![Tests](https://github.com/sitnikovik/ndbx/actions/workflows/tests.yml/badge.svg)](https://github.com/sitnikovik/ndbx/actions/workflows/tests.yml)
-![Lab Progress](https://img.shields.io/badge/Lab-5%20of%207-blue)
+![Lab Progress](https://img.shields.io/badge/Lab-6%20of%207-blue)
 
 Проект содержит все необходимые материалы для курса по NoSQL базам данных и
 пайплайн в GitHub Actions для проверки лабораторных работ.
@@ -31,7 +31,7 @@
 3. [MongoDB: Пользователи и события](docs/lab/03/)
 4. [MongoDB: Шардирование и репликация](docs/lab/04/)
 5. [Cassandra: Реакции на мероприятия](docs/lab/05/)
-6. Cassandra: Репликация событий
+6. [Cassandra: Репликация событий](docs/lab/06/)
 7. Neo4j: Связи и рекомендации
 
 > Задания публикуются постепенно по мере прохождения курса
