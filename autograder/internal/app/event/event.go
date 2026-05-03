@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/reaction"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/review"
 )
 
 // Event represents an event.
@@ -24,6 +25,8 @@ type Event struct {
 	qty Quantity
 	// reactions represents counters of the users' reactions of the event.
 	reactions reaction.Reactions
+	// reviews contains the users' reviews of the event.
+	reviews review.Reviews
 	// id is the unique identifier for the event.
 	id ID
 }
@@ -83,6 +86,11 @@ func (e Event) Quantity() Quantity {
 // Reactions returns the counters of the reactions for the event.
 func (e Event) Reactions() reaction.Reactions {
 	return e.reactions
+}
+
+// Reviews returns the counters of the reviews for the event.
+func (e Event) Reviews() review.Reviews {
+	return e.reviews
 }
 
 // ID returns the unique identifier for the event.

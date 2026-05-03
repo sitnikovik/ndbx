@@ -8,8 +8,10 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/reaction"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/review"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/money"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/reaction/count"
+	reviewCount "github.com/sitnikovik/ndbx/autograder/internal/app/review/count"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	eventfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/event"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
@@ -523,6 +525,79 @@ func TestEvent_Reactions(t *testing.T) {
 				t,
 				tt.want.val,
 				tt.e.Reactions(),
+			)
+		})
+	}
+}
+
+func TestEvent_Reviews(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		val review.Reviews
+	}
+	tests := []struct {
+		name string
+		e    event.Event
+		want want
+	}{
+		{
+			name: "with reactions",
+			e: eventfx.
+				NewBirthdayParty(
+					event.NewDates(
+						timex.MustRFC3339("2025-01-01T12:00:00Z"),
+						timex.MustRFC3339("2025-01-01T13:00:00Z"),
+					),
+					timex.MustRFC3339("2024-12-14T13:00:00Z"),
+					userfx.NewAlexSmith(),
+				).
+				CopyWith(
+					event.WithReviews(
+						review.NewReviews(
+							review.WithCounts(
+								reviewCount.NewCounts(
+									reviewCount.WithRating(4),
+									reviewCount.WithCount(1),
+								),
+							),
+						),
+					),
+					event.WithRating(4.8),
+				),
+			want: want{
+				val: review.NewReviews(
+					review.WithCounts(
+						reviewCount.NewCounts(
+							reviewCount.WithRating(4.8),
+							reviewCount.WithCount(1),
+						),
+					),
+				),
+			},
+		},
+		{
+			name: "without reactions",
+			e: eventfx.
+				NewBirthdayParty(
+					event.NewDates(
+						timex.MustRFC3339("2025-01-01T12:00:00Z"),
+						timex.MustRFC3339("2025-01-01T13:00:00Z"),
+					),
+					timex.MustRFC3339("2024-12-14T13:00:00Z"),
+					userfx.NewAlexSmith(),
+				),
+			want: want{
+				val: review.NewReviews(),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.val,
+				tt.e.Reviews(),
 			)
 		})
 	}

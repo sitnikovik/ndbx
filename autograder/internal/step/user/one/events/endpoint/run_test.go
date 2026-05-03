@@ -12,7 +12,9 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/reaction"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/review"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/reaction/count"
+	reviewCount "github.com/sitnikovik/ndbx/autograder/internal/app/review/count"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
@@ -190,6 +192,103 @@ func TestStep_Run(t *testing.T) {
 									),
 								),
 							},
+						),
+					),
+				),
+			),
+			args: args{
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
+			},
+			want: want{
+				err: nil,
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewAlexSmith().Hash(),
+						"123",
+					)
+					return vars
+				}(),
+				panic: false,
+			},
+		},
+		{
+			name: "ok found with reviews",
+			s: impl.NewStep(
+				httpfk.NewFakeClient(
+					httpfk.WithGet(
+						func(_ string) (*http.Response, error) {
+							v := `{` +
+								`"events": [` +
+								`{` +
+								`"id": "1",` +
+								`"title": "test title",` +
+								`"description": "test description",` +
+								`"location": {` +
+								`"address": "test location"` +
+								`},` +
+								`"created_at": "2024-01-01T00:00:00Z",` +
+								`"created_by": "test_user",` +
+								`"started_at": "2024-01-01T01:00:00Z",` +
+								`"finished_at": "2024-01-01T02:00:00Z",` +
+								`"reviews": {` +
+								`"rating": 4.8,` +
+								`"count": 3` +
+								`}` +
+								`}` +
+								`],` +
+								`"count": 1` +
+								`}`
+							return &http.Response{
+								StatusCode: http.StatusOK,
+								Body: func() io.ReadCloser {
+									return io.NopCloser(strings.NewReader(v))
+								}(),
+								ContentLength: int64(len(v)),
+							}, nil
+						},
+					),
+				),
+				"http://localhost",
+				userfx.NewAlexSmith(),
+				body.NewBody(),
+				[]event.Event{
+					event.NewEvent(
+						event.NewID("1"),
+						event.NewContent(
+							"test title",
+							"test description",
+						),
+						event.NewLocation("test location"),
+						event.NewCreated(
+							timex.MustRFC3339("2024-01-01T00:00:00Z"),
+							user.NewIdentity("test_user"),
+						),
+						event.NewDates(
+							timex.MustRFC3339("2024-01-01T01:00:00Z"),
+							timex.MustRFC3339("2024-01-01T02:00:00Z"),
+						),
+					),
+				},
+				impl.WithExpectations(
+					expect.NewExpectations(
+						expect.WithReviews(
+							review.NewReviews(
+								review.WithCounts(
+									reviewCount.NewCounts(
+										reviewCount.WithRating(4.8),
+										reviewCount.WithCount(3),
+									),
+								),
+							),
 						),
 					),
 				),

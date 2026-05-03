@@ -12,7 +12,9 @@ import (
 	rq "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/reaction"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/review"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/reaction/count"
+	reviewCounts "github.com/sitnikovik/ndbx/autograder/internal/app/review/count"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
@@ -672,6 +674,339 @@ func TestStep_Run(t *testing.T) {
 								count.NewCounts(
 									count.WithLikes(24),
 									count.WithDislikes(3),
+								),
+							),
+						),
+					),
+				),
+			),
+			args: args{
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
+			},
+			want: want{
+				err: nil,
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					return vars
+				}(),
+				panic: true,
+			},
+		},
+		{
+			name: "got events with reviews",
+			s: impl.NewStep(
+				step.NewDesc(
+					"Test Step",
+					"Test description",
+				),
+				httpfk.NewFakeClient(
+					httpfk.WithGet(
+						func(_ string) (*http.Response, error) {
+							v := `{` +
+								`"events": [` +
+								`{` +
+								`"id": "1",` +
+								`"title": "test title",` +
+								`"description": "test description",` +
+								`"location": {` +
+								`"address": "test location"` +
+								`},` +
+								`"created_at": "2024-01-01T00:00:00Z",` +
+								`"created_by": "test_user",` +
+								`"started_at": "2024-01-01T01:00:00Z",` +
+								`"finished_at": "2024-01-01T02:00:00Z",` +
+								`"reviews": {` +
+								`"rating": 4.8,` +
+								`"count": 12` +
+								`}` +
+								`}` +
+								`],` +
+								`"count": 1` +
+								`}`
+							return &http.Response{
+								StatusCode: http.StatusOK,
+								Body: func() io.ReadCloser {
+									return io.NopCloser(strings.NewReader(v))
+								}(),
+								ContentLength: int64(len(v)),
+							}, nil
+						},
+					),
+				),
+				"http://localhost",
+				rq.NewBody(),
+				expect.NewExpectations(
+					expect.WithEvents(
+						event.NewEvent(
+							event.NewID("1"),
+							event.NewContent(
+								"test title",
+								"test description",
+							),
+							event.NewLocation("test location"),
+							event.NewCreated(
+								timex.MustRFC3339("2024-01-01T00:00:00Z"),
+								user.NewIdentity("test_user"),
+							),
+							event.NewDates(
+								timex.MustRFC3339("2024-01-01T01:00:00Z"),
+								timex.MustRFC3339("2024-01-01T02:00:00Z"),
+							),
+							event.WithReviews(
+								review.NewReviews(
+									review.WithCounts(
+										reviewCounts.NewCounts(
+											reviewCounts.WithRating(4.8),
+											reviewCounts.WithCount(12),
+										),
+									),
+								),
+							),
+						),
+					),
+					expect.WithReviews(
+						review.NewReviews(
+							review.WithCounts(
+								reviewCounts.NewCounts(
+									reviewCounts.WithRating(4.8),
+									reviewCounts.WithCount(12),
+								),
+							),
+						),
+					),
+				),
+			),
+			args: args{
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
+			},
+			want: want{
+				err: nil,
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					return vars
+				}(),
+				panic: false,
+			},
+		},
+		{
+			name: "got events with reviews but fails expectations",
+			s: impl.NewStep(
+				step.NewDesc(
+					"Test Step",
+					"Test description",
+				),
+				httpfk.NewFakeClient(
+					httpfk.WithGet(
+						func(_ string) (*http.Response, error) {
+							v := `{` +
+								`"events": [` +
+								`{` +
+								`"id": "1",` +
+								`"title": "test title",` +
+								`"description": "test description",` +
+								`"location": {` +
+								`"address": "test location"` +
+								`},` +
+								`"created_at": "2024-01-01T00:00:00Z",` +
+								`"created_by": "test_user",` +
+								`"started_at": "2024-01-01T01:00:00Z",` +
+								`"finished_at": "2024-01-01T02:00:00Z",` +
+								`"reviews": {` +
+								`"rating": 3.8,` +
+								`"count": 12` +
+								`}` +
+								`}` +
+								`],` +
+								`"count": 1` +
+								`}`
+							return &http.Response{
+								StatusCode: http.StatusOK,
+								Body: func() io.ReadCloser {
+									return io.NopCloser(strings.NewReader(v))
+								}(),
+								ContentLength: int64(len(v)),
+							}, nil
+						},
+					),
+				),
+				"http://localhost",
+				rq.NewBody(),
+				expect.NewExpectations(
+					expect.WithEvents(
+						event.NewEvent(
+							event.NewID("1"),
+							event.NewContent(
+								"test title",
+								"test description",
+							),
+							event.NewLocation("test location"),
+							event.NewCreated(
+								timex.MustRFC3339("2024-01-01T00:00:00Z"),
+								user.NewIdentity("test_user"),
+							),
+							event.NewDates(
+								timex.MustRFC3339("2024-01-01T01:00:00Z"),
+								timex.MustRFC3339("2024-01-01T02:00:00Z"),
+							),
+							event.WithReviews(
+								review.NewReviews(
+									review.WithCounts(
+										reviewCounts.NewCounts(
+											reviewCounts.WithRating(4.8),
+											reviewCounts.WithCount(12),
+										),
+									),
+								),
+							),
+						),
+					),
+					expect.WithReviews(
+						review.NewReviews(
+							review.WithCounts(
+								reviewCounts.NewCounts(
+									reviewCounts.WithRating(4.8),
+									reviewCounts.WithCount(12),
+								),
+							),
+						),
+					),
+				),
+			),
+			args: args{
+				ctx:  context.Background(),
+				vars: step.NewVariables(),
+			},
+			want: want{
+				err: errs.ErrExpectationFailed,
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					return vars
+				}(),
+				panic: false,
+			},
+		},
+		{
+			name: "got events with reviews but expectations are set incorrectly",
+			s: impl.NewStep(
+				step.NewDesc(
+					"Test Step",
+					"Test description",
+				),
+				httpfk.NewFakeClient(
+					httpfk.WithGet(
+						func(_ string) (*http.Response, error) {
+							v := `{` +
+								`"events": [` +
+								`{` +
+								`"id": "1",` +
+								`"title": "test title",` +
+								`"description": "test description",` +
+								`"location": {` +
+								`"address": "test location"` +
+								`},` +
+								`"created_at": "2024-01-01T00:00:00Z",` +
+								`"created_by": "test_user",` +
+								`"started_at": "2024-01-01T01:00:00Z",` +
+								`"finished_at": "2024-01-01T02:00:00Z",` +
+								`"reviews": {` +
+								`"rating": 3.8,` +
+								`"count": 12` +
+								`}` +
+								`},` +
+								`{` +
+								`"id": "2",` +
+								`"title": "test title",` +
+								`"description": "test description",` +
+								`"location": {` +
+								`"address": "test location"` +
+								`},` +
+								`"created_at": "2024-01-01T00:00:00Z",` +
+								`"created_by": "test_user",` +
+								`"started_at": "2024-01-01T01:00:00Z",` +
+								`"finished_at": "2024-01-01T02:00:00Z",` +
+								`"reviews": {` +
+								`"rating": 3.8,` +
+								`"count": 12` +
+								`}` +
+								`}` +
+								`],` +
+								`"count": 2` +
+								`}`
+							return &http.Response{
+								StatusCode: http.StatusOK,
+								Body: func() io.ReadCloser {
+									return io.NopCloser(strings.NewReader(v))
+								}(),
+								ContentLength: int64(len(v)),
+							}, nil
+						},
+					),
+				),
+				"http://localhost",
+				rq.NewBody(),
+				expect.NewExpectations(
+					expect.WithEvents(
+						event.NewEvent(
+							event.NewID("1"),
+							event.NewContent(
+								"test title",
+								"test description",
+							),
+							event.NewLocation("test location"),
+							event.NewCreated(
+								timex.MustRFC3339("2024-01-01T00:00:00Z"),
+								user.NewIdentity("test_user"),
+							),
+							event.NewDates(
+								timex.MustRFC3339("2024-01-01T01:00:00Z"),
+								timex.MustRFC3339("2024-01-01T02:00:00Z"),
+							),
+							event.WithReviews(
+								review.NewReviews(
+									review.WithCounts(
+										reviewCounts.NewCounts(
+											reviewCounts.WithRating(4.8),
+											reviewCounts.WithCount(12),
+										),
+									),
+								),
+							),
+						),
+						event.NewEvent(
+							event.NewID("2"),
+							event.NewContent(
+								"test title",
+								"test description",
+							),
+							event.NewLocation("test location"),
+							event.NewCreated(
+								timex.MustRFC3339("2024-01-01T00:00:00Z"),
+								user.NewIdentity("test_user"),
+							),
+							event.NewDates(
+								timex.MustRFC3339("2024-01-01T01:00:00Z"),
+								timex.MustRFC3339("2024-01-01T02:00:00Z"),
+							),
+							event.WithReviews(
+								review.NewReviews(
+									review.WithCounts(
+										reviewCounts.NewCounts(
+											reviewCounts.WithRating(4.8),
+											reviewCounts.WithCount(12),
+										),
+									),
+								),
+							),
+						),
+					),
+					expect.WithReviews(
+						review.NewReviews(
+							review.WithCounts(
+								reviewCounts.NewCounts(
+									reviewCounts.WithRating(4.8),
+									reviewCounts.WithCount(12),
 								),
 							),
 						),

@@ -10,6 +10,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/event"
 	reaction "github.com/sitnikovik/ndbx/autograder/internal/config/app/reaction/event"
+	review "github.com/sitnikovik/ndbx/autograder/internal/config/app/review/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user/session"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/cassandra"
@@ -63,6 +64,7 @@ func TestConfig_Validate(t *testing.T) {
 					app.WithEvent(
 						event.NewConfig(
 							reaction.NewConfig(1*time.Minute),
+							review.NewConfig(90*time.Second),
 						),
 					),
 				),
@@ -178,6 +180,7 @@ func TestConfig_Validate(t *testing.T) {
 					app.WithEvent(
 						event.NewConfig(
 							reaction.NewConfig(0),
+							review.NewConfig(90*time.Second),
 						),
 					),
 				),

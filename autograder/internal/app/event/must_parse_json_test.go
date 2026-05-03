@@ -7,6 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/review"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/review/count"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
@@ -42,6 +44,10 @@ func TestMustParseJSON(t *testing.T) {
 					`"reactions": {` +
 					`"likes": 24,` +
 					`"dislikes": 3` +
+					`},` +
+					`"reviews": {` +
+					`"rating": 4.8,` +
+					`"count": 12` +
 					`}` +
 					`}`,
 				),
@@ -64,6 +70,16 @@ func TestMustParseJSON(t *testing.T) {
 					),
 					event.WithLikes(24),
 					event.WithDislikes(3),
+					event.WithReviews(
+						review.NewReviews(
+							review.WithCounts(
+								count.NewCounts(
+									count.WithRating(4.8),
+									count.WithCount(12),
+								),
+							),
+						),
+					),
 				),
 				panic: false,
 			},

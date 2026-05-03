@@ -99,5 +99,30 @@ func (s *Step) Run(
 			}
 		}
 	}
+	if s.expect.ReviewsRequired() {
+		want := s.expect.Reviews()
+		err = numbers.AssertEquals(
+			len(want),
+			n,
+		)
+		if err != nil {
+			panic("got length mismatch of expected reviews with gotten events")
+		}
+		for i, ev := range events {
+			err = expect.AssertEquals(
+				want[i],
+				ev.Reviews(),
+			)
+			if err != nil {
+				return errs.Wrap(
+					err,
+					"got unexpected reviews for event '%s' %v != %v",
+					ev.ID().String(),
+					want[i],
+					ev.Reviews(),
+				)
+			}
+		}
+	}
 	return nil
 }
