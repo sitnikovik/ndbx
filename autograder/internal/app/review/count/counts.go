@@ -33,6 +33,12 @@ func (c Counts) Empty() bool {
 	return c.rating.Empty() && c.count == 0
 }
 
+// Equals defines if the object equals to the provided one.
+func (c Counts) Equals(other Counts) bool {
+	return c.rating.Equals(other.rating) &&
+		c.count == other.count
+}
+
 // Rating returns the average rating of the object.
 func (c Counts) Rating() rating.Rating {
 	return c.rating
