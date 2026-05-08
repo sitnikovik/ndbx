@@ -310,3 +310,106 @@ func TestCounts_With(t *testing.T) {
 		})
 	}
 }
+
+func TestCounts_Equals(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		other count.Counts
+	}
+	type want struct {
+		value bool
+	}
+	tests := []struct {
+		name string
+		c    count.Counts
+		args args
+		want want
+	}{
+		{
+			name: "same",
+			c: count.NewCounts(
+				count.WithLikes(3),
+				count.WithDislikes(1),
+			),
+			args: args{
+				other: count.NewCounts(
+					count.WithLikes(3),
+					count.WithDislikes(1),
+				),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "arg has no dislikes",
+			c: count.NewCounts(
+				count.WithLikes(3),
+				count.WithDislikes(1),
+			),
+			args: args{
+				other: count.NewCounts(
+					count.WithLikes(3),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "arg has no likes",
+			c: count.NewCounts(
+				count.WithLikes(3),
+				count.WithDislikes(1),
+			),
+			args: args{
+				other: count.NewCounts(
+					count.WithDislikes(1),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "empty likes and dislikes in value and arg",
+			c: count.NewCounts(
+				count.WithLikes(0),
+				count.WithDislikes(0),
+			),
+			args: args{
+				other: count.NewCounts(
+					count.WithLikes(0),
+					count.WithDislikes(0),
+				),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "default arg vs empty likes and dislikes",
+			c: count.NewCounts(
+				count.WithLikes(0),
+				count.WithDislikes(0),
+			),
+			args: args{
+				other: count.Counts{},
+			},
+			want: want{
+				value: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.c.Equals(tt.args.other)
+			if tt.want.value {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}
