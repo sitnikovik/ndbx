@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	impl "github.com/sitnikovik/ndbx/autograder/internal/app/event/review"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/rating"
 	common "github.com/sitnikovik/ndbx/autograder/internal/app/review/count"
 )
 
@@ -168,6 +169,109 @@ func TestReviews_With(t *testing.T) {
 				tt.want.val,
 				got,
 			)
+		})
+	}
+}
+
+func TestReviews_Equals(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		other impl.Reviews
+	}
+	type want struct {
+		value bool
+	}
+	tests := []struct {
+		name string
+		r    impl.Reviews
+		args args
+		want want
+	}{
+		{
+			name: "same with counts",
+			r: impl.NewReviews(
+				impl.WithCounts(
+					common.NewCounts(
+						common.WithRating(rating.Five),
+						common.WithCount(1),
+					),
+				),
+			),
+			args: args{
+				other: impl.NewReviews(
+					impl.WithCounts(
+						common.NewCounts(
+							common.WithRating(rating.Five),
+							common.WithCount(1),
+						),
+					),
+				),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "diff with counts",
+			r: impl.NewReviews(
+				impl.WithCounts(
+					common.NewCounts(
+						common.WithRating(rating.Five),
+						common.WithCount(1),
+					),
+				),
+			),
+			args: args{
+				other: impl.NewReviews(
+					impl.WithCounts(
+						common.NewCounts(
+							common.WithRating(rating.Five),
+							common.WithCount(2),
+						),
+					),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "vs empty arg",
+			r: impl.NewReviews(
+				impl.WithCounts(
+					common.NewCounts(
+						common.WithRating(rating.Five),
+						common.WithCount(1),
+					),
+				),
+			),
+			args: args{
+				other: impl.NewReviews(),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "default value vs empty arg",
+			r:    impl.Reviews{},
+			args: args{
+				other: impl.NewReviews(),
+			},
+			want: want{
+				value: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.r.Equals(tt.args.other)
+			if tt.want.value {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
 		})
 	}
 }
