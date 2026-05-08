@@ -171,3 +171,106 @@ func TestReactions_With(t *testing.T) {
 		})
 	}
 }
+
+func TestReactions_Equals(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		other reaction.Reactions
+	}
+	type want struct {
+		value bool
+	}
+	tests := []struct {
+		name string
+		r    reaction.Reactions
+		args args
+		want want
+	}{
+		{
+			name: "same with counts",
+			r: reaction.NewReactions(
+				reaction.WithCounts(
+					common.NewCounts(
+						common.WithLikes(3),
+						common.WithDislikes(1),
+					),
+				),
+			),
+			args: args{
+				other: reaction.NewReactions(
+					reaction.WithCounts(
+						common.NewCounts(
+							common.WithLikes(3),
+							common.WithDislikes(1),
+						),
+					),
+				),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "diff with dislikes",
+			r: reaction.NewReactions(
+				reaction.WithCounts(
+					common.NewCounts(
+						common.WithLikes(3),
+						common.WithDislikes(1),
+					),
+				),
+			),
+			args: args{
+				other: reaction.NewReactions(
+					reaction.WithCounts(
+						common.NewCounts(
+							common.WithLikes(3),
+							common.WithDislikes(0),
+						),
+					),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "default arg",
+			r: reaction.NewReactions(
+				reaction.WithCounts(
+					common.NewCounts(
+						common.WithLikes(3),
+						common.WithDislikes(1),
+					),
+				),
+			),
+			args: args{
+				other: reaction.Reactions{},
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "default value and arg",
+			r:    reaction.Reactions{},
+			args: args{
+				other: reaction.Reactions{},
+			},
+			want: want{
+				value: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.r.Equals(tt.args.other)
+			if tt.want.value {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}
