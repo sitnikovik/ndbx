@@ -43,3 +43,8 @@ func (l Location) City() string {
 func (l Location) Empty() bool {
 	return l.Address() == "" && l.City() == ""
 }
+
+// Equals defines if the object equals the provided one.
+func (l Location) Equals(other Location) bool {
+	return l == other
+}
