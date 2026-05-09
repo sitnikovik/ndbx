@@ -33,12 +33,6 @@ func (b Body) MustBytes() []byte {
 	if v := b.e.Content().Description(); v != "" {
 		m["description"] = v
 	}
-	if v := b.e.Quantity().Max(); v > 0 {
-		m["max_attendees"] = v
-	}
-	if v := b.e.Quantity().Min(); v > 0 {
-		m["min_attendees"] = v
-	}
 	bb, err := json.Marshal(m)
 	if err != nil {
 		panic(errors.Join(errs.ErrMarshallFailed, err))

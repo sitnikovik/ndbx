@@ -40,9 +40,6 @@ func TestBody_MustBytes(t *testing.T) {
 						timex.MustParse(time.RFC3339, "2025-02-01T11:00:00Z"),
 						timex.MustParse(time.RFC3339, "2025-02-01T13:00:00Z"),
 					),
-					event.WithQuantity(
-						event.NewQuantity(5, 10),
-					),
 				),
 			),
 			want: want{
@@ -50,8 +47,6 @@ func TestBody_MustBytes(t *testing.T) {
 					`"address":"City, Country, Street, 123",` +
 					`"description":"Description",` +
 					`"finished_at":"2025-02-01T13:00:00Z",` +
-					`"max_attendees":10,` +
-					`"min_attendees":5,` +
 					`"started_at":"2025-02-01T11:00:00Z",` +
 					`"title":"Title"` +
 					`}`),

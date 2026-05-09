@@ -21,8 +21,6 @@ type Event struct {
 	loc Location
 	// costs contains the cost information related to the event.
 	costs Costs
-	// qty represents the quantity of attendees for the event.
-	qty Quantity
 	// reactions represents counters of the users' reactions of the event.
 	reactions reaction.Reactions
 	// reviews contains the users' reviews of the event.
@@ -76,11 +74,6 @@ func (e Event) Costs() Costs {
 // Dates returns the start and finish dates of the event.
 func (e Event) Dates() Dates {
 	return e.dates
-}
-
-// Quantity returns the quantity of attendees for the event.
-func (e Event) Quantity() Quantity {
-	return e.qty
 }
 
 // Reactions returns the counters of the reactions for the event.
