@@ -186,3 +186,91 @@ func TestType_String(t *testing.T) {
 		})
 	}
 }
+
+func TestType_Equals(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		other category.Type
+	}
+	type want struct {
+		value bool
+	}
+	tests := []struct {
+		name string
+		t    category.Type
+		args args
+		want want
+	}{
+		{
+			name: "meetup vs meetup consts",
+			t:    category.Meetup,
+			args: args{
+				other: category.Meetup,
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "meetup vs concert consts",
+			t:    category.Meetup,
+			args: args{
+				other: category.Concert,
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "meetup vs exhibition consts",
+			t:    category.Meetup,
+			args: args{
+				other: category.Exhibition,
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "meetup vs party consts",
+			t:    category.Meetup,
+			args: args{
+				other: category.Party,
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "meetup vs other consts",
+			t:    category.Meetup,
+			args: args{
+				other: category.Other,
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "meetup vs unspecified consts",
+			t:    category.Meetup,
+			args: args{
+				other: category.Unspecified,
+			},
+			want: want{
+				value: false,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.t.Equals(tt.args.other)
+			if tt.want.value {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}

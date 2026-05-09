@@ -60,3 +60,8 @@ func (t Type) String() string {
 		return ""
 	}
 }
+
+// Equals defines if the category equals to the provided one.
+func (t Type) Equals(other Type) bool {
+	return t == other
+}
