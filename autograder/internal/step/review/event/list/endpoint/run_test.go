@@ -41,7 +41,7 @@ func TestStep_Run(t *testing.T) {
 					httpxfk.WithGet(
 						func(_ string) (*http.Response, error) {
 							v := `{` +
-								`"events": [
+								`"reviews": [
 						{` +
 								`"id": "56e2c0b3a2b4c1a5e6f7f8b3",` +
 								`"event_id": "12e9c0b1a2b3c3d5e6f7a8b7",` +
@@ -88,7 +88,7 @@ func TestStep_Run(t *testing.T) {
 					httpxfk.WithGet(
 						func(_ string) (*http.Response, error) {
 							v := `{` +
-								`"events": [
+								`"reviews": [
 						{` +
 								`"id": "56e2c0b3a2b4c1a5e6f7f8b3",` +
 								`"event_id": "12e9c0b1a2b3c3d5e6f7a8b7",` +
@@ -135,7 +135,7 @@ func TestStep_Run(t *testing.T) {
 					httpxfk.WithGet(
 						func(_ string) (*http.Response, error) {
 							v := `{` +
-								`"events": [],` +
+								`"reviews": [],` +
 								`"count": 0` +
 								`}`
 							return &http.Response{
@@ -172,7 +172,7 @@ func TestStep_Run(t *testing.T) {
 					httpxfk.WithGet(
 						func(_ string) (*http.Response, error) {
 							v := `{` +
-								`"events": [],` +
+								`"reviews": [],` +
 								`"count": 1` +
 								`}`
 							return &http.Response{
@@ -209,7 +209,7 @@ func TestStep_Run(t *testing.T) {
 					httpxfk.WithGet(
 						func(_ string) (*http.Response, error) {
 							v := `{` +
-								`"events": [],` +
+								`"reviews": [],` +
 								`"count": 0` +
 								`}`
 							return &http.Response{
