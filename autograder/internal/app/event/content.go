@@ -68,3 +68,10 @@ func (c Content) Description() string {
 func (c Content) Category() category.Type {
 	return c.cat
 }
+
+// Equals defines if the object equals to the provided one.
+func (c Content) Equals(other Content) bool {
+	return c.cat.Equals(other.Category()) &&
+		c.title == other.title &&
+		c.desc == other.desc
+}

@@ -190,3 +190,132 @@ func TestContent_TitleHash(t *testing.T) {
 		})
 	}
 }
+
+func TestContent_Equals(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		other event.Content
+	}
+	type want struct {
+		value bool
+	}
+	tests := []struct {
+		name string
+		c    event.Content
+		args args
+		want want
+	}{
+		{
+			name: "same with title desc and category",
+			c: event.NewContent(
+				"title",
+				"desc",
+				event.WithCategory(
+					category.Meetup,
+				),
+			),
+			args: args{
+				other: event.NewContent(
+					"title",
+					"desc",
+					event.WithCategory(
+						category.Meetup,
+					),
+				),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "diff with title",
+			c: event.NewContent(
+				"title",
+				"desc",
+				event.WithCategory(
+					category.Meetup,
+				),
+			),
+			args: args{
+				other: event.NewContent(
+					"t1tle",
+					"desc",
+					event.WithCategory(
+						category.Meetup,
+					),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "diff with desc",
+			c: event.NewContent(
+				"title",
+				"desc",
+				event.WithCategory(
+					category.Meetup,
+				),
+			),
+			args: args{
+				other: event.NewContent(
+					"title",
+					"description",
+					event.WithCategory(
+						category.Meetup,
+					),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "diff with category",
+			c: event.NewContent(
+				"title",
+				"desc",
+				event.WithCategory(
+					category.Meetup,
+				),
+			),
+			args: args{
+				other: event.NewContent(
+					"title",
+					"desc",
+					event.WithCategory(
+						category.Party,
+					),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "default value vs empty arg",
+			c:    event.Content{},
+			args: args{
+				other: event.NewContent(
+					"",
+					"",
+				),
+			},
+			want: want{
+				value: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.c.Equals(tt.args.other)
+			if tt.want.value {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}
