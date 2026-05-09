@@ -5,10 +5,14 @@ import (
 	"encoding/hex"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/tag"
 )
 
 // Content represents content info of the event.
 type Content struct {
+	// tags is the list of tags of interests
+	// or areas covered by the event.
+	tags []tag.Tag
 	// title is the title of the event.
 	title string
 	// desc is the description of the event.
@@ -25,6 +29,13 @@ type ContentOption func(c *Content)
 func WithCategory(cat category.Type) ContentOption {
 	return func(c *Content) {
 		c.cat = cat
+	}
+}
+
+// WithTags sets the list of tags to event on its creation.
+func WithTags(tt ...tag.Tag) ContentOption {
+	return func(c *Content) {
+		c.tags = tt
 	}
 }
 
@@ -74,4 +85,9 @@ func (c Content) Equals(other Content) bool {
 	return c.cat.Equals(other.Category()) &&
 		c.title == other.title &&
 		c.desc == other.desc
+}
+
+// Tags returns the list of tags of the event.
+func (c Content) Tags() []tag.Tag {
+	return c.tags
 }

@@ -7,6 +7,13 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/reaction"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/review"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/tag"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/money"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/rating"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/reaction/count"
+	reviewcount "github.com/sitnikovik/ndbx/autograder/internal/app/review/count"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
@@ -263,6 +270,109 @@ func TestEvent_Equals(t *testing.T) {
 			},
 			want: want{
 				ok: false,
+			},
+		},
+		{
+			name: "same events but reviews and reactions and tags",
+			e: event.NewEvent(
+				event.NewID("1"),
+				event.NewContent(
+					"My birthday",
+					"The best day of the year",
+					event.WithTags(
+						tag.Sport,
+						tag.Food,
+						tag.Technology,
+					),
+				),
+				event.NewLocation("home"),
+				event.NewCreated(
+					timex.MustParse(time.RFC3339, "2024-01-01T00:00:00Z"),
+					user.NewIdentity(user.NewID("123")),
+				),
+				event.NewDates(
+					timex.MustParse(time.RFC3339, "2024-01-07T00:00:00Z"),
+					timex.MustParse(time.RFC3339, "2024-01-07T23:59:59Z"),
+				),
+				event.WithCosts(
+					event.NewCosts(
+						money.NewMoney(100, 00),
+					),
+				),
+				event.WithReactions(
+					reaction.NewReactions(
+						reaction.WithCounts(
+							count.NewCounts(
+								count.WithLikes(24),
+								count.WithDislikes(3),
+							),
+						),
+					),
+				),
+				event.WithReviews(
+					review.NewReviews(
+						review.WithCounts(
+							reviewcount.NewCounts(
+								reviewcount.WithRating(
+									rating.NewRating(4.8),
+								),
+								reviewcount.WithCount(12),
+							),
+						),
+					),
+				),
+			),
+			args: args{
+				other: event.NewEvent(
+					event.NewID("1"),
+					event.NewContent(
+						"My birthday",
+						"The best day of the year",
+						event.WithTags(
+							tag.Sport,
+							tag.Food,
+						),
+					),
+					event.NewLocation("home"),
+					event.NewCreated(
+						timex.MustParse(time.RFC3339, "2024-01-01T00:00:00Z"),
+						user.NewIdentity(user.NewID("123")),
+					),
+					event.NewDates(
+						timex.MustParse(time.RFC3339, "2024-01-07T00:00:00Z"),
+						timex.MustParse(time.RFC3339, "2024-01-07T23:59:59Z"),
+					),
+					event.WithCosts(
+						event.NewCosts(
+							money.NewMoney(100, 00),
+						),
+					),
+					event.WithReactions(
+						reaction.NewReactions(
+							reaction.WithCounts(
+								count.NewCounts(
+									count.WithLikes(123),
+									count.WithDislikes(7),
+								),
+							),
+						),
+					),
+					event.WithReviews(
+						review.NewReviews(
+							review.WithCounts(
+								reviewcount.NewCounts(
+									reviewcount.WithRating(
+										rating.NewRating(4.5),
+									),
+									reviewcount.WithCount(244),
+								),
+							),
+						),
+					),
+				),
+			},
+			want: want{
+				ok: true,
 			},
 		},
 	}

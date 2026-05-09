@@ -7,6 +7,7 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/tag"
 )
 
 func TestContent_Title(t *testing.T) {
@@ -316,6 +317,75 @@ func TestContent_Equals(t *testing.T) {
 			} else {
 				assert.False(t, got)
 			}
+		})
+	}
+}
+
+func TestContent_Tags(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		value []tag.Tag
+	}
+	tests := []struct {
+		name string
+		c    event.Content
+		want want
+	}{
+		{
+			name: "ok",
+			c: event.NewContent(
+				"Test Event",
+				"This is a test event.",
+				event.WithTags(
+					tag.Exhibition,
+					tag.Culture,
+				),
+			),
+			want: want{
+				value: []tag.Tag{
+					tag.Exhibition,
+					tag.Culture,
+				},
+			},
+		},
+		{
+			name: "empty",
+			c: event.NewContent(
+				"Test Event",
+				"This is a test event.",
+				event.WithTags(),
+			),
+			want: want{
+				value: nil,
+			},
+		},
+		{
+			name: "not set",
+			c: event.NewContent(
+				"Test Event",
+				"This is a test event.",
+			),
+			want: want{
+				value: nil,
+			},
+		},
+		{
+			name: "default value",
+			c:    event.Content{},
+			want: want{
+				value: nil,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Parallel()
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.value,
+				tt.c.Tags(),
+			)
 		})
 	}
 }
