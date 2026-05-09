@@ -75,14 +75,14 @@ func TestTag_String(t *testing.T) {
 		},
 		{
 			name: "custom",
-			t:    impl.Tag("foo"),
+			t:    impl.NewTag("foo"),
 			want: want{
 				value: "foo",
 			},
 		},
 		{
 			name: "custom string concert",
-			t:    impl.Tag("concert"),
+			t:    impl.NewTag("concert"),
 			want: want{
 				value: "concert",
 			},
