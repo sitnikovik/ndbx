@@ -8,6 +8,7 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/post/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/tag"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
 )
@@ -28,7 +29,14 @@ func TestBody_MustBytes(t *testing.T) {
 			b: body.NewBody(
 				event.NewEvent(
 					event.NewID("1"),
-					event.NewContent("Title", "Description"),
+					event.NewContent(
+						"Title",
+						"Description",
+						event.WithTags(
+							tag.Exhibition,
+							tag.Culture,
+						),
+					),
 					event.NewLocation("City, Country, Street, 123"),
 					event.NewCreated(
 						time.Time{},
@@ -48,6 +56,7 @@ func TestBody_MustBytes(t *testing.T) {
 					`"description":"Description",` +
 					`"finished_at":"2025-02-01T13:00:00Z",` +
 					`"started_at":"2025-02-01T11:00:00Z",` +
+					`"tags":["exhibition","culture"],` +
 					`"title":"Title"` +
 					`}`),
 				panic: false,
