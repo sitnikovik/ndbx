@@ -378,7 +378,6 @@ func TestContent_Tags(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Parallel()
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			assert.Equal(
