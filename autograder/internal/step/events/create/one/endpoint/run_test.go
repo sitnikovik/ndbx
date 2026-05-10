@@ -39,6 +39,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "ok",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -86,6 +90,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "http failed",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -110,6 +118,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "unexpected response",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -141,6 +153,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "created a new session cookie",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -188,6 +204,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "invalid session in cookie",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -234,6 +254,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "unexpected session in cookie",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -281,6 +305,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "got unexpected json body",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {

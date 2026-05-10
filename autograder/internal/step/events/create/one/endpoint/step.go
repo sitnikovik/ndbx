@@ -6,13 +6,7 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response/expectation"
-)
-
-const (
-	// Name is the name of the step.
-	Name = "Create an event by endpoint"
-	// Description is a brief description of the step.
-	Description = "Creates the provived event by endpoint that to be found by fitler in the next steps"
+	"github.com/sitnikovik/ndbx/autograder/internal/step"
 )
 
 // httpClient defines the interface for making HTTP requests.
@@ -35,18 +29,22 @@ type Step struct {
 	event event.Event
 	// want is the expectations to check.
 	want expectation.Expectations
+	// desc is the description of the step.
+	desc step.Desc
 }
 
 // NewStep creates a new Step instance
 // with the provided HTTP client and application base URL,
 // event to create and expectations to check.
 func NewStep(
+	desc step.Desc,
 	cli httpClient,
 	baseURL string,
 	evnt event.Event,
 	want expectation.Expectations,
 ) *Step {
 	return &Step{
+		desc:    desc,
 		cli:     cli,
 		baseURL: baseURL,
 		event:   evnt,
@@ -56,10 +54,10 @@ func NewStep(
 
 // Name returns the name of the step.
 func (s *Step) Name() string {
-	return Name
+	return s.desc.Title()
 }
 
 // Description returns a brief description of what the step does.
 func (s *Step) Description() string {
-	return Description
+	return s.desc.Description()
 }
