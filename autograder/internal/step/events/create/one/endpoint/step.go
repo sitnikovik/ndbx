@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
+	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response/expectation"
 )
 
 const (
@@ -32,19 +33,24 @@ type Step struct {
 	baseURL string
 	// event is the event that has to be created by the target application.
 	event event.Event
+	// want is the expectations to check.
+	want expectation.Expectations
 }
 
 // NewStep creates a new Step instance
-// with the provided HTTP client and application base URL.
+// with the provided HTTP client and application base URL,
+// event to create and expectations to check.
 func NewStep(
 	cli httpClient,
 	baseURL string,
 	evnt event.Event,
+	want expectation.Expectations,
 ) *Step {
 	return &Step{
 		cli:     cli,
 		baseURL: baseURL,
 		event:   evnt,
+		want:    want,
 	}
 }
 
