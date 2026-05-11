@@ -32,10 +32,18 @@ func NewBody(opts ...Option) Body {
 // Panics if marshalling the data fails.
 func (b Body) MustBytes() []byte {
 	m := make(map[string]any, 4)
-	m["tags"] = b.tags
-	m["category"] = b.category
-	m["city"] = b.city
-	m["price"] = b.price
+	if b.tags != nil {
+		m["tags"] = b.tags
+	}
+	if b.category != "" {
+		m["category"] = b.category
+	}
+	if b.city != "" {
+		m["city"] = b.city
+	}
+	if b.price != 0 {
+		m["price"] = b.price
+	}
 	bb, err := json.Marshal(m)
 	if err != nil {
 		panic(

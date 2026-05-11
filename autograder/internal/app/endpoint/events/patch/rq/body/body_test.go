@@ -43,13 +43,7 @@ func TestBody_MustBytes(t *testing.T) {
 			name: "empty fields",
 			b:    body.NewBody(),
 			want: want{
-				val: []byte(`{` +
-					`"category":"",` +
-					`"city":"",` +
-					`"price":0,` +
-					`"tags":null` +
-					`}`,
-				),
+				val:   []byte(`{}`),
 				panic: false,
 			},
 		},
@@ -60,10 +54,7 @@ func TestBody_MustBytes(t *testing.T) {
 			),
 			want: want{
 				val: []byte(`{` +
-					`"category":"",` +
-					`"city":"",` +
-					`"price":18446744073709551615,` +
-					`"tags":null` +
+					`"price":18446744073709551615` +
 					`}`,
 				),
 				panic: false,
