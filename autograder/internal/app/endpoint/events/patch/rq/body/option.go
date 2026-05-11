@@ -30,3 +30,10 @@ func WithTags(tags ...string) Option {
 		b.tags = tags
 	}
 }
+
+// WithCascade set the flag defines the patch to be cascade update.
+func WithCascade() Option {
+	return func(b *Body) {
+		b.cascade = true
+	}
+}

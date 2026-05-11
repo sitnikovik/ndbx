@@ -2,6 +2,7 @@ package body_test
 
 import (
 	"math"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -75,6 +76,73 @@ func TestBody_MustBytes(t *testing.T) {
 					tt.b.MustBytes(),
 				)
 			}
+		})
+	}
+}
+
+func TestBody_URLQuery(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		value url.Values
+	}
+	tests := []struct {
+		name string
+		b    body.Body
+		want want
+	}{
+		{
+			name: "only with cascade",
+			b: body.NewBody(
+				body.WithCascade(),
+			),
+			want: want{
+				value: func() url.Values {
+					q := make(url.Values, 1)
+					q.Set("cascade", "true")
+					return q
+				}(),
+			},
+		},
+		{
+			name: "with cascade and event fields",
+			b: body.NewBody(
+				body.WithCategory("Music"),
+				body.WithCity("New York"),
+				body.WithPrice(50),
+				body.WithTags("culture", "exhibition"),
+				body.WithCascade(),
+			),
+			want: want{
+				value: func() url.Values {
+					q := make(url.Values, 1)
+					q.Set("cascade", "true")
+					return q
+				}(),
+			},
+		},
+		{
+			name: "empty",
+			b:    body.NewBody(),
+			want: want{
+				value: make(url.Values),
+			},
+		},
+		{
+			name: "default value",
+			b:    body.Body{},
+			want: want{
+				value: make(url.Values),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.value,
+				tt.b.URLQuery(),
+			)
 		})
 	}
 }

@@ -2,6 +2,7 @@ package body
 
 import (
 	"encoding/json"
+	"net/url"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 )
@@ -16,6 +17,8 @@ type Body struct {
 	city string
 	// price is the price of the event to be set.
 	price uint
+	// cascade defines whether the patch is to be cascade update.
+	cascade bool
 }
 
 // NewBody creates a new Body instances with options.
@@ -54,4 +57,13 @@ func (b Body) MustBytes() []byte {
 		)
 	}
 	return bb
+}
+
+// URLQuery converts the Body into url.Values.
+func (b Body) URLQuery() url.Values {
+	q := make(url.Values, 1)
+	if b.cascade {
+		q.Set("cascade", "true")
+	}
+	return q
 }
