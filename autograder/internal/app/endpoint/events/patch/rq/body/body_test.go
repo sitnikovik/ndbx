@@ -26,12 +26,14 @@ func TestBody_MustBytes(t *testing.T) {
 				body.WithCategory("Music"),
 				body.WithCity("New York"),
 				body.WithPrice(50),
+				body.WithTags("culture", "exhibition"),
 			),
 			want: want{
 				val: []byte(`{` +
 					`"category":"Music",` +
 					`"city":"New York",` +
-					`"price":50` +
+					`"price":50,` +
+					`"tags":["culture","exhibition"]` +
 					`}`,
 				),
 				panic: false,
@@ -44,7 +46,8 @@ func TestBody_MustBytes(t *testing.T) {
 				val: []byte(`{` +
 					`"category":"",` +
 					`"city":"",` +
-					`"price":0` +
+					`"price":0,` +
+					`"tags":null` +
 					`}`,
 				),
 				panic: false,
@@ -59,7 +62,8 @@ func TestBody_MustBytes(t *testing.T) {
 				val: []byte(`{` +
 					`"category":"",` +
 					`"city":"",` +
-					`"price":18446744073709551615` +
+					`"price":18446744073709551615,` +
+					`"tags":null` +
 					`}`,
 				),
 				panic: false,

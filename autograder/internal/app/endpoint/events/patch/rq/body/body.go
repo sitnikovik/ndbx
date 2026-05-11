@@ -8,6 +8,8 @@ import (
 
 // Body represents the request body to updated an event.
 type Body struct {
+	// tags is the list of tags to update
+	tags []string
 	// category is the category of the event to be set.
 	category string
 	// city is the city of the event location to be set.
@@ -29,7 +31,8 @@ func NewBody(opts ...Option) Body {
 //
 // Panics if marshalling the data fails.
 func (b Body) MustBytes() []byte {
-	m := make(map[string]any, 3)
+	m := make(map[string]any, 4)
+	m["tags"] = b.tags
 	m["category"] = b.category
 	m["city"] = b.city
 	m["price"] = b.price
