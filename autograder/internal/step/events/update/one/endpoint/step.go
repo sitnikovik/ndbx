@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/patch/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response/expectation"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
@@ -29,6 +30,8 @@ type Step struct {
 	event event.Event
 	// want is the expectations to check.
 	want expectation.Expectations
+	// rq is request body to send.
+	rq body.Body
 	// desc is the description of the step.
 	desc step.Desc
 }
@@ -41,6 +44,7 @@ func NewStep(
 	cli httpClient,
 	baseURL string,
 	evnt event.Event,
+	rq body.Body,
 	want expectation.Expectations,
 ) *Step {
 	return &Step{
@@ -48,6 +52,7 @@ func NewStep(
 		cli:     cli,
 		baseURL: baseURL,
 		event:   evnt,
+		rq:      rq,
 		want:    want,
 	}
 }

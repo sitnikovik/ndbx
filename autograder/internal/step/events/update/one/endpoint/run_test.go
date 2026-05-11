@@ -11,6 +11,8 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/cookie/session"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/patch/rq/body"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder/variable"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
@@ -60,6 +62,13 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				body.NewBody(
+					body.WithCategory(category.Concert.String()),
+					body.WithPrice(1_000),
+					body.WithCity("Minsk"),
+					body.WithTags("culture", "exhibition"),
+					body.WithCascade(),
+				),
 				NewExpectationsFx(),
 			),
 			args: args{
@@ -100,6 +109,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				body.NewBody(),
 				NewExpectationsFx(),
 			),
 			args: args{
@@ -147,6 +157,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				body.NewBody(),
 				NewExpectationsFx(),
 			),
 			args: args{
@@ -195,6 +206,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				body.NewBody(),
 				NewExpectationsFx(),
 			),
 			args: args{
@@ -243,6 +255,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				body.NewBody(),
 				NewExpectationsFx(),
 			),
 			args: args{
@@ -291,6 +304,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				body.NewBody(),
 				NewExpectationsFx(),
 			),
 			args: args{
@@ -343,6 +357,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				body.NewBody(),
 				NewExpectationsFx(),
 			),
 			args: args{

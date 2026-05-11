@@ -18,11 +18,15 @@ func (s *Step) Run(
 ) error {
 	rsp, err := s.cli.Patch(
 		endpoint.
-			NewEndpoint(s.baseURL).
-			Event(
-				vars.
-					MustGet(s.event.Hash()).
-					AsString(),
+			WithQuery(
+				endpoint.
+					NewEndpoint(s.baseURL).
+					Event(
+						vars.
+							MustGet(s.event.Hash()).
+							AsString(),
+					),
+				s.rq.URLQuery(),
 			),
 		bytes.NewBuffer(
 			request.

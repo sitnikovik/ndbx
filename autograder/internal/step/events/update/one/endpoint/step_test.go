@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/patch/rq/body"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response/expectation"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/step/events/update/one/endpoint"
@@ -30,6 +31,7 @@ func TestStep_Name(t *testing.T) {
 				httpxfk.NewFakeClient(),
 				"/localhost",
 				eventfx.NewTestEvent(),
+				body.NewBody(),
 				expectation.NewExpectations(
 					expectation.WithAsserts(),
 				),
@@ -46,6 +48,7 @@ func TestStep_Name(t *testing.T) {
 				nil,
 				"",
 				eventfx.NewTestEvent(),
+				body.NewBody(),
 				expectation.NewExpectations(
 					expectation.WithAsserts(),
 				),
@@ -83,6 +86,7 @@ func TestStep_Description(t *testing.T) {
 				httpxfk.NewFakeClient(),
 				"/localhost",
 				eventfx.NewTestEvent(),
+				body.NewBody(),
 				expectation.NewExpectations(
 					expectation.WithAsserts(),
 				),
@@ -99,6 +103,7 @@ func TestStep_Description(t *testing.T) {
 				nil,
 				"",
 				eventfx.NewTestEvent(),
+				body.NewBody(),
 				expectation.NewExpectations(
 					expectation.WithAsserts(),
 				),
