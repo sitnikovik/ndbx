@@ -6,12 +6,15 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/sitnikovik/ndbx/autograder/internal/client/cassandra/consistency"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user/session"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/cassandra"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/config/lab7/config"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/mongo"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/neo4j"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/redis"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 )
 
@@ -26,12 +29,28 @@ func TestConfig_Validate(t *testing.T) {
 		{
 			name: "ok",
 			c: impl.NewConfig(
+				redis.NewConfig(
+					"localhost:6379",
+					"",
+					0,
+				),
 				mongo.NewConfig(
 					"testdb",
 					"testuser",
 					"testpass",
 					"localhost",
 					27017,
+				),
+				cassandra.NewConfig(
+					cassandra.NewConnection(
+						[]string{"localhost"},
+						9042,
+					),
+					cassandra.NewAuth("", ""),
+					cassandra.NewDatabase(
+						"testkeyspace",
+						consistency.Quorum,
+					),
 				),
 				neo4j.NewConfig(
 					neo4j.NewConnection("neo4j://localhost:7687"),
@@ -48,14 +67,71 @@ func TestConfig_Validate(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name: "invalid app config",
+			name: "invalid redis config",
 			c: impl.NewConfig(
+				redis.NewConfig(
+					"",
+					"",
+					0,
+				),
 				mongo.NewConfig(
 					"testdb",
 					"testuser",
 					"testpass",
 					"localhost",
 					27017,
+				),
+				cassandra.NewConfig(
+					cassandra.NewConnection(
+						[]string{"localhost"},
+						9042,
+					),
+					cassandra.NewAuth("", ""),
+					cassandra.NewDatabase(
+						"testkeyspace",
+						consistency.Quorum,
+					),
+				),
+				neo4j.NewConfig(
+					neo4j.NewConnection("neo4j://localhost:7687"),
+					neo4j.NewAuth("user", "password"),
+				),
+				app.NewConfig(
+					user.NewConfig(
+						session.NewConfig(0),
+					),
+					"",
+					0,
+				),
+			),
+			wantErr:         errs.ErrInvalidConfig,
+			wantErrContains: "redis",
+		},
+		{
+			name: "invalid app config",
+			c: impl.NewConfig(
+				redis.NewConfig(
+					"localhost:6379",
+					"",
+					0,
+				),
+				mongo.NewConfig(
+					"testdb",
+					"testuser",
+					"testpass",
+					"localhost",
+					27017,
+				),
+				cassandra.NewConfig(
+					cassandra.NewConnection(
+						[]string{"localhost"},
+						9042,
+					),
+					cassandra.NewAuth("", ""),
+					cassandra.NewDatabase(
+						"testkeyspace",
+						consistency.Quorum,
+					),
 				),
 				neo4j.NewConfig(
 					neo4j.NewConnection("neo4j://localhost:7687"),
@@ -75,12 +151,28 @@ func TestConfig_Validate(t *testing.T) {
 		{
 			name: "invalid mongo config",
 			c: impl.NewConfig(
+				redis.NewConfig(
+					"localhost:6379",
+					"",
+					0,
+				),
 				mongo.NewConfig(
 					"",
 					"",
 					"",
 					"",
 					0,
+				),
+				cassandra.NewConfig(
+					cassandra.NewConnection(
+						[]string{"localhost"},
+						9042,
+					),
+					cassandra.NewAuth("", ""),
+					cassandra.NewDatabase(
+						"testkeyspace",
+						consistency.Quorum,
+					),
 				),
 				neo4j.NewConfig(
 					neo4j.NewConnection("neo4j://localhost:7687"),
@@ -98,14 +190,71 @@ func TestConfig_Validate(t *testing.T) {
 			wantErrContains: "mongo",
 		},
 		{
-			name: "invalid neo4j config",
+			name: "invalid cassandra config",
 			c: impl.NewConfig(
+				redis.NewConfig(
+					"localhost:6379",
+					"",
+					0,
+				),
 				mongo.NewConfig(
 					"testdb",
 					"testuser",
 					"testpass",
 					"localhost",
 					27017,
+				),
+				cassandra.NewConfig(
+					cassandra.NewConnection(
+						[]string{"localhost"},
+						9042,
+					),
+					cassandra.NewAuth("", ""),
+					cassandra.NewDatabase(
+						"",
+						consistency.Quorum,
+					),
+				),
+				neo4j.NewConfig(
+					neo4j.NewConnection(""),
+					neo4j.NewAuth("user", "password"),
+				),
+				app.NewConfig(
+					user.NewConfig(
+						session.NewConfig(1*time.Second),
+					),
+					"localhost",
+					8080,
+				),
+			),
+			wantErr:         errs.ErrInvalidConfig,
+			wantErrContains: "cassandra",
+		},
+		{
+			name: "invalid neo4j config",
+			c: impl.NewConfig(
+				redis.NewConfig(
+					"localhost:6379",
+					"",
+					0,
+				),
+				mongo.NewConfig(
+					"testdb",
+					"testuser",
+					"testpass",
+					"localhost",
+					27017,
+				),
+				cassandra.NewConfig(
+					cassandra.NewConnection(
+						[]string{"localhost"},
+						9042,
+					),
+					cassandra.NewAuth("", ""),
+					cassandra.NewDatabase(
+						"testkeyspace",
+						consistency.Quorum,
+					),
 				),
 				neo4j.NewConfig(
 					neo4j.NewConnection(""),

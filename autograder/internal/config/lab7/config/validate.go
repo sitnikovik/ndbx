@@ -7,10 +7,26 @@ import (
 // Validate checks if the job configuration is valid
 // and returns an error if any part of the configuration is invalid.
 func (c Config) Validate() error {
-	err := c.mongo.Validate()
+	err := c.redis.Validate()
+	if err != nil {
+		return errs.WrapJoin(
+			"redis",
+			errs.ErrInvalidConfig,
+			err,
+		)
+	}
+	err = c.mongo.Validate()
 	if err != nil {
 		return errs.WrapJoin(
 			"mongo",
+			errs.ErrInvalidConfig,
+			err,
+		)
+	}
+	err = c.cassandra.Validate()
+	if err != nil {
+		return errs.WrapJoin(
+			"cassandra",
 			errs.ErrInvalidConfig,
 			err,
 		)

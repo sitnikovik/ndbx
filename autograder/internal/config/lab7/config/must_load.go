@@ -2,8 +2,10 @@ package config
 
 import (
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/cassandra"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/mongo"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/neo4j"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/redis"
 )
 
 // MustLoad loads the job configuration
@@ -14,7 +16,9 @@ import (
 // such as in the main function of the application.
 func MustLoad() Config {
 	cfg := NewConfig(
+		redis.MustLoad(),
 		mongo.MustLoad(),
+		cassandra.MustLoad(),
 		neo4j.MustLoad(),
 		app.MustLoad(),
 	)
