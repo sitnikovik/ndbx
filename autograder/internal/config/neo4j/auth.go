@@ -1,5 +1,7 @@
 package neo4j
 
+import "errors"
+
 // Auth holds the authentication credentials for the Neo4j database.
 type Auth struct {
 	// usr is the Neo4j database username
@@ -25,4 +27,15 @@ func (a Auth) Username() string {
 // Password returns the Neo4j database password.
 func (a Auth) Password() string {
 	return a.pwd
+}
+
+// Validate validates the Auth credentials.
+func (a Auth) Validate() error {
+	if a.usr == "" {
+		return errors.New("empty username")
+	}
+	if a.pwd == "" {
+		return errors.New("empty password")
+	}
+	return nil
 }

@@ -121,3 +121,69 @@ func TestAuth_Password(t *testing.T) {
 		})
 	}
 }
+
+func TestAuth_Validate(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		errContains string
+		errored     bool
+	}
+	tests := []struct {
+		name string
+		a    impl.Auth
+		want want
+	}{
+		{
+			name: "ok",
+			a:    impl.NewAuth("user", "pass"),
+			want: want{
+				errored: false,
+			},
+		},
+		{
+			name: "empty username",
+			a:    impl.NewAuth("", "pass"),
+			want: want{
+				errContains: "username",
+				errored:     true,
+			},
+		},
+		{
+			name: "empty password",
+			a:    impl.NewAuth("user", ""),
+			want: want{
+				errContains: "password",
+				errored:     true,
+			},
+		},
+		{
+			name: "all empty",
+			a:    impl.NewAuth("", ""),
+			want: want{
+				errContains: "username",
+				errored:     true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			err := tt.a.Validate()
+			if tt.want.errored {
+				assert.Error(t, err)
+				assert.Contains(
+					t,
+					err.Error(),
+					tt.want.errContains,
+				)
+			} else {
+				assert.NoErrorf(
+					t,
+					err,
+					"unexpected error: %v",
+					err,
+				)
+			}
+		})
+	}
+}
