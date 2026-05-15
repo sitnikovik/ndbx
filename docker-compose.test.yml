@@ -51,6 +51,23 @@ services:
       timeout: 10s
       retries: 10
     container_name: neo4j-test
+  test-runner:
+    image: golang:1.24
+    working_dir: /workspace/autograder
+    volumes:
+      - .:/workspace
+      - ${GO_TEST_GOMODCACHE_HOST}:/go/pkg/mod
+      - ${GO_TEST_GOCACHE_HOST}:/root/.cache/go-build
+    env_file: .env.test
+    depends_on:
+      redis-test:
+        condition: service_healthy
+      mongo-test:
+        condition: service_healthy
+      cassandra-test:
+        condition: service_healthy
+      neo4j-test:
+        condition: service_healthy
 
 volumes:
   cassandra_data_test:
