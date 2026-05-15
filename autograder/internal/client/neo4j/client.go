@@ -4,6 +4,7 @@ import (
 	"context"
 
 	driver "github.com/neo4j/neo4j-go-driver/v6/neo4j"
+
 	config "github.com/sitnikovik/ndbx/autograder/internal/config/neo4j"
 )
 
@@ -28,13 +29,17 @@ func (c *Client) Connect() error {
 	if c.cli != nil {
 		return nil
 	}
-	drv, err := driver.NewDriver(
-		c.cfg.Connection().URL(),
-		driver.BasicAuth(
+	auth := driver.NoAuth()
+	if !c.cfg.Auth().Empty() {
+		auth = driver.BasicAuth(
 			c.cfg.Auth().Username(),
 			c.cfg.Auth().Password(),
 			"",
-		),
+		)
+	}
+	drv, err := driver.NewDriver(
+		c.cfg.Connection().URL(),
+		auth,
 	)
 	if err != nil {
 		return err
