@@ -19,7 +19,7 @@ func MustLoad() Config {
 				Get("NEO4J_USERNAME").
 				String(),
 			env.
-				Get("CASSANDRA_PASSWORD").
+				Get("NEO4J_PASSWORD").
 				String(),
 		),
 	)
