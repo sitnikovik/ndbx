@@ -1,4 +1,4 @@
-package node
+package graph
 
 // Option represents the functional option
 // to modify a Node on its creation.

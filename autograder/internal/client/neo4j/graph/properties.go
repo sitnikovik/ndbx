@@ -1,4 +1,4 @@
-package property
+package graph
 
 // Properties represents a collection of Property.
 type Properties struct {

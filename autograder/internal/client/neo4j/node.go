@@ -4,8 +4,7 @@ import (
 	"context"
 
 	"github.com/neo4j/neo4j-go-driver/v6/neo4j"
-	"github.com/sitnikovik/ndbx/autograder/internal/client/neo4j/node"
-	"github.com/sitnikovik/ndbx/autograder/internal/client/neo4j/node/property"
+	"github.com/sitnikovik/ndbx/autograder/internal/client/neo4j/graph"
 )
 
 // Node executes a query and returns the node that matches the query.
@@ -14,7 +13,7 @@ func (c *Client) Node(
 	query string,
 	params map[string]any,
 	key string,
-) (node.Node, error) {
+) (graph.Node, error) {
 	c.MustConnect()
 	res, err := neo4j.ExecuteQuery(
 		ctx,
@@ -24,15 +23,15 @@ func (c *Client) Node(
 		neo4j.EagerResultTransformer,
 	)
 	if err != nil {
-		return node.Node{}, err
+		return graph.Node{}, err
 	}
 	n, _, err := neo4j.GetRecordValue[neo4j.Node](res.Records[0], key)
 	if err != nil {
-		return node.Node{}, err
+		return graph.Node{}, err
 	}
-	return node.NewNode(
-		node.NewID(n.GetElementId()),
-		property.PropertiesFromMap(n.GetProperties()),
-		node.WithKey(key),
+	return graph.NewNode(
+		n.GetElementId(),
+		graph.PropertiesFromMap(n.GetProperties()),
+		graph.WithKey(key),
 	), nil
 }

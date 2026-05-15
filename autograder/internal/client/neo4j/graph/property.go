@@ -1,4 +1,4 @@
-package property
+package graph
 
 // Property represents a property of a node.
 type Property struct {
@@ -11,7 +11,8 @@ type Property struct {
 // NewProperty creates a new Property with the given name and value.
 func NewProperty(
 	name string,
-	value Value) Property {
+	value Value,
+) Property {
 	return Property{
 		name:  name,
 		value: value,
