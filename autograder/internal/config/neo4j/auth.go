@@ -29,6 +29,11 @@ func (a Auth) Password() string {
 	return a.pwd
 }
 
+// Empty returns true if both username and password are empty.
+func (a Auth) Empty() bool {
+	return a.usr == "" && a.pwd == ""
+}
+
 // Validate validates the Auth credentials.
 func (a Auth) Validate() error {
 	if a.usr == "" {

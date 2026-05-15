@@ -3,8 +3,9 @@ package neo4j_test
 import (
 	"testing"
 
-	impl "github.com/sitnikovik/ndbx/autograder/internal/config/neo4j"
 	"github.com/stretchr/testify/assert"
+
+	impl "github.com/sitnikovik/ndbx/autograder/internal/config/neo4j"
 )
 
 func TestAuth_Username(t *testing.T) {
@@ -183,6 +184,65 @@ func TestAuth_Validate(t *testing.T) {
 					"unexpected error: %v",
 					err,
 				)
+			}
+		})
+	}
+}
+
+func TestAuth_Empty(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		value bool
+	}
+	tests := []struct {
+		name string
+		a    impl.Auth
+		want want
+	}{
+		{
+			name: "ok",
+			a:    impl.NewAuth("user", "pass"),
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "empty username",
+			a:    impl.NewAuth("", "pass"),
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "empty password",
+			a:    impl.NewAuth("user", ""),
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "all empty",
+			a:    impl.NewAuth("", ""),
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "whitespace username",
+			a:    impl.NewAuth(" ", ""),
+			want: want{
+				value: false,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.a.Empty()
+			if tt.want.value {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
 			}
 		})
 	}
