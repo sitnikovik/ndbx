@@ -38,6 +38,19 @@ services:
       timeout: 10s
       retries: 10
     container_name: cassandra-test
+  neo4j-test:
+    image: neo4j:5-community
+    environment:
+      - NEO4J_AUTH=none
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 >/dev/null 2>&1 || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    container_name: neo4j-test
 
 volumes:
   cassandra_data_test:
