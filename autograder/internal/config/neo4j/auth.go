@@ -35,7 +35,13 @@ func (a Auth) Empty() bool {
 }
 
 // Validate validates the Auth credentials.
+//
+// If both username and password are empty, nil is returned
+// because it is considered as no authentication.
 func (a Auth) Validate() error {
+	if a.Empty() {
+		return nil
+	}
 	if a.usr == "" {
 		return errors.New("empty username")
 	}

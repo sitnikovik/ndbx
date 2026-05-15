@@ -161,7 +161,15 @@ func TestAuth_Validate(t *testing.T) {
 			name: "all empty",
 			a:    impl.NewAuth("", ""),
 			want: want{
-				errContains: "username",
+				errContains: "",
+				errored:     false,
+			},
+		},
+		{
+			name: "whitespace username",
+			a:    impl.NewAuth(" ", ""),
+			want: want{
+				errContains: "password",
 				errored:     true,
 			},
 		},
