@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
-	impl "github.com/sitnikovik/ndbx/autograder/internal/app/neo4j/event"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/app/neo4j/node/event"
 )
 
 func TestEvent_ID(t *testing.T) {

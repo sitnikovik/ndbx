@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	impl "github.com/sitnikovik/ndbx/autograder/internal/app/neo4j/user"
+	impl "github.com/sitnikovik/ndbx/autograder/internal/app/neo4j/node/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 )
 
