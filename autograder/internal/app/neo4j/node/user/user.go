@@ -21,3 +21,8 @@ func NewUser(id user.ID) User {
 func (u User) ID() user.ID {
 	return u.id
 }
+
+// Equals checks if the given user is equal to the current one.
+func (u User) Equals(other User) bool {
+	return u.id == other.id
+}

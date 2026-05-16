@@ -65,3 +65,73 @@ func TestUser_ID(t *testing.T) {
 		})
 	}
 }
+
+func TestUser_Equals(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		other impl.User
+	}
+	type want struct {
+		ok bool
+	}
+	tests := []struct {
+		name string
+		u    impl.User
+		args args
+		want want
+	}{
+		{
+			name: "same with id",
+			u: impl.NewUser(
+				user.NewID("65e9c0b1a2b3c4d5e6f7a8b9"),
+			),
+			args: args{
+				other: impl.NewUser(
+					user.NewID("65e9c0b1a2b3c4d5e6f7a8b9"),
+				),
+			},
+			want: want{
+				ok: true,
+			},
+		},
+		{
+			name: "same with empty id",
+			u: impl.NewUser(
+				user.NewID(""),
+			),
+			args: args{
+				other: impl.NewUser(
+					user.NewID(""),
+				),
+			},
+			want: want{
+				ok: true,
+			},
+		},
+		{
+			name: "diff with id",
+			u: impl.NewUser(
+				user.NewID("65e9c0b1a2b3c4d5e6f7a8b9"),
+			),
+			args: args{
+				other: impl.NewUser(
+					user.NewID("65e9c0b1a2b3c4d5e6f7a8b0"),
+				),
+			},
+			want: want{
+				ok: false,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.u.Equals(tt.args.other)
+			if tt.want.ok {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}
