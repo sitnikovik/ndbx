@@ -15,6 +15,15 @@ type Client struct {
 	funcs funcs
 }
 
+// NewClient creates a new instance of the Client struct.
+func NewClient(opts ...Option) *Client {
+	c := &Client{}
+	for _, opt := range opts {
+		opt(c)
+	}
+	return c
+}
+
 // QueryNodes simulates the behavior of the QueryNodes method.
 func (c *Client) QueryNodes(
 	ctx context.Context,
