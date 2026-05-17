@@ -14,7 +14,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/endpoint"
-	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/expect"
+	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/endpoint/expect"
 	httpfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"

@@ -7,7 +7,7 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/endpoint"
-	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/expect"
+	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/endpoint/expect"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )

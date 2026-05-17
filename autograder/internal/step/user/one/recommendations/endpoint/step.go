@@ -5,7 +5,7 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
-	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/expect"
+	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/endpoint/expect"
 )
 
 // httpClient defines the interface for making HTTP requests.
