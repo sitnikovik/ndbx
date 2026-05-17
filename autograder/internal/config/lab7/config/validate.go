@@ -47,5 +47,13 @@ func (c Config) Validate() error {
 			err,
 		)
 	}
+	err = c.app.User().Recommendations().Events().Validate()
+	if err != nil {
+		return errs.WrapJoin(
+			"app: user events recommendation ttl",
+			errs.ErrInvalidConfig,
+			err,
+		)
+	}
 	return nil
 }

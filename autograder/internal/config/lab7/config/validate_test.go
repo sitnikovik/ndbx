@@ -9,6 +9,8 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/client/cassandra/consistency"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user/recommendation"
+	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user/recommendation/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/app/user/session"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/cassandra"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/config/lab7/config"
@@ -59,6 +61,15 @@ func TestConfig_Validate(t *testing.T) {
 				app.NewConfig(
 					user.NewConfig(
 						session.NewConfig(1*time.Second),
+						user.WithRecommendations(
+							recommendation.NewConfig(
+								recommendation.WithEvent(
+									event.NewConfig(
+										1*time.Minute,
+									),
+								),
+							),
+						),
 					),
 					"localhost",
 					8080,
@@ -147,6 +158,47 @@ func TestConfig_Validate(t *testing.T) {
 			),
 			wantErr:         errs.ErrInvalidConfig,
 			wantErrContains: "app",
+		},
+		{
+			name: "invalid app user recomms config",
+			c: impl.NewConfig(
+				redis.NewConfig(
+					"localhost:6379",
+					"",
+					0,
+				),
+				mongo.NewConfig(
+					"testdb",
+					"testuser",
+					"testpass",
+					"localhost",
+					27017,
+				),
+				cassandra.NewConfig(
+					cassandra.NewConnection(
+						[]string{"localhost"},
+						9042,
+					),
+					cassandra.NewAuth("", ""),
+					cassandra.NewDatabase(
+						"testkeyspace",
+						consistency.Quorum,
+					),
+				),
+				neo4j.NewConfig(
+					neo4j.NewConnection("neo4j://localhost:7687"),
+					neo4j.NewAuth("user", "password"),
+				),
+				app.NewConfig(
+					user.NewConfig(
+						session.NewConfig(1*time.Second),
+					),
+					"localhost",
+					8080,
+				),
+			),
+			wantErr:         errs.ErrInvalidConfig,
+			wantErrContains: "recommendation",
 		},
 		{
 			name: "invalid mongo config",
