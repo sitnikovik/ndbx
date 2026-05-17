@@ -4,16 +4,9 @@ import (
 	"context"
 	"os"
 
-	cookieSession "github.com/sitnikovik/ndbx/autograder/internal/app/cookie/session"
-	eventsrq "github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/rq/body"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/reviews/events/create/rq/body"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/rq/include"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/event/review"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/money"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/rating"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/review/count"
 	"github.com/sitnikovik/ndbx/autograder/internal/autograder"
 	mongoSetup "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/setup/mongo"
 	redisSetup "github.com/sitnikovik/ndbx/autograder/internal/autograder/lab3/job/setup/redis"
@@ -26,35 +19,26 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/client/redis"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/lab7/config"
 	"github.com/sitnikovik/ndbx/autograder/internal/console"
-	cookieassert "github.com/sitnikovik/ndbx/autograder/internal/expect/http/cookie"
-	cookiexpct "github.com/sitnikovik/ndbx/autograder/internal/expect/http/cookie/expectation"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response"
-	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response/expectation"
+	respXpct "github.com/sitnikovik/ndbx/autograder/internal/expect/http/response/expectation"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	cassandraSetup "github.com/sitnikovik/ndbx/autograder/internal/step/cassandra/setup"
 	cassandraTeardown "github.com/sitnikovik/ndbx/autograder/internal/step/cassandra/teardown"
 	createOneEventMongo "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/mongo"
-	listEventsEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/list/endpoint"
-	listEventsExpectations "github.com/sitnikovik/ndbx/autograder/internal/step/events/list/endpoint/expect"
-	reviewRedis "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/review/redis"
-	reviewRedisExpects "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/review/redis/expect"
-	reviewEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/review/event/create/endpoint"
-	eventReviewsCassandra "github.com/sitnikovik/ndbx/autograder/internal/step/review/event/list/cassandra"
-	eventReviewsCassandraXpct "github.com/sitnikovik/ndbx/autograder/internal/step/review/event/list/cassandra/expectation"
-	reviewListEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/review/event/list/endpoint"
-	reviewListEndpointXpct "github.com/sitnikovik/ndbx/autograder/internal/step/review/event/list/endpoint/expect"
-	updateReviewEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/review/event/update/endpoint"
+	dislikeOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/dislike/endpoint"
+	likeOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/like/endpoint"
 	login "github.com/sitnikovik/ndbx/autograder/internal/step/user/auth/login"
 	logout "github.com/sitnikovik/ndbx/autograder/internal/step/user/auth/logout"
 	signup "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/sign-up"
-	listUserEventsEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/endpoint"
-	listUserEventsExpectations "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/events/expect"
+	recommsEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/endpoint"
+	recommsEndpointXpct "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/endpoint/expect"
+	recommsRedis "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/redis"
+	recommsRedisXpct "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/redis/expect"
 	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/timex"
-	"github.com/sitnikovik/ndbx/autograder/internal/user/session"
 )
 
-// main is the entry point for the Lab 6 autograder.
+// main is the entry point for the Lab 7 autograder.
 func main() {
 	defer func() {
 		if r := recover(); r != nil {
@@ -69,19 +53,18 @@ func main() {
 	httpcli := httpx.NewClient(httpx.WithEmptyCookieJar())
 	baseURL := cfg.App().Address()
 	sessionTTL := cfg.App().User().Session().TTL()
-	reviewsTTL := cfg.App().Event().Reviews().TTL()
+	recommsTTL := cfg.App().User().Recommendations().Events().TTL()
 	ctx := context.Background()
 	vars := step.NewVariables()
-	vars.Set(
-		variable.SessionTTL,
-		sessionTTL,
-	)
+	vars.Set(variable.SessionTTL, sessionTTL)
+	// Пользователи
 	samSepiol := userfx.NewSamSepiol()
 	johnDoe := userfx.NewJohnDoe()
 	alexSmith := userfx.NewAlexSmith()
 	johnSmith := userfx.NewJohnSmith()
 	samwiseGamgee := userfx.NewSamwiseGamgee()
 	pwd := "supa_dxpa_pwd"
+	// Мепроприятия
 	wonderLandEvents := []event.Event{
 		event.NewEvent(
 			event.NewID("1"),
@@ -102,21 +85,7 @@ func main() {
 				timex.MustRFC3339("2026-03-24T10:00:00Z"),
 				timex.MustRFC3339("2026-03-24T12:00:00Z"),
 			),
-			event.WithCosts(
-				event.NewCosts(
-					money.NewMoney(0, 00),
-				),
-			),
-			event.WithReviews(
-				review.NewReviews(
-					review.WithCounts(
-						count.NewCounts(
-							count.WithRating(4),
-							count.WithCount(2),
-						),
-					),
-				),
-			),
+			event.WithCosts(event.NewCosts(money.NewMoney(0, 00))),
 		),
 		event.NewEvent(
 			event.NewID("2"),
@@ -127,6 +96,7 @@ func main() {
 			),
 			event.NewLocation(
 				"Москва. Ходынский бульвар 20а",
+				event.WithCity("Москва"),
 			),
 			event.NewCreated(
 				timex.MustRFC3339("2026-01-01T11:34:00Z"),
@@ -136,21 +106,7 @@ func main() {
 				timex.MustRFC3339("2026-03-24T12:00:00Z"),
 				timex.MustRFC3339("2026-03-24T14:00:00Z"),
 			),
-			event.WithCosts(
-				event.NewCosts(
-					money.NewMoney(0, 00),
-				),
-			),
-			event.WithReviews(
-				review.NewReviews(
-					review.WithCounts(
-						count.NewCounts(
-							count.WithRating(4),
-							count.WithCount(1),
-						),
-					),
-				),
-			),
+			event.WithCosts(event.NewCosts(money.NewMoney(0, 00))),
 		),
 		event.NewEvent(
 			event.NewID("3"),
@@ -171,786 +127,236 @@ func main() {
 				timex.MustRFC3339("2026-03-24T14:00:00Z"),
 				timex.MustRFC3339("2026-03-24T16:00:00Z"),
 			),
-			event.WithCosts(
-				event.NewCosts(
-					money.NewMoney(0, 00),
-				),
+			event.WithCosts(event.NewCosts(money.NewMoney(0, 00))),
+		),
+	}
+	concertEvent := event.NewEvent(
+		event.NewID("4"),
+		event.NewContent(
+			"Ночь в опере",
+			"Гала-концерт лучших солистов Большого театра",
+			event.WithCategory(category.Concert),
+		),
+		event.NewLocation(
+			"Москва, ул. Большая Дмитровка, д. 6",
+			event.WithCity("Москва"),
+		),
+		event.NewCreated(
+			timex.MustRFC3339("2026-01-02T10:00:00Z"),
+			alexSmith.Idendity(),
+		),
+		event.NewDates(
+			timex.MustRFC3339("2026-04-05T19:00:00Z"),
+			timex.MustRFC3339("2026-04-05T21:00:00Z"),
+		),
+		event.WithCosts(event.NewCosts(money.NewMoney(2500, 00))),
+	)
+	shakespeareMeetup := event.NewEvent(
+		event.NewID("5"),
+		event.NewContent(
+			"Обсуждение Гамлета",
+			"Встреча поклонников Шекспира: анализ пьесы, дискуссия, читка сцены",
+			event.WithCategory(category.Meetup),
+		),
+		event.NewLocation(
+			"Москва, Новый Арбат, д. 22, библиотека им. Ленина",
+			event.WithCity("Москва"),
+		),
+		event.NewCreated(
+			timex.MustRFC3339("2026-01-03T15:00:00Z"),
+			johnDoe.Idendity(),
+		),
+		event.NewDates(
+			timex.MustRFC3339("2026-04-10T18:30:00Z"),
+			timex.MustRFC3339("2026-04-10T20:30:00Z"),
+		),
+		event.WithCosts(event.NewCosts(money.NewMoney(0, 00))),
+	)
+	err := autograder.NewAutograder(
+		// Настройка инфраструктуры
+		cassandraSetup.NewStep(cassandracli),
+		mongoSetup.NewStep(mongocli),
+		redisSetup.NewStep(rediscli),
+
+		// Регистрация пользователей
+		signup.NewStep(httpcli, mongocli, baseURL, samSepiol, pwd),
+		signup.NewStep(httpcli, mongocli, baseURL, johnDoe, pwd),
+		signup.NewStep(httpcli, mongocli, baseURL, alexSmith, pwd),
+		signup.NewStep(httpcli, mongocli, baseURL, johnSmith, pwd),
+		signup.NewStep(httpcli, mongocli, baseURL, samwiseGamgee, pwd),
+
+		// Create events
+		createOneEventMongo.NewStep(mongocli, wonderLandEvents[0]),
+		createOneEventMongo.NewStep(mongocli, wonderLandEvents[1]),
+		createOneEventMongo.NewStep(mongocli, wonderLandEvents[2]),
+		createOneEventMongo.NewStep(mongocli, concertEvent),
+		createOneEventMongo.NewStep(mongocli, shakespeareMeetup),
+
+		// Sam Sepiol likes exhibition
+		login.NewStep(httpcli, baseURL, samSepiol, pwd),
+		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[0]),
+		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[1]),
+		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[2]),
+		logout.NewStep(httpcli, baseURL),
+
+		// John Doe likes exhibition and concert
+		login.NewStep(httpcli, baseURL, johnDoe, pwd),
+		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[0]),
+		likeOneEventEndpoint.NewStep(httpcli, baseURL, concertEvent),
+		logout.NewStep(httpcli, baseURL),
+
+		// Alex Smith likes exhibition, concert and shakespeareMeetup
+		login.NewStep(httpcli, baseURL, alexSmith, pwd),
+		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[0]),
+		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[2]),
+		likeOneEventEndpoint.NewStep(httpcli, baseURL, concertEvent),
+		logout.NewStep(httpcli, baseURL),
+
+		// Samwise Gamgee likes the exhibition (then dislikes), and joins the Shakespeare meetup
+		login.NewStep(httpcli, baseURL, samwiseGamgee, pwd),
+		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[0]),
+		dislikeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[0]),
+		likeOneEventEndpoint.NewStep(httpcli, baseURL, shakespeareMeetup),
+		logout.NewStep(httpcli, baseURL),
+
+		// Check recommendations
+		login.NewStep(httpcli, baseURL, samwiseGamgee, pwd),
+		recommsEndpoint.NewStep(
+			step.NewDesc(
+				"User's recommendations endpoint",
+				"Checking recommendations for Samwise Gamgee. "+
+					"He liked shakespeareMeetup → John Doe also liked it → "+
+					"John Doe liked the exhibition and concert → recommend them",
 			),
-			event.WithReviews(
-				review.NewReviews(
-					review.WithCounts(
-						count.NewCounts(
-							count.WithRating(4),
-							count.WithCount(1),
+			httpcli,
+			baseURL,
+			samwiseGamgee,
+			recommsEndpointXpct.NewExpectations(
+				recommsEndpointXpct.WithEvents(
+					wonderLandEvents[1],
+					concertEvent,
+				),
+				recommsEndpointXpct.WithResponse(
+					respXpct.NewExpectations(
+						respXpct.WithAsserts(
+							response.AssertOKStatus,
+							response.AssertNotEmptyContent,
 						),
 					),
 				),
 			),
 		),
-	}
-	err := autograder.
-		NewAutograder(
-			cassandraSetup.NewStep(
-				cassandracli,
+		recommsRedis.NewStep(
+			step.NewDesc(
+				"User's recommendations Redis",
+				"Recommendations for Samwise Gamgee must not be in Redis cache before first request",
 			),
-			mongoSetup.NewStep(
-				mongocli,
+			rediscli,
+			samwiseGamgee,
+			recommsRedisXpct.NewExpectations(
+				recommsRedisXpct.WithNoEvents(),
 			),
-			redisSetup.NewStep(
-				rediscli,
+		),
+		recommsEndpoint.NewStep(
+			step.NewDesc(
+				"User's recommendations endpoint",
+				"Checking recommendations for Samwise Gamgee. "+
+					"He liked shakespeareMeetup → John Doe also liked it → "+
+					"John Doe liked the exhibition and concert → recommend them",
 			),
-			signup.NewStep(
-				httpcli,
-				mongocli,
-				baseURL,
-				samSepiol,
-				pwd,
-			),
-			signup.NewStep(
-				httpcli,
-				mongocli,
-				baseURL,
-				johnDoe,
-				pwd,
-			),
-			signup.NewStep(
-				httpcli,
-				mongocli,
-				baseURL,
-				alexSmith,
-				pwd,
-			),
-			signup.NewStep(
-				httpcli,
-				mongocli,
-				baseURL,
-				johnSmith,
-				pwd,
-			),
-			signup.NewStep(
-				httpcli,
-				mongocli,
-				baseURL,
-				samwiseGamgee,
-				pwd,
-			),
-			createOneEventMongo.NewStep(
-				mongocli,
-				wonderLandEvents[0],
-			),
-			createOneEventMongo.NewStep(
-				mongocli,
-				wonderLandEvents[1],
-			),
-			createOneEventMongo.NewStep(
-				mongocli,
-				wonderLandEvents[2],
-			),
-			login.NewStep(
-				httpcli,
-				baseURL,
-				samSepiol,
-				pwd,
-			),
-			reviewEventEndpoint.NewStep(
-				step.NewDesc(
-					"Review event bad request",
-					"Makes wrong request for event review without comment by the endpoint",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[0],
-				body.NewBody(
-					body.WithRating(rating.Five),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertBadRequestStatus,
-						response.AssertNotEmptyContent,
-					),
-					expectation.WithCookies(
-						cookiexpct.NewExpectations(
-							cookieSession.Name,
-							cookiexpct.WithAsserts(
-								cookieassert.AssertExistsMaxAge,
-								cookieassert.AssertExistsHTTPOnly,
-							),
-							cookiexpct.WithAssertsValueFn(
-								session.Validate,
-							),
-						),
-					),
-				),
-			),
-			reviewEventEndpoint.NewStep(
-				step.NewDesc(
-					"Review event bad request",
-					"Makes wrong request for event review without rating by the endpoint",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[0],
-				body.NewBody(
-					body.WithComment("Отлично!"),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertBadRequestStatus,
-						response.AssertNotEmptyContent,
-					),
-					expectation.WithCookies(
-						cookiexpct.NewExpectations(
-							cookieSession.Name,
-							cookiexpct.WithAsserts(
-								cookieassert.AssertExistsMaxAge,
-								cookieassert.AssertExistsHTTPOnly,
-							),
-							cookiexpct.WithAssertsValueFn(
-								session.Validate,
-							),
-						),
-					),
-				),
-			),
-			reviewEventEndpoint.NewStep(
-				step.NewDesc(
-					"Review event",
-					"Makes a review for an event created earlier by the endpoint and validates the response",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[0],
-				body.NewBody(
-					body.WithRating(rating.Five),
-					body.WithComment("Рекомендую"),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertCreatedStatus,
-						response.AssertNotEmptyContent,
-					),
-					expectation.WithCookies(
-						cookiexpct.NewExpectations(
-							cookieSession.Name,
-							cookiexpct.WithAsserts(
-								cookieassert.AssertExistsMaxAge,
-								cookieassert.AssertExistsHTTPOnly,
-							),
-							cookiexpct.WithAssertsValueFn(
-								session.Validate,
-							),
-						),
-					),
-				),
-			),
-			reviewEventEndpoint.NewStep(
-				step.NewDesc(
-					"Review event conflict",
-					"Repeats the request with other comment and rating for event review that has been already left",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[0],
-				body.NewBody(
-					body.WithRating(rating.Four),
-					body.WithComment("Я передумал"),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertConflictStatus,
-						response.AssertNotEmptyContent,
-					),
-					expectation.WithCookies(
-						cookiexpct.NewExpectations(
-							cookieSession.Name,
-							cookiexpct.WithAsserts(
-								cookieassert.AssertExistsMaxAge,
-								cookieassert.AssertExistsHTTPOnly,
-							),
-							cookiexpct.WithAssertsValueFn(
-								session.Validate,
-							),
-						),
-					),
-				),
-			),
-			reviewEventEndpoint.NewStep(
-				step.NewDesc(
-					"Review event",
-					"Makes a review for an event created earlier by the endpoint and validates the response",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[1],
-				body.NewBody(
-					body.WithRating(rating.Two),
-					body.WithComment("Не рекомендую. Очень плохой спектакль."),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertCreatedStatus,
-						response.AssertNotEmptyContent,
-					),
-					expectation.WithCookies(
-						cookiexpct.NewExpectations(
-							cookieSession.Name,
-							cookiexpct.WithAsserts(
-								cookieassert.AssertExistsMaxAge,
-								cookieassert.AssertExistsHTTPOnly,
-							),
-							cookiexpct.WithAssertsValueFn(
-								session.Validate,
-							),
-						),
-					),
-				),
-			),
-			reviewEventEndpoint.NewStep(
-				step.NewDesc(
-					"Review event",
-					"Makes a review for an event created earlier by the endpoint and validates the response",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[2],
-				body.NewBody(
-					body.WithRating(rating.Four),
-					body.WithComment("Потрясающие актеры! Но минус балл за плохую организацию"),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertCreatedStatus,
-						response.AssertNotEmptyContent,
-					),
-					expectation.WithCookies(
-						cookiexpct.NewExpectations(
-							cookieSession.Name,
-							cookiexpct.WithAsserts(
-								cookieassert.AssertExistsMaxAge,
-								cookieassert.AssertExistsHTTPOnly,
-							),
-							cookiexpct.WithAssertsValueFn(
-								session.Validate,
-							),
-						),
-					),
-				),
-			),
-			updateReviewEndpoint.NewStep(
-				step.NewDesc(
-					"Update review event",
-					"Updates the event review by the endpoin",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[0],
-				body.NewBody(
-					body.WithComment("Рекомендую! Идите скорее пока билеты не раскупили"),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertNoContentStatus,
-						response.AssertEmptyContent,
-					),
-					expectation.WithCookies(
-						cookiexpct.NewExpectations(
-							cookieSession.Name,
-							cookiexpct.WithAsserts(
-								cookieassert.AssertExistsMaxAge,
-								cookieassert.AssertExistsHTTPOnly,
-							),
-							cookiexpct.WithAssertsValueFn(
-								session.Validate,
-							),
-						),
-					),
-				),
-			),
-			logout.NewStep(
-				httpcli,
-				baseURL,
-			),
-			login.NewStep(
-				httpcli,
-				baseURL,
-				johnDoe,
-				pwd,
-			),
-			reviewEventEndpoint.NewStep(
-				step.NewDesc(
-					"Review event",
-					"Makes a review for an event created earlier by the endpoint and validates the response",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[1],
-				body.NewBody(
-					body.WithRating(rating.One),
-					body.WithComment("Отвратительный спектакль!"),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertCreatedStatus,
-						response.AssertNotEmptyContent,
-					),
-					expectation.WithCookies(
-						cookiexpct.NewExpectations(
-							cookieSession.Name,
-							cookiexpct.WithAsserts(
-								cookieassert.AssertExistsMaxAge,
-								cookieassert.AssertExistsHTTPOnly,
-							),
-							cookiexpct.WithAssertsValueFn(
-								session.Validate,
-							),
-						),
-					),
-				),
-			),
-			logout.NewStep(
-				httpcli,
-				baseURL,
-			),
-			login.NewStep(
-				httpcli,
-				baseURL,
-				alexSmith,
-				pwd,
-			),
-			reviewEventEndpoint.NewStep(
-				step.NewDesc(
-					"Review event",
-					"Makes a review for an event created earlier by the endpoint and validates the response",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[0],
-				body.NewBody(
-					body.WithRating(rating.Three),
-					body.WithComment("На один раз и то вод вопросом"),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertCreatedStatus,
-						response.AssertNotEmptyContent,
-					),
-					expectation.WithCookies(
-						cookiexpct.NewExpectations(
-							cookieSession.Name,
-							cookiexpct.WithAsserts(
-								cookieassert.AssertExistsMaxAge,
-								cookieassert.AssertExistsHTTPOnly,
-							),
-							cookiexpct.WithAssertsValueFn(
-								session.Validate,
-							),
-						),
-					),
-				),
-			),
-			reviewEventEndpoint.NewStep(
-				step.NewDesc(
-					"Review event",
-					"Makes a review for an event created earlier by the endpoint and validates the response",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[2],
-				body.NewBody(
-					body.WithRating(rating.Five),
-					body.WithComment("Рекомендую. Идите и не думайте"),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertCreatedStatus,
-						response.AssertNotEmptyContent,
-					),
-					expectation.WithCookies(
-						cookiexpct.NewExpectations(
-							cookieSession.Name,
-							cookiexpct.WithAsserts(
-								cookieassert.AssertExistsMaxAge,
-								cookieassert.AssertExistsHTTPOnly,
-							),
-							cookiexpct.WithAssertsValueFn(
-								session.Validate,
-							),
-						),
-					),
-				),
-			),
-			logout.NewStep(
-				httpcli,
-				baseURL,
-			),
-			login.NewStep(
-				httpcli,
-				baseURL,
-				samwiseGamgee,
-				pwd,
-			),
-			reviewEventEndpoint.NewStep(
-				step.NewDesc(
-					"Review event",
-					"Makes a review for an event created earlier by the endpoint and validates the response",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[0],
-				body.NewBody(
-					body.WithRating(rating.Five),
-					body.WithComment("Отлично!"),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertCreatedStatus,
-						response.AssertNotEmptyContent,
-					),
-					expectation.WithCookies(
-						cookiexpct.NewExpectations(
-							cookieSession.Name,
-							cookiexpct.WithAsserts(
-								cookieassert.AssertExistsMaxAge,
-								cookieassert.AssertExistsHTTPOnly,
-							),
-							cookiexpct.WithAssertsValueFn(
-								session.Validate,
-							),
-						),
-					),
-				),
-			),
-			reviewRedis.NewStep(
-				step.NewDesc(
-					"Event reviews in Redis",
-					"Checks how the event reviews stored in Redis",
-				),
-				rediscli,
-				wonderLandEvents[0],
-				reviewRedis.WithExpectations(
-					reviewRedisExpects.NewExpectations(
-						reviewRedisExpects.WithCounts(
-							count.NewCounts(
-								count.WithRating(3.6),
-								count.WithCount(7),
-							),
-						),
-						reviewRedisExpects.WithTTL(
-							reviewsTTL,
-						),
-					),
-				),
-			),
-			listUserEventsEndpoint.NewStep(
-				httpcli,
-				baseURL,
-				samSepiol,
-				eventsrq.NewBody(
-					eventsrq.WithInclude(
-						include.NewInclude("reviews"),
-					),
-				),
-				[]event.Event{
-					wonderLandEvents[0],
+			httpcli,
+			baseURL,
+			samwiseGamgee,
+			recommsEndpointXpct.NewExpectations(
+				recommsEndpointXpct.WithEvents(
 					wonderLandEvents[1],
-				},
-				listUserEventsEndpoint.WithExpectations(
-					listUserEventsExpectations.NewExpectations(
-						listUserEventsExpectations.WithReviews(
-							review.NewReviews(
-								review.WithCounts(
-									count.NewCounts(
-										count.WithRating(3.6),
-										count.WithCount(7),
-									),
-								),
-							),
-							review.NewReviews(
-								review.WithCounts(
-									count.NewCounts(
-										count.WithRating(3.6),
-										count.WithCount(7),
-									),
-								),
-							),
+					concertEvent,
+				),
+				recommsEndpointXpct.WithResponse(
+					respXpct.NewExpectations(
+						respXpct.WithAsserts(
+							response.AssertOKStatus,
+							response.AssertNotEmptyContent,
 						),
 					),
 				),
 			),
-			listEventsEndpoint.NewStep(
-				step.NewDesc(
-					"List events including reviews",
-					"Gets lists of all events with reviews",
-				),
-				httpcli,
-				baseURL,
-				eventsrq.NewBody(
-					eventsrq.WithInclude(
-						include.NewInclude("reviews"),
-					),
-				),
-				listEventsExpectations.NewExpectations(
-					listEventsExpectations.WithEvents(
-						wonderLandEvents[0],
-						wonderLandEvents[1],
-						wonderLandEvents[2],
-					),
-					listEventsExpectations.WithReviews(
-						review.NewReviews(
-							review.WithCounts(
-								count.NewCounts(
-									count.WithRating(3.6),
-									count.WithCount(7),
-								),
-							),
-						),
-						review.NewReviews(
-							review.WithCounts(
-								count.NewCounts(
-									count.WithRating(3.6),
-									count.WithCount(7),
-								),
-							),
-						),
-						review.NewReviews(
-							review.WithCounts(
-								count.NewCounts(
-									count.WithRating(3.6),
-									count.WithCount(7),
-								),
-							),
-						),
-					),
-				),
+		),
+		recommsRedis.NewStep(
+			step.NewDesc(
+				"User's recommendations Redis",
+				"Recommendations for Samwise Gamgee must not be in Redis cache before first request",
 			),
-			logout.NewStep(
-				httpcli,
-				baseURL,
-			),
-			reviewEventEndpoint.NewStep(
-				step.NewDesc(
-					"Event reviews in Redis",
-					"Checks how the event reviews stored in Redis",
-				),
-				httpcli,
-				baseURL,
-				wonderLandEvents[0],
-				body.NewBody(
-					body.WithRating(rating.Five),
-					body.WithComment("Отлично!"),
-				),
-				expectation.NewExpectations(
-					expectation.WithAsserts(
-						response.AssertUnauthorizedStatus,
-						response.AssertEmptyContent,
-					),
-				),
-			),
-			reviewRedis.NewStep(
-				step.NewDesc(
-					"Event reviews in Redis",
-					"Checks how the event reviews stored in Redis",
-				),
-				rediscli,
-				wonderLandEvents[1],
-				reviewRedis.WithExpectations(
-					reviewRedisExpects.NewExpectations(
-						reviewRedisExpects.WithCounts(
-							count.NewCounts(
-								count.WithRating(3.6),
-								count.WithCount(7),
-							),
-						),
-						reviewRedisExpects.WithTTL(
-							reviewsTTL,
-						),
-					),
-				),
-			),
-			reviewRedis.NewStep(
-				step.NewDesc(
-					"Event reviews in Redis",
-					"Checks how the event reviews stored in Redis",
-				),
-				rediscli,
-				wonderLandEvents[2],
-				reviewRedis.WithExpectations(
-					reviewRedisExpects.NewExpectations(
-						reviewRedisExpects.WithCounts(
-							count.NewCounts(
-								count.WithRating(3.6),
-								count.WithCount(7),
-							),
-						),
-						reviewRedisExpects.WithTTL(
-							reviewsTTL,
-						),
-					),
-				),
-			),
-			eventReviewsCassandra.NewStep(
-				step.NewDesc(
-					"Get event reviews from Cassandra",
-					"Selects event reviews from Cassandra databases and validates the rows",
-				),
-				cassandracli,
-				wonderLandEvents[0],
-				eventReviewsCassandraXpct.NewExpectations(
-					eventReviewsCassandraXpct.WithCount(3),
-				),
-			),
-			eventReviewsCassandra.NewStep(
-				step.NewDesc(
-					"Get event reviews from Cassandra",
-					"Selects event reviews from Cassandra databases and validates the rows",
-				),
-				cassandracli,
-				wonderLandEvents[1],
-				eventReviewsCassandraXpct.NewExpectations(
-					eventReviewsCassandraXpct.WithCount(2),
-				),
-			),
-			eventReviewsCassandra.NewStep(
-				step.NewDesc(
-					"Get event reviews from Cassandra",
-					"Selects event reviews from Cassandra databases and validates the rows",
-				),
-				cassandracli,
-				wonderLandEvents[2],
-				eventReviewsCassandraXpct.NewExpectations(
-					eventReviewsCassandraXpct.WithCount(2),
-				),
-			),
-			reviewListEndpoint.NewStep(
-				step.NewDesc(
-					"Get event reviews by endpoint",
-					"Gets reviews for the event by the endpoint and validates the response",
-				),
-				httpcli,
-				wonderLandEvents[0],
-				baseURL,
-				reviewListEndpointXpct.NewExpectations(
-					reviewListEndpointXpct.WithCount(3),
-				),
-			),
-			reviewListEndpoint.NewStep(
-				step.NewDesc(
-					"Get event reviews by endpoint",
-					"Gets reviews for the event by the endpoint and validates the response",
-				),
-				httpcli,
-				wonderLandEvents[1],
-				baseURL,
-				reviewListEndpointXpct.NewExpectations(
-					reviewListEndpointXpct.WithCount(2),
-				),
-			),
-			reviewListEndpoint.NewStep(
-				step.NewDesc(
-					"Get event reviews by endpoint",
-					"Gets reviews for the event by the endpoint and validates the response",
-				),
-				httpcli,
-				wonderLandEvents[2],
-				baseURL,
-				reviewListEndpointXpct.NewExpectations(
-					reviewListEndpointXpct.WithCount(2),
-				),
-			),
-			listUserEventsEndpoint.NewStep(
-				httpcli,
-				baseURL,
-				samSepiol,
-				eventsrq.NewBody(
-					eventsrq.WithInclude(
-						include.NewInclude("reviews"),
-					),
-				),
-				[]event.Event{
-					wonderLandEvents[0],
+			rediscli,
+			samwiseGamgee,
+			recommsRedisXpct.NewExpectations(
+				recommsRedisXpct.WithEvents(
 					wonderLandEvents[1],
-				},
-				listUserEventsEndpoint.WithExpectations(
-					listUserEventsExpectations.NewExpectations(
-						listUserEventsExpectations.WithReviews(
-							review.NewReviews(
-								review.WithCounts(
-									count.NewCounts(
-										count.WithRating(3.6),
-										count.WithCount(7),
-									),
-								),
-							),
-							review.NewReviews(
-								review.WithCounts(
-									count.NewCounts(
-										count.WithRating(3.6),
-										count.WithCount(7),
-									),
-								),
-							),
+					concertEvent,
+				),
+				recommsRedisXpct.WithTTL(
+					recommsTTL,
+				),
+			),
+		),
+		logout.NewStep(httpcli, baseURL),
+		login.NewStep(httpcli, baseURL, johnSmith, pwd),
+		recommsEndpoint.NewStep(
+			step.NewDesc(
+				"User's recommendations endpoint",
+				"Cannot get recommendations for other user",
+			),
+			httpcli,
+			baseURL,
+			alexSmith,
+			recommsEndpointXpct.NewExpectations(
+				recommsEndpointXpct.WithResponse(
+					respXpct.NewExpectations(
+						respXpct.WithAsserts(
+							response.AssertForbiddenStatus,
+							response.AssertNotEmptyContent,
 						),
 					),
 				),
 			),
-			listEventsEndpoint.NewStep(
-				step.NewDesc(
-					"List events after reviewed",
-					"Gets lists of all events with reviews after someone reviewed",
-				),
-				httpcli,
-				baseURL,
-				eventsrq.NewBody(
-					eventsrq.WithInclude(
-						include.NewInclude("reviews"),
-					),
-				),
-				listEventsExpectations.NewExpectations(
-					listEventsExpectations.WithEvents(
-						wonderLandEvents[0],
-						wonderLandEvents[1],
-						wonderLandEvents[2],
-					),
-					listEventsExpectations.WithReviews(
-						review.NewReviews(
-							review.WithCounts(
-								count.NewCounts(
-									count.WithRating(3.6),
-									count.WithCount(7),
-								),
-							),
-						),
-						review.NewReviews(
-							review.WithCounts(
-								count.NewCounts(
-									count.WithRating(3.6),
-									count.WithCount(7),
-								),
-							),
-						),
-						review.NewReviews(
-							review.WithCounts(
-								count.NewCounts(
-									count.WithRating(3.6),
-									count.WithCount(7),
-								),
-							),
+		),
+		recommsEndpoint.NewStep(
+			step.NewDesc(
+				"User's recommendations endpoint",
+				"Empty list is expected for John Doe",
+			),
+			httpcli,
+			baseURL,
+			johnSmith,
+			recommsEndpointXpct.NewExpectations(
+				recommsEndpointXpct.WithNoEvents(),
+			),
+		),
+		logout.NewStep(httpcli, baseURL),
+		recommsEndpoint.NewStep(
+			step.NewDesc(
+				"User's recommendations endpoint",
+				"Try to get recommendations on user is authenticated",
+			),
+			httpcli,
+			baseURL,
+			samwiseGamgee,
+			recommsEndpointXpct.NewExpectations(
+				recommsEndpointXpct.WithResponse(
+					respXpct.NewExpectations(
+						respXpct.WithAsserts(
+							response.AssertUnauthorizedStatus,
+							response.AssertEmptyContent,
 						),
 					),
 				),
 			),
-			mongoTeardown.NewStep(
-				mongocli,
-			),
-			redisTeardown.NewStep(
-				rediscli,
-			),
-			cassandraTeardown.NewStep(
-				cassandracli,
-			),
-		).
-		Run(ctx, vars)
+		),
+		mongoTeardown.NewStep(mongocli),
+		redisTeardown.NewStep(rediscli),
+		cassandraTeardown.NewStep(cassandracli),
+	).Run(ctx, vars)
 	if err != nil {
-		console.Fatal("Lab 6 autograder failed: %v", err)
+		console.Fatal("Lab 7 autograder failed: %v", err)
 	}
 }
