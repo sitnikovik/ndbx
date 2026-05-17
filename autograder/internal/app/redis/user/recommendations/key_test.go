@@ -27,7 +27,7 @@ func TestKey(t *testing.T) {
 				sfx: "123",
 			},
 			want: want{
-				val: "user:123:recommendations",
+				val: "user:123:recomms",
 			},
 		},
 		{
@@ -36,7 +36,7 @@ func TestKey(t *testing.T) {
 				sfx: "",
 			},
 			want: want{
-				val: "user::recommendations",
+				val: "user::recomms",
 			},
 		},
 	}
