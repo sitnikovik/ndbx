@@ -177,7 +177,7 @@ user:53e9c0c1a2a3c3d7e6c9c8a1:recomms
 Добавьте параметры конфигурации контейнера с Neo4j в `.env.local`
 
 ```sh
-NEO4J_HOST=neo4j
+NEO4J_URL=bolt://neo4j:7687
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=password
 
