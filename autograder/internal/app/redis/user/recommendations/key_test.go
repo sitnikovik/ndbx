@@ -1,0 +1,55 @@
+package recommendations_test
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	impl "github.com/sitnikovik/ndbx/autograder/internal/app/redis/user/recommendations"
+)
+
+func TestKey(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		sfx string
+	}
+	type want struct {
+		val string
+	}
+	tests := []struct {
+		name string
+		args args
+		want want
+	}{
+		{
+			name: "ok",
+			args: args{
+				sfx: "123",
+			},
+			want: want{
+				val: "user:123:recommendations",
+			},
+		},
+		{
+			name: "empty id",
+			args: args{
+				sfx: "",
+			},
+			want: want{
+				val: "user::recommendations",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.val,
+				impl.Key(
+					tt.args.sfx,
+				),
+			)
+		})
+	}
+}
