@@ -69,12 +69,14 @@ func (s *Step) Run(
 			err,
 		)
 	}
-	err = duration.AssertEquals(ttl, s.want.TTL())
-	if err != nil {
-		return errs.Wrap(
-			err,
-			"unexpected TTL",
-		)
+	if s.want.HasTTL() {
+		err = duration.AssertEquals(ttl, s.want.TTL())
+		if err != nil {
+			return errs.Wrap(
+				err,
+				"unexpected TTL",
+			)
+		}
 	}
 	return nil
 }

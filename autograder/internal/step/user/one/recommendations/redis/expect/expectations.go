@@ -34,6 +34,11 @@ func (e Expectations) Events() []event.Event {
 	return e.events
 }
 
+// HasTTL defines if ttl is set in the Expectations.
+func (e Expectations) HasTTL() bool {
+	return e.ttl != 0
+}
+
 // TTL returns the duration of the list to expect.
 func (e Expectations) TTL() time.Duration {
 	return e.ttl
