@@ -1,0 +1,63 @@
+package endpoint
+
+import (
+	"context"
+	"errors"
+
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/resp/body"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
+	"github.com/sitnikovik/ndbx/autograder/internal/errs"
+	"github.com/sitnikovik/ndbx/autograder/internal/expect/numbers"
+	"github.com/sitnikovik/ndbx/autograder/internal/step"
+)
+
+// Run executes the search of user's recommendations
+// and validates the response got.
+func (s *Step) Run(
+	_ context.Context,
+	vars step.Variables,
+) error {
+	rsp, err := s.cli.Get(
+		endpoint.UserRecommendations(
+			user.NewID(
+				vars.
+					MustGet(s.user.Hash()).
+					AsString(),
+			),
+		),
+	)
+	if err != nil {
+		return errors.Join(
+			errs.ErrHTTPFailed,
+			err,
+		)
+	}
+	defer func() {
+		errs.MustBeClosed(
+			rsp.Body.Close(),
+		)
+	}()
+	err = s.want.Response().Assert(rsp)
+	if err != nil {
+		return errs.Wrap(
+			err,
+			"got unexpected response",
+		)
+	}
+	body := body.MustParseBody(rsp.Body)
+	events := body.Events()
+	if s.want.HasEvents() {
+		err = numbers.AssertEquals(
+			len(s.want.Events()),
+			len(events),
+		)
+		if err != nil {
+			return errs.Wrap(
+				err,
+				"got unexpected count of events",
+			)
+		}
+	}
+	return nil
+}
