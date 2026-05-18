@@ -14,7 +14,7 @@ if [ -z "$THRESHOLD" ] || [ "$THRESHOLD" = "0" ] || [ "$THRESHOLD" = "" ]; then
 fi
 
 # Run coverage generation first even though this is a check script.
-if ! make coverage >/dev/null 2>&1; then
+if ! make coverage; then
     echo "❌ make coverage failed" >&2
     exit 1
 fi
