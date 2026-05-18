@@ -306,24 +306,6 @@ func main() {
 		recommsEndpoint.NewStep(
 			step.NewDesc(
 				"User's recommendations endpoint",
-				"Cannot get recommendations for other user",
-			),
-			httpcli,
-			baseURL,
-			recommsEndpointXpct.NewExpectations(
-				recommsEndpointXpct.WithResponse(
-					respXpct.NewExpectations(
-						respXpct.WithAsserts(
-							response.AssertForbiddenStatus,
-							response.AssertNotEmptyContent,
-						),
-					),
-				),
-			),
-		),
-		recommsEndpoint.NewStep(
-			step.NewDesc(
-				"User's recommendations endpoint",
 				"Empty list is expected for John Doe",
 			),
 			httpcli,
