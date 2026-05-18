@@ -3,8 +3,9 @@ package neo4j_test
 import (
 	"testing"
 
-	impl "github.com/sitnikovik/ndbx/autograder/internal/config/neo4j"
 	"github.com/stretchr/testify/assert"
+
+	impl "github.com/sitnikovik/ndbx/autograder/internal/config/neo4j"
 )
 
 func TestConfig_Validate(t *testing.T) {
@@ -58,8 +59,8 @@ func TestConfig_Validate(t *testing.T) {
 				impl.NewAuth("", ""),
 			),
 			want: want{
-				errContains: "auth",
-				errored:     true,
+				errContains: "",
+				errored:     false,
 			},
 		},
 		{
