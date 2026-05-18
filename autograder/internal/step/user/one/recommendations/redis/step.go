@@ -22,6 +22,11 @@ type redisClient interface {
 		ctx context.Context,
 		key string,
 	) (map[string]string, error)
+	// Has checks if a key exists in Redis.
+	//
+	// Returns true if the key exists, false if it does not exist,
+	// and an error if the operation fails.
+	Has(ctx context.Context, key string) (bool, error)
 }
 
 // Step represents the HTTP create event step in the autograder process.

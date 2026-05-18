@@ -31,3 +31,11 @@ func WithNoEvents() Option {
 		e.events = []event.Event{}
 	}
 }
+
+// WithNotExists sets that there is no any event in response to expect
+// and the key itself does not exist in Redis.
+func WithNotExists() Option {
+	return func(e *Expectations) {
+		e.nx = true
+	}
+}

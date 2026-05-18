@@ -23,6 +23,24 @@ func (s *Step) Run(
 			MustGet(s.user.Hash()).
 			AsString(),
 	)
+	if s.want.NX() {
+		ok, err := s.cli.Has(ctx, k)
+		if err != nil {
+			return errs.WrapJoin(
+				"failed to check key existence",
+				errs.ErrExternalDependencyFailed,
+				err,
+			)
+		}
+		if ok {
+			return errs.Wrap(
+				errs.ErrExpectationFailed,
+				"expected key '%s' to not exist in Redis",
+				k,
+			)
+		}
+		return nil
+	}
 	m, err := s.cli.HGetAll(ctx, k)
 	if err != nil {
 		return errs.WrapJoin(

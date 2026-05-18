@@ -12,6 +12,8 @@ type Expectations struct {
 	events []event.Event
 	// ttl is the duration of the list to expect.
 	ttl time.Duration
+	// nx defines that the key itself does not exist in Redis.
+	nx bool
 }
 
 // NewExpectations creates a new Expectations instance with the given options.
@@ -42,4 +44,9 @@ func (e Expectations) HasTTL() bool {
 // TTL returns the duration of the list to expect.
 func (e Expectations) TTL() time.Duration {
 	return e.ttl
+}
+
+// NX defines that the key itself does not exist in Redis.
+func (e Expectations) NX() bool {
+	return e.nx
 }

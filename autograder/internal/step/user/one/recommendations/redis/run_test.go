@@ -428,6 +428,126 @@ func TestStep_Run(t *testing.T) {
 				panic: false,
 			},
 		},
+		{
+			name: "not exists expected but key exists",
+			s: impl.NewStep(
+				NewDescFx(),
+				redis.NewFakeClient(
+					redis.WithHas(
+						func(_ context.Context, _ string) (bool, error) {
+							return true, nil
+						},
+					),
+				),
+				userfx.NewJohnDoe(),
+				expect.NewExpectations(
+					expect.WithNotExists(),
+				),
+			),
+			args: args{
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewJohnDoe().Hash(),
+						"123",
+					)
+					return vars
+				}(),
+			},
+			want: want{
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewJohnDoe().Hash(),
+						"123",
+					)
+					return vars
+				}(),
+				err:   errs.ErrExpectationFailed,
+				panic: false,
+			},
+		},
+		{
+			name: "not exists expected and key does not exist",
+			s: impl.NewStep(
+				NewDescFx(),
+				redis.NewFakeClient(
+					redis.WithHas(
+						func(_ context.Context, _ string) (bool, error) {
+							return false, nil
+						},
+					),
+				),
+				userfx.NewJohnDoe(),
+				expect.NewExpectations(
+					expect.WithNotExists(),
+				),
+			),
+			args: args{
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewJohnDoe().Hash(),
+						"123",
+					)
+					return vars
+				}(),
+			},
+			want: want{
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewJohnDoe().Hash(),
+						"123",
+					)
+					return vars
+				}(),
+				err:   nil,
+				panic: false,
+			},
+		},
+		{
+			name: "not exists expected but redis failed on has",
+			s: impl.NewStep(
+				NewDescFx(),
+				redis.NewFakeClient(
+					redis.WithHas(
+						func(_ context.Context, _ string) (bool, error) {
+							return false, assert.AnError
+						},
+					),
+				),
+				userfx.NewJohnDoe(),
+				expect.NewExpectations(
+					expect.WithNotExists(),
+				),
+			),
+			args: args{
+				ctx: context.Background(),
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewJohnDoe().Hash(),
+						"123",
+					)
+					return vars
+				}(),
+			},
+			want: want{
+				vars: func() step.Variables {
+					vars := step.NewVariables()
+					vars.Set(
+						userfx.NewJohnDoe().Hash(),
+						"123",
+					)
+					return vars
+				}(),
+				err:   errs.ErrExternalDependencyFailed,
+				panic: false,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
