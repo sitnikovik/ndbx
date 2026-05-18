@@ -35,9 +35,6 @@ unit-test:
 			-covermode=atomic \
 			-coverprofile=../tmp/coverage_unit.out \
 			$$pkgs; \
-			if [ -f ../tmp/coverage_unit.out ] && [ $$(wc -l < ../tmp/coverage_unit.out) -le 1 ]; then \
-				rm -f ../tmp/coverage_unit.out; \
-			fi; \
 		else \
 			echo "no packages to test"; \
 		fi \
@@ -61,10 +58,7 @@ integration-test:
 		-covermode=atomic \
 		-coverprofile=../tmp/coverage_integration.out \
 		-coverpkg=$$coverpkgs \
-		./internal/test/integration/...; \
-		if [ -f ../tmp/coverage_integration.out ] && [ $$(wc -l < ../tmp/coverage_integration.out) -le 1 ]; then \
-			rm -f ../tmp/coverage_integration.out; \
-		fi'
+		./internal/test/integration/...'
 
 # Lint the codebase.
 .PHONY: lint

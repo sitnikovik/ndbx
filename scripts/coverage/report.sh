@@ -35,8 +35,8 @@ fi
 
 # Combine coverage files (excluding main packages)
 echo "mode: count" > tmp/coverage.out
-tail -n +2 tmp/coverage_unit.out | grep -v '/cmd/' >> tmp/coverage.out
-tail -n +2 tmp/coverage_integration.out | grep -v '/cmd/' >> tmp/coverage.out
+awk 'NR > 1 && $0 !~ /\/cmd\//' tmp/coverage_unit.out >> tmp/coverage.out
+awk 'NR > 1 && $0 !~ /\/cmd\//' tmp/coverage_integration.out >> tmp/coverage.out
 
 # Calculate total coverage percentage
 ./scripts/coverage/calc.sh \
