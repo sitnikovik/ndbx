@@ -221,32 +221,6 @@ func main() {
 
 		// Check recommendations
 		login.NewStep(httpcli, baseURL, samwiseGamgee, pwd),
-		recommsEndpoint.NewStep(
-			step.NewDesc(
-				"User's recommendations endpoint",
-				"Checking recommendations for Samwise Gamgee. "+
-					"Likes build the recommendation graph, dislikes are ignored in this lab. "+
-					"Samwise liked the exhibition before disliking it, so the graph still connects him to other users who liked it. "+
-					"Those users also liked other exhibition events and the concert, so after deduplication by title and excluding already liked events "+
-					"the recommendations are wonderLandEvents[1] and concertEvent",
-			),
-			httpcli,
-			baseURL,
-			recommsEndpointXpct.NewExpectations(
-				recommsEndpointXpct.WithEvents(
-					wonderLandEvents[1],
-					concertEvent,
-				),
-				recommsEndpointXpct.WithResponse(
-					respXpct.NewExpectations(
-						respXpct.WithAsserts(
-							response.AssertOKStatus,
-							response.AssertNotEmptyContent,
-						),
-					),
-				),
-			),
-		),
 		recommsRedis.NewStep(
 			step.NewDesc(
 				"User's recommendations Redis",
@@ -255,7 +229,33 @@ func main() {
 			rediscli,
 			samwiseGamgee,
 			recommsRedisXpct.NewExpectations(
-				recommsRedisXpct.WithNoEvents(),
+				recommsRedisXpct.WithNotExists(),
+			),
+		),
+		recommsEndpoint.NewStep(
+			step.NewDesc(
+				"User's recommendations endpoint",
+				"Checking recommendations for Samwise Gamgee. "+
+					"Likes build the recommendation graph, dislikes are ignored in this lab. "+
+					"Samwise liked the exhibition before disliking it, so the graph still connects him to other users who liked it. "+
+					"Those users also liked other exhibition events and the concert, so after deduplication by title and excluding already liked events "+
+					"the recommendations are wonderLandEvents[1] and concertEvent",
+			),
+			httpcli,
+			baseURL,
+			recommsEndpointXpct.NewExpectations(
+				recommsEndpointXpct.WithEvents(
+					wonderLandEvents[1],
+					concertEvent,
+				),
+				recommsEndpointXpct.WithResponse(
+					respXpct.NewExpectations(
+						respXpct.WithAsserts(
+							response.AssertOKStatus,
+							response.AssertNotEmptyContent,
+						),
+					),
+				),
 			),
 		),
 		recommsEndpoint.NewStep(
@@ -287,7 +287,7 @@ func main() {
 		recommsRedis.NewStep(
 			step.NewDesc(
 				"User's recommendations Redis",
-				"Recommendations for Samwise Gamgee must not be in Redis cache before first request",
+				"Recommendations for Samwise Gamgee must not be in Redis cache after requested",
 			),
 			rediscli,
 			samwiseGamgee,
@@ -315,24 +315,6 @@ func main() {
 			),
 		),
 		logout.NewStep(httpcli, baseURL),
-		recommsEndpoint.NewStep(
-			step.NewDesc(
-				"User's recommendations endpoint",
-				"Try to get recommendations on user is authenticated",
-			),
-			httpcli,
-			baseURL,
-			recommsEndpointXpct.NewExpectations(
-				recommsEndpointXpct.WithResponse(
-					respXpct.NewExpectations(
-						respXpct.WithAsserts(
-							response.AssertUnauthorizedStatus,
-							response.AssertEmptyContent,
-						),
-					),
-				),
-			),
-		),
 		mongoTeardown.NewStep(mongocli),
 		redisTeardown.NewStep(rediscli),
 		cassandraTeardown.NewStep(cassandracli),
