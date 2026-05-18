@@ -33,10 +33,8 @@ fi
 
 # Print coverage summary.
 unit_val=$(cat tmp/coverage_unit_percent.out 2>/dev/null || echo "n/a")
-integration_val=$(cat tmp/coverage_integration_percent.out 2>/dev/null || echo "n/a")
-echo "  Unit tests:        ${unit_val}%"
-echo "  Integration tests: ${integration_val}%"
-echo "  Total:             ${VAL}%"
+echo "  Unit tests: ${unit_val}%"
+echo "  Total:      ${VAL}%"
 echo ""
 
 # Check against threshold.

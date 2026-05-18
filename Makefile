@@ -83,7 +83,7 @@ lint:
 	@echo "✅ Done"
 
 
-# Generate coverage report combining unit and integration tests.
+# Generate coverage report from unit tests.
 # Outputs total coverage percentage to tmp/coverage_total.out,
 # covered lines to tmp/coverage_*.out
 # and uncovered lines to tmp/uncovered.out.

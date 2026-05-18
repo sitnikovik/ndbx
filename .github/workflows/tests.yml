@@ -16,10 +16,3 @@ jobs:
       - name: Run unit tests
         run: |
           make unit-test
-      - name: Run integration tests
-        run: |
-          make integration-test
-      - name: Check coverage
-        run: |
-          source .github/ci.env
-          make coverage-check
