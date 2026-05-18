@@ -31,3 +31,8 @@ func (r Reactions) With(opts ...Option) Reactions {
 func (r Reactions) Counts() common.Counts {
 	return r.counts
 }
+
+// Equals defines if the object equals to the provided one.
+func (r Reactions) Equals(other Reactions) bool {
+	return r.counts.Equals(other.counts)
+}

@@ -23,3 +23,17 @@ func WithPrice(price uint) Option {
 		b.price = price
 	}
 }
+
+// WithTags set the list of tags to the Body instance.
+func WithTags(tags ...string) Option {
+	return func(b *Body) {
+		b.tags = tags
+	}
+}
+
+// WithCascade set the flag defines the patch to be cascade update.
+func WithCascade() Option {
+	return func(b *Body) {
+		b.cascade = true
+	}
+}

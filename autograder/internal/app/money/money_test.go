@@ -205,3 +205,81 @@ func TestMoney_Nanos(t *testing.T) {
 		})
 	}
 }
+
+func TestMoney_Equals(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		other money.Money
+	}
+	type want struct {
+		value bool
+	}
+	tests := []struct {
+		name string
+		m    money.Money
+		args args
+		want want
+	}{
+		{
+			name: "same",
+			m:    money.NewMoney(100, 50),
+			args: args{
+				other: money.NewMoney(100, 50),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "diff nanos",
+			m:    money.NewMoney(100, 50),
+			args: args{
+				other: money.NewMoney(100, 25),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "diff units",
+			m:    money.NewMoney(99, 50),
+			args: args{
+				other: money.NewMoney(100, 50),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "empty in arg",
+			m:    money.NewMoney(99, 50),
+			args: args{
+				other: money.NewMoney(0, 00),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "default value and arg",
+			m:    money.Money{},
+			args: args{
+				other: money.Money{},
+			},
+			want: want{
+				value: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.m.Equals(tt.args.other)
+			if tt.want.value {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}

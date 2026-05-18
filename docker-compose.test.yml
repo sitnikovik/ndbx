@@ -33,11 +33,42 @@ services:
     volumes:
       - cassandra_data_test:/var/lib/cassandra
     healthcheck:
-      test: ["CMD-SHELL", "cqlsh -u cassandra -p cassandra cassandra-test 9042 -e 'DESCRIBE KEYSPACES' && exit 0 || exit 1"]
+      test: ["CMD-SHELL", "cqlsh localhost 9042 -e 'DESCRIBE KEYSPACES' >/dev/null 2>&1"]
+      start_period: 45s
+      interval: 5s
+      timeout: 10s
+      retries: 24
+    container_name: cassandra-test
+  neo4j-test:
+    image: neo4j:5-community
+    environment:
+      - NEO4J_AUTH=none
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 >/dev/null 2>&1 || exit 1"]
       interval: 5s
       timeout: 10s
       retries: 10
-    container_name: cassandra-test
+    container_name: neo4j-test
+  test-runner:
+    image: golang:1.23.4
+    working_dir: /workspace/autograder
+    volumes:
+      - .:/workspace
+      - ${GO_TEST_GOMODCACHE_HOST}:/go/pkg/mod
+      - ${GO_TEST_GOCACHE_HOST}:/root/.cache/go-build
+    env_file: .env.test
+    depends_on:
+      redis-test:
+        condition: service_healthy
+      mongo-test:
+        condition: service_healthy
+      cassandra-test:
+        condition: service_healthy
+      neo4j-test:
+        condition: service_healthy
 
 volumes:
   cassandra_data_test:

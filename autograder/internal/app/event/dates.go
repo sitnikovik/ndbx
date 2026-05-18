@@ -27,3 +27,9 @@ func (d Dates) StartedAt() time.Time {
 func (d Dates) FinishedAt() time.Time {
 	return d.finishedAt
 }
+
+// Equals defines if the object equals the provided one.
+func (d Dates) Equals(other Dates) bool {
+	return d.startedAt.Equal(other.startedAt) &&
+		d.finishedAt.Equal(other.finishedAt)
+}

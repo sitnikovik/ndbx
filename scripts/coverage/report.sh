@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 #
-# This script combines unit and integration coverage profiles and calculates total coverage.
+# This script calculates coverage from the unit test coverage profile.
 # It generates:
-# - tmp/coverage.out - combined coverage profile
+# - tmp/coverage.out - normalized coverage profile
 # - tmp/coverage_unit_percent.out - unit test coverage percentage (without % sign)
-# - tmp/coverage_integration_percent.out - integration test coverage percentage (without % sign)
 # - tmp/coverage_total.out - total coverage percentage (without % sign)
 # - tmp/uncovered.out - list of uncovered lines
 
@@ -16,27 +15,15 @@ if [ ! -f "tmp/coverage_unit.out" ]; then
 	exit 1
 fi
 
-if [ ! -f "tmp/coverage_integration.out" ]; then
-	echo "Error: tmp/coverage_integration.out not found" >&2
-	exit 1
-fi
-
 # Calculate unit test coverage
 ./scripts/coverage/calc.sh \
 	"tmp/coverage_unit.out" \
 	"tmp/coverage_unit_percent.out" \
 	"Unit test coverage"
 
-# Calculate integration test coverage
-./scripts/coverage/calc.sh \
-	"tmp/coverage_integration.out" \
-	"tmp/coverage_integration_percent.out" \
-	"Integration test coverage"
-
-# Combine coverage files (excluding main packages)
+# Normalize coverage file (excluding main packages)
 echo "mode: count" > tmp/coverage.out
-tail -n +2 tmp/coverage_unit.out | grep -v '/cmd/' >> tmp/coverage.out
-tail -n +2 tmp/coverage_integration.out | grep -v '/cmd/' >> tmp/coverage.out
+awk 'NR > 1 && $0 !~ /\/cmd\//' tmp/coverage_unit.out >> tmp/coverage.out
 
 # Calculate total coverage percentage
 ./scripts/coverage/calc.sh \

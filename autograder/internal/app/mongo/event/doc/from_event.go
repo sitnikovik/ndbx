@@ -23,6 +23,12 @@ func FromEvent(e event.Event) EventDocument {
 			v,
 		))
 	}
+	if v := e.Content().Tags(); len(v) > 0 {
+		kvs = append(kvs, doc.NewKV(
+			key.Tags,
+			v,
+		))
+	}
 	if v := e.Location(); !v.Empty() {
 		m := make(map[string]string, 2)
 		if v := v.Address(); v != "" {

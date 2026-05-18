@@ -31,6 +31,11 @@ func (c Counts) Empty() bool {
 	return c.likes == 0 && c.dislikes == 0
 }
 
+// Equals defines if the object equals the provided one.
+func (c Counts) Equals(other Counts) bool {
+	return c == other
+}
+
 // Likes returns the number of likes users left.
 func (c Counts) Likes() uint64 {
 	return c.likes

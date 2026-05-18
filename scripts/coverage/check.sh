@@ -14,7 +14,7 @@ if [ -z "$THRESHOLD" ] || [ "$THRESHOLD" = "0" ] || [ "$THRESHOLD" = "" ]; then
 fi
 
 # Run coverage generation first even though this is a check script.
-if ! make coverage >/dev/null 2>&1; then
+if ! make coverage; then
     echo "❌ make coverage failed" >&2
     exit 1
 fi
@@ -33,10 +33,8 @@ fi
 
 # Print coverage summary.
 unit_val=$(cat tmp/coverage_unit_percent.out 2>/dev/null || echo "n/a")
-integration_val=$(cat tmp/coverage_integration_percent.out 2>/dev/null || echo "n/a")
-echo "  Unit tests:        ${unit_val}%"
-echo "  Integration tests: ${integration_val}%"
-echo "  Total:             ${VAL}%"
+echo "  Unit tests: ${unit_val}%"
+echo "  Total:      ${VAL}%"
 echo ""
 
 # Check against threshold.

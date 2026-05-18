@@ -5,6 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/sitnikovik/ndbx/autograder/internal/expect/http/response/expectation"
+	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	impl "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/endpoint"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
 	eventfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/event"
@@ -21,20 +23,34 @@ func TestStep_Name(t *testing.T) {
 		{
 			name: "ok",
 			step: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(),
 				"/localhost",
 				eventfx.NewTestEvent(),
+				expectation.NewExpectations(
+					expectation.WithAsserts(),
+				),
 			),
-			want: impl.Name,
+			want: "Title",
 		},
 		{
 			name: "default fields",
 			step: impl.NewStep(
+				step.NewDesc(
+					"",
+					"",
+				),
 				nil,
 				"",
 				eventfx.NewTestEvent(),
+				expectation.NewExpectations(
+					expectation.WithAsserts(),
+				),
 			),
-			want: impl.Name,
+			want: "",
 		},
 	}
 	for _, tt := range tests {
@@ -60,20 +76,34 @@ func TestStep_Description(t *testing.T) {
 		{
 			name: "ok",
 			step: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(),
 				"/localhost",
 				eventfx.NewTestEvent(),
+				expectation.NewExpectations(
+					expectation.WithAsserts(),
+				),
 			),
-			want: impl.Description,
+			want: "Description",
 		},
 		{
 			name: "default fields",
 			step: impl.NewStep(
+				step.NewDesc(
+					"",
+					"",
+				),
 				nil,
 				"",
 				eventfx.NewTestEvent(),
+				expectation.NewExpectations(
+					expectation.WithAsserts(),
+				),
 			),
-			want: impl.Description,
+			want: "",
 		},
 	}
 	for _, tt := range tests {

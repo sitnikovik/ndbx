@@ -7,6 +7,7 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/tag"
 )
 
 func TestContent_Title(t *testing.T) {
@@ -186,6 +187,203 @@ func TestContent_TitleHash(t *testing.T) {
 				t,
 				tt.want.val,
 				tt.c.TitleHash(),
+			)
+		})
+	}
+}
+
+func TestContent_Equals(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		other event.Content
+	}
+	type want struct {
+		value bool
+	}
+	tests := []struct {
+		name string
+		c    event.Content
+		args args
+		want want
+	}{
+		{
+			name: "same with title desc and category",
+			c: event.NewContent(
+				"title",
+				"desc",
+				event.WithCategory(
+					category.Meetup,
+				),
+			),
+			args: args{
+				other: event.NewContent(
+					"title",
+					"desc",
+					event.WithCategory(
+						category.Meetup,
+					),
+				),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "diff with title",
+			c: event.NewContent(
+				"title",
+				"desc",
+				event.WithCategory(
+					category.Meetup,
+				),
+			),
+			args: args{
+				other: event.NewContent(
+					"t1tle",
+					"desc",
+					event.WithCategory(
+						category.Meetup,
+					),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "diff with desc",
+			c: event.NewContent(
+				"title",
+				"desc",
+				event.WithCategory(
+					category.Meetup,
+				),
+			),
+			args: args{
+				other: event.NewContent(
+					"title",
+					"description",
+					event.WithCategory(
+						category.Meetup,
+					),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "diff with category",
+			c: event.NewContent(
+				"title",
+				"desc",
+				event.WithCategory(
+					category.Meetup,
+				),
+			),
+			args: args{
+				other: event.NewContent(
+					"title",
+					"desc",
+					event.WithCategory(
+						category.Party,
+					),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "default value vs empty arg",
+			c:    event.Content{},
+			args: args{
+				other: event.NewContent(
+					"",
+					"",
+				),
+			},
+			want: want{
+				value: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.c.Equals(tt.args.other)
+			if tt.want.value {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}
+
+func TestContent_Tags(t *testing.T) {
+	t.Parallel()
+	type want struct {
+		value []tag.Tag
+	}
+	tests := []struct {
+		name string
+		c    event.Content
+		want want
+	}{
+		{
+			name: "ok",
+			c: event.NewContent(
+				"Test Event",
+				"This is a test event.",
+				event.WithTags(
+					tag.Exhibition,
+					tag.Culture,
+				),
+			),
+			want: want{
+				value: []tag.Tag{
+					tag.Exhibition,
+					tag.Culture,
+				},
+			},
+		},
+		{
+			name: "empty",
+			c: event.NewContent(
+				"Test Event",
+				"This is a test event.",
+				event.WithTags(),
+			),
+			want: want{
+				value: nil,
+			},
+		},
+		{
+			name: "not set",
+			c: event.NewContent(
+				"Test Event",
+				"This is a test event.",
+			),
+			want: want{
+				value: nil,
+			},
+		},
+		{
+			name: "default value",
+			c:    event.Content{},
+			want: want{
+				value: nil,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(
+				t,
+				tt.want.value,
+				tt.c.Tags(),
 			)
 		})
 	}

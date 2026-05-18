@@ -26,13 +26,6 @@ func WithCreatedBy(id user.Identity) Option {
 	}
 }
 
-// WithQuantity sets the quantity of attendees for the event in the Event.
-func WithQuantity(q Quantity) Option {
-	return func(b *Event) {
-		b.qty = q
-	}
-}
-
 // WithCosts sets the cost information related to the event.
 func WithCosts(costs Costs) Option {
 	return func(e *Event) {

@@ -31,3 +31,8 @@ func (r Reviews) With(opts ...Option) Reviews {
 func (r Reviews) Counts() common.Counts {
 	return r.counts
 }
+
+// Equals defines if the object equals the provided one.
+func (r Reviews) Equals(other Reviews) bool {
+	return r.counts.Equals(other.counts)
+}

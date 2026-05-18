@@ -43,3 +43,9 @@ func (m Money) Units() uint64 {
 func (m Money) Nanos() uint8 {
 	return m.nanos
 }
+
+// Equals defines if the object equals the provided one.
+func (m Money) Equals(other Money) bool {
+	return m.units == other.units &&
+		m.nanos == other.nanos
+}

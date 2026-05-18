@@ -165,3 +165,99 @@ func TestLocation_Empty(t *testing.T) {
 		})
 	}
 }
+
+func TestLocation_Equals(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		other event.Location
+	}
+	type want struct {
+		value bool
+	}
+	tests := []struct {
+		name string
+		l    event.Location
+		args args
+		want want
+	}{
+		{
+			name: "same city and address",
+			l: event.NewLocation(
+				"City, Country, Street, 123",
+				event.WithCity("New York"),
+			),
+			args: args{
+				other: event.NewLocation(
+					"City, Country, Street, 123",
+					event.WithCity("New York"),
+				),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "diff city but same address",
+			l: event.NewLocation(
+				"City, Country, Street, 123",
+				event.WithCity("New York City"),
+			),
+			args: args{
+				other: event.NewLocation(
+					"City, Country, Street, 123",
+					event.WithCity("New York"),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "diff address but same city",
+			l: event.NewLocation(
+				"New York, USA, Street, 123",
+				event.WithCity("New York"),
+			),
+			args: args{
+				other: event.NewLocation(
+					"City, Country, Street, 123",
+					event.WithCity("New"),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "empty addresses",
+			l:    event.NewLocation(""),
+			args: args{
+				other: event.NewLocation(""),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "defaults",
+			l:    event.Location{},
+			args: args{
+				other: event.Location{},
+			},
+			want: want{
+				value: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.l.Equals(tt.args.other)
+			if tt.want.value {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}

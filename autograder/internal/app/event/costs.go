@@ -19,3 +19,8 @@ func NewCosts(entry money.Money) Costs {
 func (c Costs) Entry() money.Money {
 	return c.entry
 }
+
+// Equals defines if the object equals to the provided one.
+func (c Costs) Equals(other Costs) bool {
+	return c.entry.Equals(other.entry)
+}

@@ -3,13 +3,14 @@ module github.com/sitnikovik/ndbx/autograder
 go 1.23.4
 
 require (
+	github.com/gocql/gocql v1.7.0
+	github.com/neo4j/neo4j-go-driver/v5 v5.28.4
 	github.com/sitnikovik/fluxhttp v0.0.0-20250317190557-944d960fec05
 	github.com/sitnikovik/paints v0.1.1
 	go.mongodb.org/mongo-driver/v2 v2.5.0
 )
 
 require (
-	github.com/gocql/gocql v1.7.0 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/klauspost/compress v1.17.6 // indirect

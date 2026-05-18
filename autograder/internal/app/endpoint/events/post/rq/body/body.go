@@ -25,7 +25,7 @@ func NewBody(event event.Event) Body {
 //
 // Panics if marshalling the data fails.
 func (b Body) MustBytes() []byte {
-	m := make(map[string]any, 10)
+	m := make(map[string]any, 11)
 	m["title"] = b.e.Content().Title()
 	m["address"] = b.e.Location().Address()
 	m["started_at"] = b.e.Dates().StartedAt().Format(time.RFC3339)
@@ -33,11 +33,8 @@ func (b Body) MustBytes() []byte {
 	if v := b.e.Content().Description(); v != "" {
 		m["description"] = v
 	}
-	if v := b.e.Quantity().Max(); v > 0 {
-		m["max_attendees"] = v
-	}
-	if v := b.e.Quantity().Min(); v > 0 {
-		m["min_attendees"] = v
+	if tags := b.e.Content().Tags(); len(tags) > 0 {
+		m["tags"] = tags
 	}
 	bb, err := json.Marshal(m)
 	if err != nil {

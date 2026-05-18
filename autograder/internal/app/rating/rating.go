@@ -82,3 +82,8 @@ func (r Rating) Validate() error {
 func (r Rating) Empty() bool {
 	return r == None
 }
+
+// Equals defines if the rating equals the provided one.
+func (r Rating) Equals(other Rating) bool {
+	return r == other
+}

@@ -385,3 +385,131 @@ func TestRating_Int(t *testing.T) {
 		})
 	}
 }
+
+func TestRating_Equals(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		other impl.Rating
+	}
+	type want struct {
+		value bool
+	}
+	tests := []struct {
+		name string
+		r    impl.Rating
+		args args
+		want want
+	}{
+		{
+			name: "one vs one",
+			r:    impl.One,
+			args: args{
+				other: impl.One,
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "one vs two",
+			r:    impl.One,
+			args: args{
+				other: impl.Two,
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "one vs three",
+			r:    impl.One,
+			args: args{
+				other: impl.Three,
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "one vs four",
+			r:    impl.One,
+			args: args{
+				other: impl.Four,
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "one vs five",
+			r:    impl.One,
+			args: args{
+				other: impl.Five,
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "const vs custom but same value",
+			r:    impl.Five,
+			args: args{
+				other: impl.NewRating(5),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "const vs custom but float",
+			r:    impl.Five,
+			args: args{
+				other: impl.NewRating(5.00),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "diff const vs custom but float",
+			r:    impl.Five,
+			args: args{
+				other: impl.NewRating(4.99),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "empty value",
+			r:    impl.Five,
+			args: args{
+				other: impl.NewRating(0),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "none vs empty arg",
+			r:    impl.None,
+			args: args{
+				other: impl.NewRating(0),
+			},
+			want: want{
+				value: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.r.Equals(tt.args.other)
+			if tt.want.value {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}

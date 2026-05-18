@@ -31,3 +31,8 @@ func (c Created) At() time.Time {
 func (c Created) By() user.Identity {
 	return c.by
 }
+
+// Equals defines if the object equals to the provided one.
+func (c Created) Equals(other Created) bool {
+	return c.At().Equal(other.at) && c.by == other.by
+}

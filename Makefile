@@ -35,9 +35,6 @@ unit-test:
 			-covermode=atomic \
 			-coverprofile=../tmp/coverage_unit.out \
 			$$pkgs; \
-			if [ -f ../tmp/coverage_unit.out ] && [ $$(wc -l < ../tmp/coverage_unit.out) -le 1 ]; then \
-				rm -f ../tmp/coverage_unit.out; \
-			fi; \
 		else \
 			echo "no packages to test"; \
 		fi \
@@ -46,28 +43,22 @@ unit-test:
 # Run integration tests.
 .PHONY: integration-test
 integration-test:
-	@echo "🐳 Starting containers..."
-	@set -a && . ./.env.test && set +a && docker compose -f docker-compose.test.yml --env-file .env.test up -d
-	@sleep 2
-	@echo 🧪 Running integration tests...
 	@mkdir -p tmp
-	@cd autograder && ( \
-		set -a; \
-		. ../.env.test; \
-		set +a; \
-		coverpkgs=$$(go list ./... | grep -v 'internal/test/integration' | grep -v 'internal/test/fake' | tr '\n' ','); \
+	@echo "🐳 Starting containers..."
+	@set -e; \
+	gomodcache=$$(cd autograder && go env GOMODCACHE); \
+	gocache=$$(cd autograder && go env GOCACHE); \
+	trap 'echo "🐳 Stopping containers..."; GO_TEST_GOMODCACHE_HOST="'"$$gomodcache"'" GO_TEST_GOCACHE_HOST="'"$$gocache"'" docker compose -f docker-compose.test.yml --env-file .env.test down' EXIT; \
+	GO_TEST_GOMODCACHE_HOST="$$gomodcache" GO_TEST_GOCACHE_HOST="$$gocache" docker compose -f docker-compose.test.yml --env-file .env.test up -d redis-test mongo-test cassandra-test neo4j-test; \
+	echo 🧪 Running integration tests...; \
+	GO_TEST_GOMODCACHE_HOST="$$gomodcache" GO_TEST_GOCACHE_HOST="$$gocache" docker compose -f docker-compose.test.yml --env-file .env.test run --rm test-runner sh -c '\
+		coverpkgs=$$(go list ./... | grep -v "internal/test/integration" | grep -v "internal/test/fake" | tr "\\n" ","); \
 		go test -tags=integration \
 		-race -count=1 -v \
 		-covermode=atomic \
 		-coverprofile=../tmp/coverage_integration.out \
 		-coverpkg=$$coverpkgs \
-		./internal/test/integration/...; \
-		if [ -f ../tmp/coverage_integration.out ] && [ $$(wc -l < ../tmp/coverage_integration.out) -le 1 ]; then \
-			rm -f ../tmp/coverage_integration.out; \
-		fi \
-	)
-	@echo "🐳 Stopping containers..."
-	@set -a && . ./.env.test && set +a && docker compose -f docker-compose.test.yml down
+		./internal/test/integration/...'
 
 # Lint the codebase.
 .PHONY: lint
@@ -92,7 +83,7 @@ lint:
 	@echo "✅ Done"
 
 
-# Generate coverage report combining unit and integration tests.
+# Generate coverage report from unit tests.
 # Outputs total coverage percentage to tmp/coverage_total.out,
 # covered lines to tmp/coverage_*.out
 # and uncovered lines to tmp/uncovered.out.

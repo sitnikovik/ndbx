@@ -39,6 +39,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "ok",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -60,6 +64,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				NewExpectationsFx(),
 			),
 			args: args{
 				ctx: context.Background(),
@@ -76,6 +81,7 @@ func TestStep_Run(t *testing.T) {
 					vars := step.NewVariables()
 					vars.Set(session.Name, "0123456789abcdef0123456789abcdef")
 					vars.Set(variable.SessionTTL, 3600*time.Second)
+					vars.Set(variable.EventID, "123")
 					return vars
 				}(),
 				panic: false,
@@ -84,6 +90,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "http failed",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -93,6 +103,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				NewExpectationsFx(),
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -107,6 +118,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "unexpected response",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -123,6 +138,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				NewExpectationsFx(),
 			),
 			args: args{
 				ctx:  context.Background(),
@@ -137,6 +153,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "created a new session cookie",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -158,6 +178,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				NewExpectationsFx(),
 			),
 			args: args{
 				ctx: context.Background(),
@@ -169,11 +190,12 @@ func TestStep_Run(t *testing.T) {
 				}(),
 			},
 			want: want{
-				err: errs.ErrExpectationFailed,
+				err: nil,
 				vars: func() step.Variables {
 					vars := step.NewVariables()
 					vars.Set(session.Name, "0123456789abcdef0123456789abcdef")
 					vars.Set(variable.SessionTTL, 3600*time.Second)
+					vars.Set(variable.EventID, "123")
 					return vars
 				}(),
 				panic: false,
@@ -182,6 +204,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "invalid session in cookie",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -203,6 +229,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				NewExpectationsFx(),
 			),
 			args: args{
 				ctx: context.Background(),
@@ -227,6 +254,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "unexpected session in cookie",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -248,6 +279,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				NewExpectationsFx(),
 			),
 			args: args{
 				ctx: context.Background(),
@@ -259,11 +291,12 @@ func TestStep_Run(t *testing.T) {
 				}(),
 			},
 			want: want{
-				err: errs.ErrExpectationFailed,
+				err: nil,
 				vars: func() step.Variables {
 					vars := step.NewVariables()
 					vars.Set(session.Name, "0123456789abcdef0123456789abcdef")
 					vars.Set(variable.SessionTTL, 3600*time.Second)
+					vars.Set(variable.EventID, "123")
 					return vars
 				}(),
 				panic: false,
@@ -272,6 +305,10 @@ func TestStep_Run(t *testing.T) {
 		{
 			name: "got unexpected json body",
 			s: impl.NewStep(
+				step.NewDesc(
+					"Title",
+					"Description",
+				),
 				httpxfk.NewFakeClient(
 					httpxfk.WithPostJSON(
 						func(_ string, _ io.Reader) (*http.Response, error) {
@@ -293,6 +330,7 @@ func TestStep_Run(t *testing.T) {
 				),
 				"http://localhost",
 				eventfx.NewTestEvent(),
+				NewExpectationsFx(),
 			),
 			args: args{
 				ctx: context.Background(),
@@ -304,11 +342,12 @@ func TestStep_Run(t *testing.T) {
 				}(),
 			},
 			want: want{
-				err: errs.ErrExpectationFailed,
+				err: nil,
 				vars: func() step.Variables {
 					vars := step.NewVariables()
 					vars.Set(session.Name, "0123456789abcdef0123456789abcdef")
 					vars.Set(variable.SessionTTL, 3600*time.Second)
+					vars.Set(variable.EventID, "")
 					return vars
 				}(),
 				panic: false,
@@ -325,6 +364,11 @@ func TestStep_Run(t *testing.T) {
 						tt.args.vars,
 					)
 				})
+				assert.Equal(
+					t,
+					tt.want.vars,
+					tt.args.vars,
+				)
 				return
 			}
 			assert.ErrorIs(

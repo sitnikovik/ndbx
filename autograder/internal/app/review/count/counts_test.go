@@ -173,3 +173,102 @@ func TestCounts_Count(t *testing.T) {
 		})
 	}
 }
+
+func TestCounts_Equals(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		other impl.Counts
+	}
+	type want struct {
+		value bool
+	}
+	tests := []struct {
+		name string
+		c    impl.Counts
+		args args
+		want want
+	}{
+		{
+			name: "same with rating and count",
+			c: impl.NewCounts(
+				impl.WithRating(rating.Five),
+				impl.WithCount(1),
+			),
+			args: args{
+				other: impl.NewCounts(
+					impl.WithRating(rating.Five),
+					impl.WithCount(1),
+				),
+			},
+			want: want{
+				value: true,
+			},
+		},
+		{
+			name: "diff with rating",
+			c: impl.NewCounts(
+				impl.WithRating(rating.Five),
+				impl.WithCount(1),
+			),
+			args: args{
+				other: impl.NewCounts(
+					impl.WithRating(rating.Four),
+					impl.WithCount(1),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "diff with count",
+			c: impl.NewCounts(
+				impl.WithRating(rating.Five),
+				impl.WithCount(1),
+			),
+			args: args{
+				other: impl.NewCounts(
+					impl.WithRating(rating.Five),
+					impl.WithCount(2),
+				),
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "vs default arg",
+			c: impl.NewCounts(
+				impl.WithRating(rating.Five),
+				impl.WithCount(1),
+			),
+			args: args{
+				other: impl.Counts{},
+			},
+			want: want{
+				value: false,
+			},
+		},
+		{
+			name: "default value vs default arg",
+			c:    impl.Counts{},
+			args: args{
+				other: impl.Counts{},
+			},
+			want: want{
+				value: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := tt.c.Equals(tt.args.other)
+			if tt.want.value {
+				assert.True(t, got)
+			} else {
+				assert.False(t, got)
+			}
+		})
+	}
+}

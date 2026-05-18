@@ -8,6 +8,7 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/event/category"
+	"github.com/sitnikovik/ndbx/autograder/internal/app/event/tag"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/money"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/mongo/event/doc/key"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
@@ -21,6 +22,7 @@ import (
 func (d EventDocument) ToEvent() event.Event {
 	var (
 		err        error
+		tags       []tag.Tag
 		title      string
 		desc       string
 		addr       string
@@ -97,6 +99,13 @@ func (d EventDocument) ToEvent() event.Event {
 			if v, ok := kv.Value().(string); ok {
 				cat = category.Parse(v)
 			}
+		case key.Tags:
+			if vv, ok := kv.Value().([]string); ok {
+				tags = make([]tag.Tag, 0, len(vv))
+				for _, v := range vv {
+					tags = append(tags, tag.NewTag(v))
+				}
+			}
 		}
 	}
 	evnt := event.NewEvent(
@@ -105,6 +114,7 @@ func (d EventDocument) ToEvent() event.Event {
 			title,
 			desc,
 			event.WithCategory(cat),
+			event.WithTags(tags...),
 		),
 		loc,
 		event.NewCreated(

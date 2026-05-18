@@ -1,7 +1,7 @@
 LAB_DIR = autograder/cmd
 
 .PHONY: autograder
-autograder: lab1 lab2 lab3 lab4 lab5 lab6
+autograder: lab1 lab2 lab3 lab4 lab5 lab6 lab7
 
 .PHONY: lab1
 lab1:
@@ -26,3 +26,7 @@ lab5:
 .PHONY: lab6
 lab6:
 	@cd $(LAB_DIR)/lab6 && set -a; source $(ENV_FILE); set +a; go run .
+
+.PHONY: lab7
+lab7:
+	@cd $(LAB_DIR)/lab7 && set -a; source $(ENV_FILE); set +a; go run .
