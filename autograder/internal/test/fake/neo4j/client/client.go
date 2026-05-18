@@ -36,3 +36,11 @@ func (c *Client) QueryNodes(
 	}
 	return c.funcs.queryNodes(ctx, query, params, keys...)
 }
+
+// DeleteAll simulates the behavior of the DeleteAll method.
+func (c *Client) DeleteAll(ctx context.Context) error {
+	if c.funcs.deleteAll == nil {
+		panic("not specified behavior for DeleteAll method")
+	}
+	return c.funcs.deleteAll(ctx)
+}

@@ -16,6 +16,7 @@ import (
 	"github.com/sitnikovik/ndbx/autograder/internal/client/cassandra"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/httpx"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/mongo"
+	"github.com/sitnikovik/ndbx/autograder/internal/client/neo4j"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/redis"
 	"github.com/sitnikovik/ndbx/autograder/internal/config/lab7/config"
 	"github.com/sitnikovik/ndbx/autograder/internal/console"
@@ -27,6 +28,8 @@ import (
 	createOneEventMongo "github.com/sitnikovik/ndbx/autograder/internal/step/events/create/one/mongo"
 	dislikeOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/dislike/endpoint"
 	likeOneEventEndpoint "github.com/sitnikovik/ndbx/autograder/internal/step/events/one/like/endpoint"
+	neo4jSetup "github.com/sitnikovik/ndbx/autograder/internal/step/neo4j/setup"
+	neo4jTeardown "github.com/sitnikovik/ndbx/autograder/internal/step/neo4j/teardown"
 	login "github.com/sitnikovik/ndbx/autograder/internal/step/user/auth/login"
 	logout "github.com/sitnikovik/ndbx/autograder/internal/step/user/auth/logout"
 	signup "github.com/sitnikovik/ndbx/autograder/internal/step/user/create/sign-up"
@@ -50,6 +53,7 @@ func main() {
 	mongocli := mongo.NewClient(cfg.Mongo())
 	rediscli := redis.NewClient(cfg.Redis())
 	cassandracli := cassandra.NewClient(cfg.Cassandra())
+	neo4jcli := neo4j.NewClient(cfg.Neo4j())
 	httpcli := httpx.NewClient(httpx.WithEmptyCookieJar())
 	baseURL := cfg.App().Address()
 	sessionTTL := cfg.App().User().Session().TTL()
@@ -174,6 +178,7 @@ func main() {
 	)
 	err := autograder.NewAutograder(
 		// Настройка инфраструктуры
+		neo4jSetup.NewStep(neo4jcli),
 		cassandraSetup.NewStep(cassandracli),
 		mongoSetup.NewStep(mongocli),
 		redisSetup.NewStep(rediscli),
@@ -318,6 +323,7 @@ func main() {
 		mongoTeardown.NewStep(mongocli),
 		redisTeardown.NewStep(rediscli),
 		cassandraTeardown.NewStep(cassandracli),
+		neo4jTeardown.NewStep(neo4jcli),
 	).Run(ctx, vars)
 	if err != nil {
 		console.Fatal("Lab 7 autograder failed: %v", err)

@@ -22,3 +22,14 @@ func WithQueryNodes(
 		c.funcs.queryNodes = fn
 	}
 }
+
+// WithDeleteAll sets the DeleteAll function for the fake Client.
+func WithDeleteAll(
+	fn func(
+		ctx context.Context,
+	) error,
+) Option {
+	return func(c *Client) {
+		c.funcs.deleteAll = fn
+	}
+}

@@ -17,4 +17,7 @@ type funcs struct {
 		params map[string]any,
 		keys ...string,
 	) (graph.Nodes, error)
+	// deleteAll is a function that will be used
+	// to mock the behavior of the DeleteAll method.
+	deleteAll func(ctx context.Context) error
 }
