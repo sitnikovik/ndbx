@@ -71,7 +71,6 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost:8080",
-				userfx.NewJohnDoe(),
 				expect.NewExpectations(
 					expect.WithEvents(
 						event.NewEvent(
@@ -126,7 +125,6 @@ func TestStep_Run(t *testing.T) {
 				NewDescFx(),
 				httpfk.NewFakeClient(),
 				"http://localhost:8080",
-				userfx.NewJohnDoe(),
 				expect.NewExpectations(
 					expect.WithNoEvents(),
 				),
@@ -153,7 +151,6 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost:8080",
-				userfx.NewJohnDoe(),
 				expect.NewExpectations(
 					expect.WithNoEvents(),
 				),
@@ -203,7 +200,6 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost:8080",
-				userfx.NewJohnDoe(),
 				expect.NewExpectations(
 					expect.WithNoEvents(),
 					expect.WithResponse(
@@ -281,7 +277,6 @@ func TestStep_Run(t *testing.T) {
 					),
 				),
 				"http://localhost:8080",
-				userfx.NewJohnDoe(),
 				expect.NewExpectations(
 					expect.WithEvents(
 						event.NewEvent(

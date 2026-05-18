@@ -19,12 +19,11 @@
 Рекомендации должны кэшироваться в Redis по принципу Caсhe-Aside (lazy),
 чтобы не перестраивать подборку при каждом запросе
 
-
 > 🔐 Только для авторизованных пользователей.
 > Пользователь может запрашивать рекомендации только для себя.
 
 ```http
-GET /users/{user_id}/recommendations HTTP/1.1
+GET /recommendations HTTP/1.1
 Host: localhost:8080
 Cookie: X-Session-Id=3f8a2c1d9e4b7f0a5c6d2e8b1a3f9c7d;
 Content-Type: application/json
@@ -62,7 +61,7 @@ Content-Length: 999
 ```
 
 ```http
-GET /users/{user_id}/recommendations HTTP/1.1
+GET /recommendations HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
 Content-Length: 999
@@ -81,22 +80,6 @@ Content-Length: 999
   "events": []
 }
 ```
-
-**Ответ (попытка запроса рекомендаций другого пользователя):**
-
-```http
-HTTP/1.1 403 Forbidden
-Content-Type: application/json
-Content-Length: 999
-```
-
-```json
-{
-  "message": "you can get recommendation only for yourself"
-}
-```
-
-> ⚠️ 403 Forbidden возвращаем даже когда пользователь не найден
 
 **Ответ (не авторизован):**
 
@@ -196,10 +179,6 @@ A: Один. Больше не требуется.
 
 **Q: Нужно ли возвращать `count` в рекомендациях?**  
 A: Нет, в рекомендациях только сами рекомендации.
-
-**Q: При попытке получения рекомендаций другого пользователя возвращает 403?**  
-A: Да. Хотя в других эндпоинтах при схожих действиях возвращаем 404,
-в данном случае возвращаем именно 403
 
 **Q: Что храним в Neo4j?**  
 A: Только граф для отбора рекомендаций,

@@ -3,7 +3,6 @@ package endpoint
 import (
 	"net/http"
 
-	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
 	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/endpoint/expect"
 )
@@ -20,8 +19,6 @@ type Step struct {
 	cli httpClient
 	// want holds the expectations we need to check in the Step.
 	want expect.Expectations
-	// user is the user's which events are expected to be retrieved.
-	user user.User
 	// desc is the description of the step.
 	desc step.Desc
 	// baseURL is the base URL of the application.
@@ -35,14 +32,12 @@ func NewStep(
 	desc step.Desc,
 	cli httpClient,
 	baseURL string,
-	usr user.User,
 	want expect.Expectations,
 ) *Step {
 	s := &Step{
 		desc:    desc,
 		cli:     cli,
 		baseURL: baseURL,
-		user:    usr,
 		want:    want,
 	}
 	return s

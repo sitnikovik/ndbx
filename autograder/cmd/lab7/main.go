@@ -230,7 +230,6 @@ func main() {
 			),
 			httpcli,
 			baseURL,
-			samwiseGamgee,
 			recommsEndpointXpct.NewExpectations(
 				recommsEndpointXpct.WithEvents(
 					wonderLandEvents[1],
@@ -266,7 +265,6 @@ func main() {
 			),
 			httpcli,
 			baseURL,
-			samwiseGamgee,
 			recommsEndpointXpct.NewExpectations(
 				recommsEndpointXpct.WithEvents(
 					wonderLandEvents[1],
@@ -308,7 +306,6 @@ func main() {
 			),
 			httpcli,
 			baseURL,
-			alexSmith,
 			recommsEndpointXpct.NewExpectations(
 				recommsEndpointXpct.WithResponse(
 					respXpct.NewExpectations(
@@ -327,7 +324,6 @@ func main() {
 			),
 			httpcli,
 			baseURL,
-			johnSmith,
 			recommsEndpointXpct.NewExpectations(
 				recommsEndpointXpct.WithNoEvents(),
 			),
@@ -340,7 +336,6 @@ func main() {
 			),
 			httpcli,
 			baseURL,
-			samwiseGamgee,
 			recommsEndpointXpct.NewExpectations(
 				recommsEndpointXpct.WithResponse(
 					respXpct.NewExpectations(

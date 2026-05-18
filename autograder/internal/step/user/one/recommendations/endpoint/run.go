@@ -6,7 +6,6 @@ import (
 
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/app/endpoint/events/get/resp/body"
-	"github.com/sitnikovik/ndbx/autograder/internal/app/user"
 	"github.com/sitnikovik/ndbx/autograder/internal/errs"
 	"github.com/sitnikovik/ndbx/autograder/internal/expect/numbers"
 	"github.com/sitnikovik/ndbx/autograder/internal/step"
@@ -19,13 +18,9 @@ func (s *Step) Run(
 	vars step.Variables,
 ) error {
 	rsp, err := s.cli.Get(
-		endpoint.UserRecommendations(
-			user.NewID(
-				vars.
-					MustGet(s.user.Hash()).
-					AsString(),
-			),
-		),
+		endpoint.
+			NewEndpoint(s.baseURL).
+			Recommendations(),
 	)
 	if err != nil {
 		return errors.Join(

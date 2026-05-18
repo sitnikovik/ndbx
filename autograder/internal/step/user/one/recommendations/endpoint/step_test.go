@@ -9,7 +9,6 @@ import (
 	impl "github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/endpoint"
 	"github.com/sitnikovik/ndbx/autograder/internal/step/user/one/recommendations/endpoint/expect"
 	httpxfk "github.com/sitnikovik/ndbx/autograder/internal/test/fake/client/httpx"
-	userfx "github.com/sitnikovik/ndbx/autograder/internal/test/fixture/app/user"
 )
 
 func TestStep_Name(t *testing.T) {
@@ -32,7 +31,6 @@ func TestStep_Name(t *testing.T) {
 				),
 				httpxfk.NewFakeClient(),
 				"/localhost",
-				userfx.NewAlexSmith(),
 				expect.NewExpectations(
 					expect.WithNoEvents(),
 				),
@@ -88,7 +86,6 @@ func TestStep_Description(t *testing.T) {
 				),
 				httpxfk.NewFakeClient(),
 				"/localhost",
-				userfx.NewAlexSmith(),
 				expect.NewExpectations(
 					expect.WithNoEvents(),
 				),
