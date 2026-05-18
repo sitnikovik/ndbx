@@ -3,7 +3,7 @@ package anyv
 import "time"
 
 // MustTime returns the raw value as a time
-// and panics if the type assertion not succeded.
+// and panics if the type assertion did not succeed.
 func (v Value) MustTime() time.Time {
 	x, ok := v.AsTime()
 	if !ok {

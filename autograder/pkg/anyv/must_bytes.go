@@ -1,7 +1,7 @@
 package anyv
 
 // MustBytes returns the raw value as a slice of bytes
-// and panics if the type assertion not succeded.
+// and panics if the type assertion did not succeed.
 func (v Value) MustBytes() []byte {
 	x, ok := v.AsBytes()
 	if !ok {

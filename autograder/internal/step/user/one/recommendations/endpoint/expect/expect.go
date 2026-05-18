@@ -28,7 +28,7 @@ func (e Expectations) HasEvents() bool {
 	return e.events != nil
 }
 
-// Events returns events to expect
+// Events returns events to expect.
 func (e Expectations) Events() []event.Event {
 	return e.events
 }

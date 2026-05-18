@@ -9,8 +9,8 @@ import (
 // to configure the Exectations instance on its creation.
 type Option func(e *Expectations)
 
-// WithReviews sets the list of events
-// to the Expectations instance on its creation.
+// WithEvents sets the list of events
+// on the Expectations instance being built.
 func WithEvents(ee ...event.Event) Option {
 	return func(e *Expectations) {
 		e.events = ee

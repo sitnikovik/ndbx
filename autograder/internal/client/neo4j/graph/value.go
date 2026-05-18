@@ -1,24 +1,28 @@
 package graph
 
 import (
-	"github.com/neo4j/neo4j-go-driver/v6/neo4j"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"github.com/sitnikovik/ndbx/autograder/pkg/anyv"
 )
 
+// Value wraps a raw graph value with typed accessors.
 type Value struct {
 	raw any
 }
 
+// NewValue creates a graph value wrapper.
 func NewValue(v any) Value {
 	return Value{
 		v,
 	}
 }
 
+// Base returns the underlying generic value wrapper.
 func (v Value) Base() anyv.Value {
 	return anyv.NewValue(v.raw)
 }
 
+// MustNode returns the value as a node or panics.
 func (v Value) MustNode() Node {
 	x, ok := v.AsNode()
 	if !ok {
@@ -27,6 +31,7 @@ func (v Value) MustNode() Node {
 	return x
 }
 
+// AsNode returns the value as a node when possible.
 func (v Value) AsNode() (Node, bool) {
 	x, ok := v.raw.(*neo4j.Node)
 	if !ok {
@@ -38,6 +43,7 @@ func (v Value) AsNode() (Node, bool) {
 	), true
 }
 
+// MustRelationship returns the value as a relationship or panics.
 func (v Value) MustRelationship() Relationship {
 	x, ok := v.AsRelationship()
 	if !ok {
@@ -46,6 +52,7 @@ func (v Value) MustRelationship() Relationship {
 	return x
 }
 
+// AsRelationship returns the value as a relationship when possible.
 func (v Value) AsRelationship() (Relationship, bool) {
 	x, ok := v.raw.(*neo4j.Relationship)
 	if !ok {
@@ -60,6 +67,7 @@ func (v Value) AsRelationship() (Relationship, bool) {
 	), true
 }
 
+// MustPath returns the value as a path or panics.
 func (v Value) MustPath() Path {
 	x, ok := v.AsPath()
 	if !ok {
@@ -68,6 +76,7 @@ func (v Value) MustPath() Path {
 	return x
 }
 
+// AsPath returns the value as a path when possible.
 func (v Value) AsPath() (Path, bool) {
 	x, ok := v.raw.(*neo4j.Path)
 	if !ok {

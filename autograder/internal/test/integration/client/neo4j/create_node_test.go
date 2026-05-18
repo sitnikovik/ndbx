@@ -1,4 +1,4 @@
-package neo4j
+package neo4j_test
 
 import (
 	"context"

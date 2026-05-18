@@ -1,7 +1,7 @@
 package anyv
 
 // MustInt returns the raw value as an int
-// and panics if the type assertion not succeded.
+// and panics if the type assertion did not succeed.
 func (v Value) MustInt() int {
 	x, ok := v.AsInt()
 	if !ok {

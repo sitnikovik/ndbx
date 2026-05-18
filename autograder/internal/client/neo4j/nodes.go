@@ -3,11 +3,11 @@ package neo4j
 import (
 	"context"
 
-	"github.com/neo4j/neo4j-go-driver/v6/neo4j"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/neo4j/graph"
 )
 
-// Nodes executes a query and returns the nodes that match the query.
+// QueryNodes executes a query and returns the nodes that match the query.
 func (c *Client) QueryNodes(
 	ctx context.Context,
 	query string,

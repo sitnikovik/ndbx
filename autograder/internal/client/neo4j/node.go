@@ -3,7 +3,7 @@ package neo4j
 import (
 	"context"
 
-	"github.com/neo4j/neo4j-go-driver/v6/neo4j"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"github.com/sitnikovik/ndbx/autograder/internal/client/neo4j/graph"
 )
 

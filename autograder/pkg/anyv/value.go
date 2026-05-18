@@ -6,6 +6,7 @@ type Value struct {
 	raw any
 }
 
+// NewValue creates a new typed wrapper around a raw value.
 func NewValue(v any) Value {
 	return Value{
 		raw: v,

@@ -3,7 +3,7 @@ package neo4j
 import (
 	"context"
 
-	driver "github.com/neo4j/neo4j-go-driver/v6/neo4j"
+	driver "github.com/neo4j/neo4j-go-driver/v5/neo4j"
 
 	config "github.com/sitnikovik/ndbx/autograder/internal/config/neo4j"
 )
@@ -12,7 +12,7 @@ import (
 // for interacting with the database.
 type Client struct {
 	// cli is the Neo4j driver client.
-	cli driver.Driver
+	cli driver.DriverWithContext
 	// cfg is the Neo4j configuration.
 	cfg config.Config
 }
@@ -37,7 +37,7 @@ func (c *Client) Connect() error {
 			"",
 		)
 	}
-	drv, err := driver.NewDriver(
+	drv, err := driver.NewDriverWithContext(
 		c.cfg.Connection().URL(),
 		auth,
 	)

@@ -35,10 +35,10 @@ func TestUsers_All(t *testing.T) {
 				neo4jfk.NewClient(
 					neo4jfk.WithQueryNodes(
 						func(
-							ctx context.Context,
-							query string,
-							params map[string]any,
-							keys ...string,
+							_ context.Context,
+							_ string,
+							_ map[string]any,
+							_ ...string,
 						) (graph.Nodes, error) {
 							return graph.NewNodes(
 								graph.NewNode(
@@ -73,10 +73,10 @@ func TestUsers_All(t *testing.T) {
 				neo4jfk.NewClient(
 					neo4jfk.WithQueryNodes(
 						func(
-							ctx context.Context,
-							query string,
-							params map[string]any,
-							keys ...string,
+							_ context.Context,
+							_ string,
+							_ map[string]any,
+							_ ...string,
 						) (graph.Nodes, error) {
 							return graph.NewNodes(), nil
 						},
@@ -98,10 +98,10 @@ func TestUsers_All(t *testing.T) {
 				neo4jfk.NewClient(
 					neo4jfk.WithQueryNodes(
 						func(
-							ctx context.Context,
-							query string,
-							params map[string]any,
-							keys ...string,
+							_ context.Context,
+							_ string,
+							_ map[string]any,
+							_ ...string,
 						) (graph.Nodes, error) {
 							return nil, assert.AnError
 						},

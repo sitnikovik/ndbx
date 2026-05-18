@@ -7,8 +7,8 @@ import (
 // Option is a functional option for configuring the configuration.
 type Option func(*Config)
 
-// WithEvent sets the event recommendation configuration
-// to the instance of its creation.
+// WithRecommendations sets the recommendation configuration
+// for the config being built.
 func WithRecommendations(cfg recommendation.Config) Option {
 	return func(c *Config) {
 		c.recomms = cfg

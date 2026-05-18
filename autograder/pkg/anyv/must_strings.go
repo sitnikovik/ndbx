@@ -1,7 +1,7 @@
 package anyv
 
 // MustStrings returns the raw value as a slice of strings
-// and panics if the type assertion not succeded.
+// and panics if the type assertion did not succeed.
 func (v Value) MustStrings() []string {
 	x, ok := v.AsStrings()
 	if !ok {

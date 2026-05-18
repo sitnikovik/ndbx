@@ -15,7 +15,7 @@ import (
 // and validates the response got.
 func (s *Step) Run(
 	_ context.Context,
-	vars step.Variables,
+	_ step.Variables,
 ) error {
 	rsp, err := s.cli.Get(
 		endpoint.

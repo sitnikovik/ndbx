@@ -1,7 +1,7 @@
 package anyv
 
 // MustInt64 returns the raw value as an int65
-// and panics if the type assertion not succeded.
+// and panics if the type assertion did not succeed.
 func (v Value) MustInt64() int64 {
 	x, ok := v.AsInt64()
 	if !ok {
