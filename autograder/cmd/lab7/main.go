@@ -61,14 +61,12 @@ func main() {
 	ctx := context.Background()
 	vars := step.NewVariables()
 	vars.Set(variable.SessionTTL, sessionTTL)
-	// Пользователи
 	samSepiol := userfx.NewSamSepiol()
 	johnDoe := userfx.NewJohnDoe()
 	alexSmith := userfx.NewAlexSmith()
 	johnSmith := userfx.NewJohnSmith()
 	samwiseGamgee := userfx.NewSamwiseGamgee()
 	pwd := "supa_dxpa_pwd"
-	// Мепроприятия
 	wonderLandEvents := []event.Event{
 		event.NewEvent(
 			event.NewID("1"),
@@ -177,55 +175,168 @@ func main() {
 		event.WithCosts(event.NewCosts(money.NewMoney(0, 00))),
 	)
 	err := autograder.NewAutograder(
-		// Настройка инфраструктуры
 		neo4jSetup.NewStep(neo4jcli),
 		cassandraSetup.NewStep(cassandracli),
 		mongoSetup.NewStep(mongocli),
 		redisSetup.NewStep(rediscli),
-
-		// Регистрация пользователей
-		signup.NewStep(httpcli, mongocli, baseURL, samSepiol, pwd),
-		signup.NewStep(httpcli, mongocli, baseURL, johnDoe, pwd),
-		signup.NewStep(httpcli, mongocli, baseURL, alexSmith, pwd),
-		signup.NewStep(httpcli, mongocli, baseURL, johnSmith, pwd),
-		signup.NewStep(httpcli, mongocli, baseURL, samwiseGamgee, pwd),
-
-		// Create events
-		createOneEventMongo.NewStep(mongocli, wonderLandEvents[0]),
-		createOneEventMongo.NewStep(mongocli, wonderLandEvents[1]),
-		createOneEventMongo.NewStep(mongocli, wonderLandEvents[2]),
-		createOneEventMongo.NewStep(mongocli, concertEvent),
-		createOneEventMongo.NewStep(mongocli, shakespeareMeetup),
-
-		// Sam Sepiol likes exhibition
-		login.NewStep(httpcli, baseURL, samSepiol, pwd),
-		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[0]),
-		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[1]),
-		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[2]),
-		logout.NewStep(httpcli, baseURL),
-
-		// John Doe likes exhibition and concert
-		login.NewStep(httpcli, baseURL, johnDoe, pwd),
-		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[0]),
-		likeOneEventEndpoint.NewStep(httpcli, baseURL, concertEvent),
-		logout.NewStep(httpcli, baseURL),
-
-		// Alex Smith likes exhibition and concert
-		login.NewStep(httpcli, baseURL, alexSmith, pwd),
-		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[0]),
-		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[2]),
-		likeOneEventEndpoint.NewStep(httpcli, baseURL, concertEvent),
-		logout.NewStep(httpcli, baseURL),
-
+		signup.NewStep(
+			httpcli,
+			mongocli,
+			baseURL,
+			samSepiol,
+			pwd,
+		),
+		signup.NewStep(
+			httpcli,
+			mongocli,
+			baseURL,
+			johnDoe,
+			pwd,
+		),
+		signup.NewStep(
+			httpcli,
+			mongocli,
+			baseURL,
+			alexSmith,
+			pwd,
+		),
+		signup.NewStep(
+			httpcli,
+			mongocli,
+			baseURL,
+			johnSmith,
+			pwd,
+		),
+		signup.NewStep(
+			httpcli,
+			mongocli,
+			baseURL,
+			samwiseGamgee,
+			pwd,
+		),
+		createOneEventMongo.NewStep(
+			mongocli,
+			wonderLandEvents[0],
+		),
+		createOneEventMongo.NewStep(
+			mongocli,
+			wonderLandEvents[1],
+		),
+		createOneEventMongo.NewStep(
+			mongocli,
+			wonderLandEvents[2],
+		),
+		createOneEventMongo.NewStep(
+			mongocli,
+			concertEvent,
+		),
+		createOneEventMongo.NewStep(
+			mongocli,
+			shakespeareMeetup,
+		),
+		login.NewStep(
+			httpcli,
+			baseURL,
+			samSepiol,
+			pwd,
+		),
+		likeOneEventEndpoint.NewStep(
+			httpcli,
+			baseURL,
+			wonderLandEvents[0],
+		),
+		likeOneEventEndpoint.NewStep(
+			httpcli,
+			baseURL,
+			wonderLandEvents[1],
+		),
+		likeOneEventEndpoint.NewStep(
+			httpcli,
+			baseURL,
+			wonderLandEvents[2],
+		),
+		logout.NewStep(
+			httpcli,
+			baseURL,
+		),
+		login.NewStep(
+			httpcli,
+			baseURL,
+			johnDoe,
+			pwd,
+		),
+		likeOneEventEndpoint.NewStep(
+			httpcli,
+			baseURL,
+			wonderLandEvents[0],
+		),
+		likeOneEventEndpoint.NewStep(
+			httpcli,
+			baseURL,
+			concertEvent,
+		),
+		logout.NewStep(
+			httpcli,
+			baseURL,
+		),
+		login.NewStep(
+			httpcli,
+			baseURL,
+			alexSmith,
+			pwd,
+		),
+		likeOneEventEndpoint.NewStep(
+			httpcli,
+			baseURL,
+			wonderLandEvents[0],
+		),
+		likeOneEventEndpoint.NewStep(
+			httpcli,
+			baseURL,
+			wonderLandEvents[2],
+		),
+		likeOneEventEndpoint.NewStep(
+			httpcli,
+			baseURL,
+			concertEvent,
+		),
+		logout.NewStep(
+			httpcli,
+			baseURL,
+		),
 		// Samwise Gamgee likes the exhibition (then dislikes), and joins the Shakespeare meetup
-		login.NewStep(httpcli, baseURL, samwiseGamgee, pwd),
-		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[0]),
-		dislikeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[0]),
-		likeOneEventEndpoint.NewStep(httpcli, baseURL, shakespeareMeetup),
-		logout.NewStep(httpcli, baseURL),
-
+		login.NewStep(
+			httpcli,
+			baseURL,
+			samwiseGamgee,
+			pwd,
+		),
+		likeOneEventEndpoint.NewStep(
+			httpcli,
+			baseURL,
+			wonderLandEvents[0],
+		),
+		dislikeOneEventEndpoint.NewStep(
+			httpcli,
+			baseURL,
+			wonderLandEvents[0],
+		),
+		likeOneEventEndpoint.NewStep(
+			httpcli,
+			baseURL,
+			shakespeareMeetup,
+		),
+		logout.NewStep(
+			httpcli,
+			baseURL,
+		),
 		// Check recommendations
-		login.NewStep(httpcli, baseURL, samwiseGamgee, pwd),
+		login.NewStep(
+			httpcli,
+			baseURL,
+			samwiseGamgee,
+			pwd,
+		),
 		recommsRedis.NewStep(
 			step.NewDesc(
 				"User's recommendations Redis",
@@ -241,9 +352,10 @@ func main() {
 			step.NewDesc(
 				"User's recommendations endpoint",
 				"Checking recommendations for Samwise Gamgee. "+
-					"Likes build the recommendation graph, dislikes are ignored in this lab. "+
-					"Samwise liked the exhibition before disliking it, so the graph still connects him to other users who liked it. "+
-					"Those users also liked other exhibition events and the concert, so after deduplication by title and excluding already liked events "+
+					"Samwise liked the exhibition before disliking it,"+
+					" so the graph still connects him to other users who liked it. "+
+					"Those users also liked other exhibition events and the concert,"+
+					"so after deduplication by title and excluding already liked events "+
 					"the recommendations are wonderLandEvents[1] and concertEvent",
 			),
 			httpcli,
@@ -267,9 +379,10 @@ func main() {
 			step.NewDesc(
 				"User's recommendations endpoint",
 				"Checking recommendations for Samwise Gamgee. "+
-					"Likes build the recommendation graph, dislikes are ignored in this lab. "+
-					"Samwise liked the exhibition before disliking it, so the graph still connects him to other users who liked it. "+
-					"Those users also liked other exhibition events and the concert, so after deduplication by title and excluding already liked events "+
+					"Samwise liked the exhibition before disliking it, "+
+					"so the graph still connects him to other users who liked it. "+
+					"Those users also liked other exhibition events and the concert, "+
+					"so after deduplication by title and excluding already liked events "+
 					"the recommendations are wonderLandEvents[1] and concertEvent",
 			),
 			httpcli,
@@ -306,8 +419,16 @@ func main() {
 				),
 			),
 		),
-		logout.NewStep(httpcli, baseURL),
-		login.NewStep(httpcli, baseURL, johnSmith, pwd),
+		logout.NewStep(
+			httpcli,
+			baseURL,
+		),
+		login.NewStep(
+			httpcli,
+			baseURL,
+			johnSmith,
+			pwd,
+		),
 		recommsEndpoint.NewStep(
 			step.NewDesc(
 				"User's recommendations endpoint",
@@ -319,7 +440,10 @@ func main() {
 				recommsEndpointXpct.WithNoEvents(),
 			),
 		),
-		logout.NewStep(httpcli, baseURL),
+		logout.NewStep(
+			httpcli,
+			baseURL,
+		),
 		mongoTeardown.NewStep(mongocli),
 		redisTeardown.NewStep(rediscli),
 		cassandraTeardown.NewStep(cassandracli),
