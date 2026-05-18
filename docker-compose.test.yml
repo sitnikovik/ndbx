@@ -33,10 +33,11 @@ services:
     volumes:
       - cassandra_data_test:/var/lib/cassandra
     healthcheck:
-      test: ["CMD-SHELL", "cqlsh -u cassandra -p cassandra cassandra-test 9042 -e 'DESCRIBE KEYSPACES' && exit 0 || exit 1"]
+      test: ["CMD-SHELL", "cqlsh localhost 9042 -e 'DESCRIBE KEYSPACES' >/dev/null 2>&1"]
+      start_period: 45s
       interval: 5s
       timeout: 10s
-      retries: 10
+      retries: 24
     container_name: cassandra-test
   neo4j-test:
     image: neo4j:5-community
