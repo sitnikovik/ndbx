@@ -205,7 +205,7 @@ func main() {
 		likeOneEventEndpoint.NewStep(httpcli, baseURL, concertEvent),
 		logout.NewStep(httpcli, baseURL),
 
-		// Alex Smith likes exhibition, concert and shakespeareMeetup
+		// Alex Smith likes exhibition and concert
 		login.NewStep(httpcli, baseURL, alexSmith, pwd),
 		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[0]),
 		likeOneEventEndpoint.NewStep(httpcli, baseURL, wonderLandEvents[2]),
@@ -225,8 +225,10 @@ func main() {
 			step.NewDesc(
 				"User's recommendations endpoint",
 				"Checking recommendations for Samwise Gamgee. "+
-					"He liked shakespeareMeetup → John Doe also liked it → "+
-					"John Doe liked the exhibition and concert → recommend them",
+					"Likes build the recommendation graph, dislikes are ignored in this lab. "+
+					"Samwise liked the exhibition before disliking it, so the graph still connects him to other users who liked it. "+
+					"Those users also liked other exhibition events and the concert, so after deduplication by title and excluding already liked events "+
+					"the recommendations are wonderLandEvents[1] and concertEvent",
 			),
 			httpcli,
 			baseURL,
@@ -260,8 +262,10 @@ func main() {
 			step.NewDesc(
 				"User's recommendations endpoint",
 				"Checking recommendations for Samwise Gamgee. "+
-					"He liked shakespeareMeetup → John Doe also liked it → "+
-					"John Doe liked the exhibition and concert → recommend them",
+					"Likes build the recommendation graph, dislikes are ignored in this lab. "+
+					"Samwise liked the exhibition before disliking it, so the graph still connects him to other users who liked it. "+
+					"Those users also liked other exhibition events and the concert, so after deduplication by title and excluding already liked events "+
+					"the recommendations are wonderLandEvents[1] and concertEvent",
 			),
 			httpcli,
 			baseURL,
